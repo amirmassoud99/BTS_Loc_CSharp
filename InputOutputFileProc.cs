@@ -1,0 +1,222 @@
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+
+namespace BTS_Location_Estimation
+{
+    public class RowData
+    {
+        public double Lat { get; set; }
+        public double Lon { get; set; }
+        public string CellId { get; set; }
+        public string CellIdentity { get; set; }
+        // ...existing code...
+    }
+
+    public static class InputOutputFileProc
+    {
+        public static int GetFileType(string filePath)
+        {
+            if (filePath.Contains("LTE") && filePath.Contains("Top N")) return 1;
+            if (filePath.Contains("LTE") && filePath.Contains("Blind")) return 2;
+            if (filePath.Contains("NR") && (filePath.Contains("Topn") || filePath.Contains("Top N"))) return 3;
+            if (filePath.Contains("NR") && filePath.Contains("Blind")) return 4;
+            if (filePath.Contains("WCDMA")) return 5;
+            return 1; // Default to LTE Top N
+        }
+
+        public static void SaveCinrDistResultsCsv(List<Dictionary<string, string>> selectedPoints, string outputFilename, int channel, int cellId, int beamIndex)
+        {
+            // ...full implementation from previous port...
+            throw new NotImplementedException();
+        }
+
+        public static string Trim(string s) => s?.Trim() ?? "";
+
+        public static List<Dictionary<string, string>> ExtractChannelCellMap(string filePath, int fileType)
+        {
+            // Extracts relevant data from cellular drive test CSV files.
+            // This function reads a CSV file, identifies the correct headers based on the file type,
+            // and extracts key columns like Latitude, Longitude, Cell ID, and signal metrics (CINR, RSSI).
+            // It returns a list of dictionaries, where each dictionary represents a row of data
+            // with standardized, generic keys for easier processing downstream.
+            //
+            // A special handling is implemented for NR Blind Scan files (fileType = 4).
+            // For these files, the 'Cell ID' and 'Beam Index' are combined into a single,
+            // unique identifier using the formula: new_cell_id = (original_cell_id * 10) + beam_index.
+            // This composite ID is then stored under the "cellId" key, and the "beamIndex" key is omitted.
+            var results = new List<Dictionary<string, string>>();
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine($"Error: File not found at {filePath} in ExtractChannelCellMap.");
+                return results;
+            }
+
+            // Define keywords based on file type
+            string cellIdKeyword = "", channelKeyword = "", cinrKeyword = "", beamIndexKeyword = "", latKeyword = "Latitude", lonKeyword = "Longitude", rssiKeyword = "", timeOffsetKeyword = "";
+            switch (fileType)
+            {
+                case 1: // LTE eTOPN Scan
+                    cellIdKeyword = "Cell ID";
+                    
+                    cinrKeyword = "Ref Signal - CINR";
+                    rssiKeyword = "Carrier RSSI Antenna Port 0";
+                    timeOffsetKeyword = "Ref Signal - Timeoffset";
+                    break;
+
+                case 2: // LTE Blind Scan
+                    cellIdKeyword = "Cell Id";
+                    channelKeyword = "Channel Number";
+                    cinrKeyword = "Ref Signal - CINR";
+                    rssiKeyword = "Channel RSSI";
+                    timeOffsetKeyword = "Ref Signal - Timeoffset";
+                    break;
+                case 4: // NR Blind Scan
+                    cellIdKeyword = "Cell ID";
+                    channelKeyword = "Channel Number";
+                    cinrKeyword = "Secondary Sync Signal - CINR";
+                    beamIndexKeyword = "Beam Index";
+                    rssiKeyword = "SSB RSSI";
+                    timeOffsetKeyword = "Time Offset";
+                    break;
+                default: // Fallback for other types if needed
+                    Console.WriteLine($"File type {fileType} not fully configured for extraction. Using defaults.");
+                    cellIdKeyword = "Cell ID";
+                    cinrKeyword = "Ref Signal - CINR";
+                    break;
+            }
+
+            try
+            {
+                using var file = new StreamReader(filePath);
+                string? line;
+                List<string> headers = new List<string>();
+                bool foundHeader = false;
+                while ((line = file.ReadLine()) != null)
+                {
+                    if (line.Contains(cellIdKeyword) && line.Contains(cinrKeyword))
+                    {
+                        headers = line.Split(',').Select(Trim).ToList();
+                        foundHeader = true;
+                        break;
+                    }
+                }
+
+                if (!foundHeader)
+                {
+                    Console.WriteLine("Error: Could not find the data header row in the file.");
+                    return results;
+                }
+
+                // Find column indices
+                int latIndex = headers.FindIndex(h => h.Equals(latKeyword, StringComparison.OrdinalIgnoreCase));
+                int lonIndex = headers.FindIndex(h => h.Equals(lonKeyword, StringComparison.OrdinalIgnoreCase));
+                int cellIdIndex = headers.FindIndex(h => h.Equals(cellIdKeyword, StringComparison.OrdinalIgnoreCase));
+                int channelNumIndex = !string.IsNullOrEmpty(channelKeyword) ? headers.FindIndex(h => h.Equals(channelKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
+                int cinrIndex = headers.FindIndex(h => h.Equals(cinrKeyword, StringComparison.OrdinalIgnoreCase));
+                int beamIndexCol = !string.IsNullOrEmpty(beamIndexKeyword) ? headers.FindIndex(h => h.Equals(beamIndexKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
+                int rssiIndex = !string.IsNullOrEmpty(rssiKeyword) ? headers.FindIndex(h => h.Equals(rssiKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
+                int timeOffsetIndex = !string.IsNullOrEmpty(timeOffsetKeyword) ? headers.FindIndex(h => h.Equals(timeOffsetKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
+
+
+                if (cellIdIndex == -1 || cinrIndex == -1 || latIndex == -1 || lonIndex == -1)
+                {
+                    Console.WriteLine("Error: One or more required columns (Lat, Lon, CellID, CINR) not found.");
+                    return results;
+                }
+
+                // Determine the highest index we'll need to access
+                int maxIndex = new[] { latIndex, lonIndex, cellIdIndex, channelNumIndex, cinrIndex, beamIndexCol, rssiIndex, timeOffsetIndex }.Max();
+
+                // Process data rows
+                int rowCounter = 0; // Start counting data rows after the header
+                while ((line = file.ReadLine()) != null)
+                {
+                    rowCounter++;
+                    var values = line.Split(',').Select(Trim).ToList();
+                    // Ensure the row has enough columns to access all required fields
+                    if (values.Count <= maxIndex) continue;
+
+                    var genericRow = new Dictionary<string, string>();
+                    genericRow["rowNumber"] = rowCounter.ToString();
+                    genericRow["latitude"] = values[latIndex];
+                    genericRow["longitude"] = values[lonIndex];
+                    genericRow["cinr"] = values[cinrIndex];
+
+                    // Handle Cell ID and Beam Index combination for fileType 4
+                    if (fileType == 4 && beamIndexCol != -1 &&
+                        int.TryParse(values[cellIdIndex], out int cellId) &&
+                        int.TryParse(values[beamIndexCol], out int beamIndex))
+                    {
+                        genericRow["cellId"] = (cellId * 10 + beamIndex).ToString();
+                    }
+                    else
+                    {
+                        genericRow["cellId"] = values[cellIdIndex];
+                        // Only add beamIndex if it's not fileType 4
+                        if (beamIndexCol != -1)
+                        {
+                            genericRow["beamIndex"] = values[beamIndexCol];
+                        }
+                    }
+
+                    if (channelNumIndex != -1)
+                    {
+                        genericRow["channel"] = values[channelNumIndex];
+                    }
+                    else
+                    {
+                        genericRow["channel"] = "0";
+                    }
+
+                    if (rssiIndex != -1)
+                    {
+                        genericRow["RSSI"] = values[rssiIndex];
+                    }
+                    if (timeOffsetIndex != -1)
+                    {
+                        genericRow["TimeOffset"] = values[timeOffsetIndex];
+                    }
+                    results.Add(genericRow);
+                }
+            }
+            catch (IOException ex)
+            {
+                Console.WriteLine($"Error accessing file: {Path.GetFileName(filePath)}. It is likely open in another program.");
+                Console.WriteLine($"Full path: {filePath}");
+                Console.WriteLine($"Details: {ex.Message}");
+            }
+            return results;
+        }
+
+        public static List<Dictionary<string, string>> filter_cinr_minimum_PCI(List<Dictionary<string, string>> allData, double cinrThresh, int minimumCellIdCount)
+        {
+            // 1. Filter out rows where CINR is below the threshold
+            var cinrFiltered = allData.Where(row =>
+            {
+                if (row.TryGetValue("cinr", out var cinrString) && double.TryParse(cinrString, NumberStyles.Any, CultureInfo.InvariantCulture, out var cinrValue))
+                {
+                    return cinrValue >= cinrThresh;
+                }
+                return false; // Discard rows without a valid CINR
+            }).ToList();
+
+            // 2. Group by channel and cell ID, then filter by count
+            var finalFilteredData = cinrFiltered
+                .GroupBy(row => new
+                {
+                    Channel = row.GetValueOrDefault("channel", "N/A"),
+                    CellId = row.GetValueOrDefault("cellId", "N/A")
+                })
+                .Where(group => group.Count() >= minimumCellIdCount)
+                .SelectMany(group => group) // Flatten the groups back into a list of rows
+                .ToList();
+
+            Console.WriteLine($"Filtered data down to {finalFilteredData.Count} rows after CINR and minimum count check.");
+            return finalFilteredData;
+        }
+    }
+}
+

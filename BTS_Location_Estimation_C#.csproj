@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+  <PlatformTarget>x64</PlatformTarget>
+    <OutputType>Exe</OutputType>
+  <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>BTS_Location_Estimation_C_</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,36 @@
+# Visual Studio Code
+.vscode/
+
+# Dependencies
+/packages/
+/node_modules/
+
+# Build results
+[Bb]in/
+[Oo]bj/
+
+# User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Rider
+.idea/
+*.sln.iml
+
+# Mac
+.DS_Store
+
+# Executables
+*.exe
+*.dll
+*.pdb
+
+# Output files
+*.csv
+step1_*.csv
+step2_*.csv
+
+# Source code from other languages
+*.cpp
