@@ -29,6 +29,102 @@ namespace BTS_Location_Estimation
                 }
             }
             Console.WriteLine($"\nFinal estimation results saved to {outputFilename}");
+
+            // Generate map files per channel
+            var resultsByChannel = estimationResults.GroupBy(r => r.GetValueOrDefault("Channel", "NoChannel"));
+
+            foreach (var channelGroup in resultsByChannel)
+            {
+                string channel = channelGroup.Key;
+                var channelResults = channelGroup.ToList();
+                if (!channelResults.Any()) continue;
+
+                string baseOutputFilename = Path.GetFileNameWithoutExtension(outputFilename).Replace("Estimate_", "");
+                string mapBaseFilename = $"map_ch{channel}_{baseOutputFilename}";
+                
+                string directory = Path.GetDirectoryName(outputFilename) ?? string.Empty;
+                string mapCsvFilename = Path.Combine(directory, mapBaseFilename + ".csv");
+                string mapKmlFilename = Path.Combine(directory, mapBaseFilename + ".kml");
+
+                generate_map_csv(channelResults, mapCsvFilename);
+                generate_map_kml(channelResults, mapKmlFilename);
+            }
+        }
+
+        private static void generate_map_csv(List<Dictionary<string, string>> estimationResults, string mapCsvFilename)
+        {
+            try
+            {
+                using (var writer = new StreamWriter(mapCsvFilename))
+                {
+                    writer.WriteLine("Latitude,Longitude,CellID,CellIdentity,BeamIndex");
+                    foreach (var result in estimationResults)
+                    {
+                        string lat = result.GetValueOrDefault("est_Lat2", "");
+                        string lon = result.GetValueOrDefault("est_Lon2", "");
+                        string cellId = result.GetValueOrDefault("CellId", "");
+                        string cellIdentity = result.GetValueOrDefault("cellIdentity", "");
+                        string beamIndex = result.GetValueOrDefault("BeamIndex", "");
+                        writer.WriteLine($"{lat},{lon},{cellId},{cellIdentity},{beamIndex}");
+                    }
+                }
+                Console.WriteLine($"Map CSV saved to {mapCsvFilename}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error generating map CSV: {ex.Message}");
+            }
+        }
+
+        private static void generate_map_kml(List<Dictionary<string, string>> estimationResults, string mapKmlFilename)
+        {
+            try
+            {
+                string mapName = Path.GetFileNameWithoutExtension(mapKmlFilename);
+                using (var writer = new StreamWriter(mapKmlFilename))
+                {
+                    writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                    writer.WriteLine("<kml xmlns=\"http://www.opengis.net/kml/2.2\">");
+                    writer.WriteLine("  <Document>");
+                    writer.WriteLine($"    <name>{mapName}</name>");
+                    writer.WriteLine("    <Style id=\"red_balloon\">");
+                    writer.WriteLine("      <IconStyle>");
+                    writer.WriteLine("        <Icon>");
+                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>");
+                    writer.WriteLine("        </Icon>");
+                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
+                    writer.WriteLine("      </IconStyle>");
+                    writer.WriteLine("    </Style>");
+
+                    foreach (var result in estimationResults)
+                    {
+                        string lat = result.GetValueOrDefault("est_Lat2", "");
+                        string lon = result.GetValueOrDefault("est_Lon2", "");
+                        string cellId = result.GetValueOrDefault("CellId", "");
+                        string cellIdentity = result.GetValueOrDefault("cellIdentity", "");
+                        string beamInfo = result.ContainsKey("BeamIndex") ? $", Beam: {result["BeamIndex"]}" : "";
+
+                        writer.WriteLine("    <Placemark>");
+                        writer.WriteLine($"      <name>{cellId}</name>");
+                        writer.WriteLine("      <description>");
+                        writer.WriteLine($"        <![CDATA[Cell ID: {cellId}{beamInfo}<br/>Cell Identity: {cellIdentity}]]>");
+                        writer.WriteLine("      </description>");
+                        writer.WriteLine("      <styleUrl>#red_balloon</styleUrl>");
+                        writer.WriteLine("      <Point>");
+                        writer.WriteLine($"        <coordinates>{lon},{lat},0</coordinates>");
+                        writer.WriteLine("      </Point>");
+                        writer.WriteLine("    </Placemark>");
+                    }
+
+                    writer.WriteLine("  </Document>");
+                    writer.WriteLine("</kml>");
+                }
+                Console.WriteLine($"Map KML saved to {mapKmlFilename}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error generating map KML: {ex.Message}");
+            }
         }
 
         public static void save_extract_step3(List<Dictionary<string, string>> finalPoints, string outputFilename, double maxCinr)

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>map_ch126510_Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect</name>
+    <Style id="red_balloon">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Placemark>
+      <name>191</name>
+      <description>
+        <![CDATA[Cell ID: 191, Beam: 1<br/>Cell Identity: 5497360385]]>
+      </description>
+      <styleUrl>#red_balloon</styleUrl>
+      <Point>
+        <coordinates>-77.289403,39.237056,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>370</name>
+      <description>
+        <![CDATA[Cell ID: 370, Beam: 1<br/>Cell Identity: 5488136195]]>
+      </description>
+      <styleUrl>#red_balloon</styleUrl>
+      <Point>
+        <coordinates>-77.330836,39.198647,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>691</name>
+      <description>
+        <![CDATA[Cell ID: 691, Beam: 1<br/>Cell Identity: 5497360386]]>
+      </description>
+      <styleUrl>#red_balloon</styleUrl>
+      <Point>
+        <coordinates>-77.281613,39.228642,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>705</name>
+      <description>
+        <![CDATA[Cell ID: 705, Beam: 1<br/>Cell Identity: 5488136194]]>
+      </description>
+      <styleUrl>#red_balloon</styleUrl>
+      <Point>
+        <coordinates>-77.250163,39.224135,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>
