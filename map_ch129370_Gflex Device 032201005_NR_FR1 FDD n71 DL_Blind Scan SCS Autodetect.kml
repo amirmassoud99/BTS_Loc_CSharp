@@ -10,6 +10,14 @@
         <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
       </IconStyle>
     </Style>
+    <Style id="yellow_circle_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
     <Style id="pink_circle_style">
       <IconStyle>
         <Icon>
@@ -29,9 +37,9 @@
     <Placemark>
       <name>544</name>
       <description>
-        <![CDATA[Cell ID: 544, Beam: 3<br/>Cell Identity: 1814560816<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 544, Beam: 3<br/>Cell Identity: 1814560816<br/>Confidence: Low]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#yellow_circle_style</styleUrl>
       <Point>
         <coordinates>-77.210945,39.110930,0</coordinates>
       </Point>
@@ -39,7 +47,7 @@
     <Placemark>
       <name>65</name>
       <description>
-        <![CDATA[Cell ID: 65, Beam: 3<br/>Cell Identity: 1814560902<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 65, Beam: 3<br/>Cell Identity: 1814560902<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_circle_style</styleUrl>
       <Point>
@@ -49,7 +57,7 @@
     <Placemark>
       <name>373</name>
       <description>
-        <![CDATA[Cell ID: 373, Beam: 3<br/>Cell Identity: 1814560942<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 373, Beam: 3<br/>Cell Identity: 1814560942<br/>Confidence: High]]>
       </description>
       <styleUrl>#pink_circle_style</styleUrl>
       <Point>
@@ -59,7 +67,7 @@
     <Placemark>
       <name>204</name>
       <description>
-        <![CDATA[Cell ID: 204, Beam: 3<br/>Cell Identity: 1814560943<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 204, Beam: 3<br/>Cell Identity: 1814560943<br/>Confidence: High]]>
       </description>
       <styleUrl>#pink_circle_style</styleUrl>
       <Point>
@@ -69,7 +77,7 @@
     <Placemark>
       <name>206</name>
       <description>
-        <![CDATA[Cell ID: 206, Beam: 3<br/>Cell Identity: 1814560944<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 206, Beam: 3<br/>Cell Identity: 1814560944<br/>Confidence: High]]>
       </description>
       <styleUrl>#pink_circle_style</styleUrl>
       <Point>
@@ -79,7 +87,7 @@
     <Placemark>
       <name>525</name>
       <description>
-        <![CDATA[Cell ID: 525, Beam: 3<br/>Cell Identity: 1814560985<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 525, Beam: 3<br/>Cell Identity: 1814560985<br/>Confidence: High]]>
       </description>
       <styleUrl>#pink_circle_style</styleUrl>
       <Point>
@@ -89,7 +97,7 @@
     <Placemark>
       <name>527</name>
       <description>
-        <![CDATA[Cell ID: 527, Beam: 3<br/>Cell Identity: 1814560986<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 527, Beam: 3<br/>Cell Identity: 1814560986<br/>Confidence: High]]>
       </description>
       <styleUrl>#pink_circle_style</styleUrl>
       <Point>
@@ -99,7 +107,7 @@
     <Placemark>
       <name>307</name>
       <description>
-        <![CDATA[Cell ID: 307, Beam: 3<br/>Cell Identity: 1814561068<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 307, Beam: 3<br/>Cell Identity: 1814561068<br/>Confidence: High]]>
       </description>
       <styleUrl>#pink_circle_style</styleUrl>
       <Point>
@@ -109,7 +117,7 @@
     <Placemark>
       <name>768</name>
       <description>
-        <![CDATA[Cell ID: 768, Beam: 3<br/>Cell Identity: 1814561069<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 768, Beam: 3<br/>Cell Identity: 1814561069<br/>Confidence: High]]>
       </description>
       <styleUrl>#pink_circle_style</styleUrl>
       <Point>
@@ -119,7 +127,7 @@
     <Placemark>
       <name>601</name>
       <description>
-        <![CDATA[Cell ID: 601, Beam: 3<br/>Cell Identity: 1814561110<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 601, Beam: 3<br/>Cell Identity: 1814561110<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_circle_style</styleUrl>
       <Point>
@@ -129,7 +137,7 @@
     <Placemark>
       <name>810</name>
       <description>
-        <![CDATA[Cell ID: 810, Beam: 3<br/>Cell Identity: 1814561131<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 810, Beam: 3<br/>Cell Identity: 1814561131<br/>Confidence: High]]>
       </description>
       <styleUrl>#pink_circle_style</styleUrl>
       <Point>
@@ -139,7 +147,7 @@
     <Placemark>
       <name>793</name>
       <description>
-        <![CDATA[Cell ID: 793, Beam: 3<br/>Cell Identity: 1814561133<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 793, Beam: 3<br/>Cell Identity: 1814561133<br/>Confidence: High]]>
       </description>
       <styleUrl>#pink_circle_style</styleUrl>
       <Point>
@@ -149,9 +157,9 @@
     <Placemark>
       <name>273</name>
       <description>
-        <![CDATA[Cell ID: 273, Beam: 3<br/>Cell Identity: 1814561321<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 273, Beam: 3<br/>Cell Identity: 1814561321<br/>Confidence: Low]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#yellow_circle_style</styleUrl>
       <Point>
         <coordinates>-77.284568,39.233126,0</coordinates>
       </Point>

@@ -10,6 +10,14 @@
         <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
       </IconStyle>
     </Style>
+    <Style id="yellow_circle_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
     <Style id="pink_circle_style">
       <IconStyle>
         <Icon>
@@ -29,7 +37,7 @@
     <Placemark>
       <name>705</name>
       <description>
-        <![CDATA[Cell ID: 705, Beam: 1<br/>Cell Identity: 5488136194<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 705, Beam: 1<br/>Cell Identity: 5488136194<br/>Confidence: High]]>
       </description>
       <styleUrl>#pink_circle_style</styleUrl>
       <Point>
@@ -39,7 +47,7 @@
     <Placemark>
       <name>370</name>
       <description>
-        <![CDATA[Cell ID: 370, Beam: 1<br/>Cell Identity: 5488136195<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 370, Beam: 1<br/>Cell Identity: 5488136195<br/>Confidence: High]]>
       </description>
       <styleUrl>#pink_circle_style</styleUrl>
       <Point>
@@ -49,7 +57,7 @@
     <Placemark>
       <name>191</name>
       <description>
-        <![CDATA[Cell ID: 191, Beam: 1<br/>Cell Identity: 5497360385<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 191, Beam: 1<br/>Cell Identity: 5497360385<br/>Confidence: High]]>
       </description>
       <styleUrl>#pink_circle_style</styleUrl>
       <Point>
@@ -59,7 +67,7 @@
     <Placemark>
       <name>691</name>
       <description>
-        <![CDATA[Cell ID: 691, Beam: 1<br/>Cell Identity: 5497360386<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 691, Beam: 1<br/>Cell Identity: 5497360386<br/>Confidence: High]]>
       </description>
       <styleUrl>#pink_circle_style</styleUrl>
       <Point>

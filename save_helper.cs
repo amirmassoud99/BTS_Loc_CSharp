@@ -201,6 +201,15 @@ namespace BTS_Location_Estimation
                 // 4. Combine all placemarks
                 placemarks.AddRange(groupPlacemarks);
 
+                // 5. Override styles for low confidence points
+                foreach (var p in placemarks)
+                {
+                    if (p.Confidence == "Low")
+                    {
+                        p.StyleId = "yellow_circle_style";
+                    }
+                }
+
                 string mapName = Path.GetFileNameWithoutExtension(mapKmlFilename);
                 using (var writer = new StreamWriter(mapKmlFilename))
                 {
@@ -214,6 +223,16 @@ namespace BTS_Location_Estimation
                     writer.WriteLine("      <IconStyle>");
                     writer.WriteLine("        <Icon>");
                     writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>");
+                    writer.WriteLine("        </Icon>");
+                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
+                    writer.WriteLine("      </IconStyle>");
+                    writer.WriteLine("    </Style>");
+
+                    // Style for low confidence points (yellow circle)
+                    writer.WriteLine("    <Style id=\"yellow_circle_style\">");
+                    writer.WriteLine("      <IconStyle>");
+                    writer.WriteLine("        <Icon>");
+                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href>");
                     writer.WriteLine("        </Icon>");
                     writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
                     writer.WriteLine("      </IconStyle>");

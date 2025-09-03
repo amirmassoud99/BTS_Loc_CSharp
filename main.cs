@@ -24,7 +24,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.0.10";
+        public const string SW_VERSION = "1.0.1.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -152,6 +152,13 @@ namespace BTS_Location_Estimation
 
             Console.WriteLine($"Estimated Final Location for Cell {group.Key.CellId} (Lat, Lon): ({est_Lat2:F6}, {est_Lon2:F6})");
 
+            // Debugging trap for a specific channel and cell ID
+            if (group.Key.Channel == "125530" && group.Key.CellId == "1101")
+            {
+                // You can set a breakpoint here to examine the 'group' variable and its cell identities.
+                Console.WriteLine("Debug Trap Hit for Channel 125530 and CellId 11");
+            }
+
             // Extract and combine unique cellIdentity values for the group
             var cellIdentities = group
                 .Where(p => p.ContainsKey("cellIdentity") && !string.IsNullOrWhiteSpace(p["cellIdentity"]))
@@ -159,6 +166,12 @@ namespace BTS_Location_Estimation
                 .Distinct()
                 .ToList();
             string combinedCellIdentity = string.Join("-", cellIdentities);
+
+            string confidence = "High";
+            if (timeAdjustedPoints.Count < 8 && maxCinr < 12)
+            {
+                confidence = "Low";
+            }
 
             var resultDict = new Dictionary<string, string>
             {
@@ -174,7 +187,8 @@ namespace BTS_Location_Estimation
                 { "est_Lat2", est_Lat2.ToString("F6", CultureInfo.InvariantCulture) },
                 { "est_Lon2", est_Lon2.ToString("F6", CultureInfo.InvariantCulture) },
                 { "Max_cinr", maxCinr.ToString("F2", CultureInfo.InvariantCulture) },
-                { "Num_points", timeAdjustedPoints.Count.ToString() }
+                { "Num_points", timeAdjustedPoints.Count.ToString() },
+                { "Confidence", confidence }
             };
             estimationResults.Add(resultDict);
         }
