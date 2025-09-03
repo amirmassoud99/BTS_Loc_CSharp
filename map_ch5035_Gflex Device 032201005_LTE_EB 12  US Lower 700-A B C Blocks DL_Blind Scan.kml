@@ -10,6 +10,14 @@
         <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
       </IconStyle>
     </Style>
+    <Style id="pink_circle_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/pink-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
     <Style id="pink_pin_style">
       <IconStyle>
         <Icon>
@@ -19,63 +27,33 @@
       </IconStyle>
     </Style>
     <Placemark>
-      <name>395_276_394</name>
+      <name>395</name>
       <description>
-        <![CDATA[Grouped Cell Identities: 27997461_27997462_27997463]]>
+        <![CDATA[Cell ID: 395<br/>Cell Identity: 27997461<br/>Confidence: N/A]]>
       </description>
-      <styleUrl>#pink_pin_style</styleUrl>
+      <styleUrl>#pink_circle_style</styleUrl>
       <Point>
-        <coordinates>-77.219800,39.143999,0</coordinates>
+        <coordinates>-77.218796,39.145473,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
-      <name>308_306_307</name>
+      <name>276</name>
       <description>
-        <![CDATA[Grouped Cell Identities: 122515460_122515461_122515462]]>
+        <![CDATA[Cell ID: 276<br/>Cell Identity: 27997462<br/>Confidence: N/A]]>
       </description>
-      <styleUrl>#pink_pin_style</styleUrl>
+      <styleUrl>#pink_circle_style</styleUrl>
       <Point>
-        <coordinates>-77.245559,39.127886,0</coordinates>
+        <coordinates>-77.219958,39.143002,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
-      <name>449_474_316</name>
+      <name>394</name>
       <description>
-        <![CDATA[Grouped Cell Identities: 223996949_223996950_223996951]]>
+        <![CDATA[Cell ID: 394<br/>Cell Identity: 27997463<br/>Confidence: N/A]]>
       </description>
-      <styleUrl>#pink_pin_style</styleUrl>
+      <styleUrl>#pink_circle_style</styleUrl>
       <Point>
-        <coordinates>-77.276578,39.213636,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>489_490</name>
-      <description>
-        <![CDATA[Grouped Cell Identities: 122153221_122153223]]>
-      </description>
-      <styleUrl>#pink_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.180467,39.119923,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>389_223</name>
-      <description>
-        <![CDATA[Grouped Cell Identities: 122590229_122590231]]>
-      </description>
-      <styleUrl>#pink_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.204442,39.138941,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>473_471</name>
-      <description>
-        <![CDATA[Grouped Cell Identities: 224724757_224724758]]>
-      </description>
-      <styleUrl>#pink_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.286361,39.229687,0</coordinates>
+        <coordinates>-77.220645,39.143521,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -139,6 +117,26 @@
       </Point>
     </Placemark>
     <Placemark>
+      <name>489</name>
+      <description>
+        <![CDATA[Cell ID: 489<br/>Cell Identity: 122153221<br/>Confidence: N/A]]>
+      </description>
+      <styleUrl>#pink_circle_style</styleUrl>
+      <Point>
+        <coordinates>-77.178241,39.119403,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>490</name>
+      <description>
+        <![CDATA[Cell ID: 490<br/>Cell Identity: 122153223<br/>Confidence: N/A]]>
+      </description>
+      <styleUrl>#pink_circle_style</styleUrl>
+      <Point>
+        <coordinates>-77.182694,39.120443,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
       <name>94</name>
       <description>
         <![CDATA[Cell ID: 94<br/>Cell Identity: 122153751<br/>Confidence: N/A]]>
@@ -146,6 +144,56 @@
       <styleUrl>#red_circle_style</styleUrl>
       <Point>
         <coordinates>-77.206488,39.135770,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>308</name>
+      <description>
+        <![CDATA[Cell ID: 308<br/>Cell Identity: 122515460<br/>Confidence: N/A]]>
+      </description>
+      <styleUrl>#pink_circle_style</styleUrl>
+      <Point>
+        <coordinates>-77.310400,39.082742,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>306</name>
+      <description>
+        <![CDATA[Cell ID: 306<br/>Cell Identity: 122515461<br/>Confidence: N/A]]>
+      </description>
+      <styleUrl>#pink_circle_style</styleUrl>
+      <Point>
+        <coordinates>-77.212497,39.151006,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>307</name>
+      <description>
+        <![CDATA[Cell ID: 307<br/>Cell Identity: 122515462<br/>Confidence: N/A]]>
+      </description>
+      <styleUrl>#pink_circle_style</styleUrl>
+      <Point>
+        <coordinates>-77.213780,39.149911,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>389</name>
+      <description>
+        <![CDATA[Cell ID: 389<br/>Cell Identity: 122590229<br/>Confidence: N/A]]>
+      </description>
+      <styleUrl>#pink_circle_style</styleUrl>
+      <Point>
+        <coordinates>-77.204714,39.138578,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>223</name>
+      <description>
+        <![CDATA[Cell ID: 223<br/>Cell Identity: 122590231<br/>Confidence: N/A]]>
+      </description>
+      <styleUrl>#pink_circle_style</styleUrl>
+      <Point>
+        <coordinates>-77.204169,39.139304,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -166,6 +214,116 @@
       <styleUrl>#red_circle_style</styleUrl>
       <Point>
         <coordinates>-77.214538,39.120330,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>449</name>
+      <description>
+        <![CDATA[Cell ID: 449<br/>Cell Identity: 223996949<br/>Confidence: N/A]]>
+      </description>
+      <styleUrl>#pink_circle_style</styleUrl>
+      <Point>
+        <coordinates>-77.277786,39.217587,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>474</name>
+      <description>
+        <![CDATA[Cell ID: 474<br/>Cell Identity: 223996950<br/>Confidence: N/A]]>
+      </description>
+      <styleUrl>#pink_circle_style</styleUrl>
+      <Point>
+        <coordinates>-77.277200,39.210593,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>316</name>
+      <description>
+        <![CDATA[Cell ID: 316<br/>Cell Identity: 223996951<br/>Confidence: N/A]]>
+      </description>
+      <styleUrl>#pink_circle_style</styleUrl>
+      <Point>
+        <coordinates>-77.274748,39.212728,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>473</name>
+      <description>
+        <![CDATA[Cell ID: 473<br/>Cell Identity: 224724757<br/>Confidence: N/A]]>
+      </description>
+      <styleUrl>#pink_circle_style</styleUrl>
+      <Point>
+        <coordinates>-77.285803,39.229852,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>471</name>
+      <description>
+        <![CDATA[Cell ID: 471<br/>Cell Identity: 224724758<br/>Confidence: N/A]]>
+      </description>
+      <styleUrl>#pink_circle_style</styleUrl>
+      <Point>
+        <coordinates>-77.286920,39.229523,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>395_276_394</name>
+      <description>
+        <![CDATA[Grouped Cell Identities: 27997461_27997462_27997463]]>
+      </description>
+      <styleUrl>#pink_pin_style</styleUrl>
+      <Point>
+        <coordinates>-77.219800,39.143999,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>308_306_307</name>
+      <description>
+        <![CDATA[Grouped Cell Identities: 122515460_122515461_122515462]]>
+      </description>
+      <styleUrl>#pink_pin_style</styleUrl>
+      <Point>
+        <coordinates>-77.245559,39.127886,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>449_474_316</name>
+      <description>
+        <![CDATA[Grouped Cell Identities: 223996949_223996950_223996951]]>
+      </description>
+      <styleUrl>#pink_pin_style</styleUrl>
+      <Point>
+        <coordinates>-77.276578,39.213636,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>489_490</name>
+      <description>
+        <![CDATA[Grouped Cell Identities: 122153221_122153223]]>
+      </description>
+      <styleUrl>#pink_pin_style</styleUrl>
+      <Point>
+        <coordinates>-77.180467,39.119923,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>389_223</name>
+      <description>
+        <![CDATA[Grouped Cell Identities: 122590229_122590231]]>
+      </description>
+      <styleUrl>#pink_pin_style</styleUrl>
+      <Point>
+        <coordinates>-77.204442,39.138941,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>473_471</name>
+      <description>
+        <![CDATA[Grouped Cell Identities: 224724757_224724758]]>
+      </description>
+      <styleUrl>#pink_pin_style</styleUrl>
+      <Point>
+        <coordinates>-77.286361,39.229687,0</coordinates>
       </Point>
     </Placemark>
   </Document>

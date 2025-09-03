@@ -84,7 +84,7 @@ namespace BTS_Location_Estimation
             public string CellIdentity { get; set; } = "";
             public string BeamInfo { get; set; } = "";
             public string Confidence { get; set; } = "";
-            public bool IsGroup { get; set; } = false;
+            public string StyleId { get; set; } = "red_circle_style"; // Default to red circle
         }
 
         private static void generate_map_kml(List<Dictionary<string, string>> estimationResults, string mapKmlFilename)
@@ -107,9 +107,26 @@ namespace BTS_Location_Estimation
                     .ToList();
 
                 var placemarks = new List<Placemark>();
+                var groupPlacemarks = new List<Placemark>(); // Separate list for averaged groups
                 var processedIndices = new HashSet<int>();
 
-                // 2. Identify groups of three
+                // 1. Create placemarks for all individual points first
+                foreach (var dataPoint in parsedData)
+                {
+                    var result = dataPoint.Result;
+                    placemarks.Add(new Placemark
+                    {
+                        Lat = result.GetValueOrDefault("est_Lat2", ""),
+                        Lon = result.GetValueOrDefault("est_Lon2", ""),
+                        CellId = result.GetValueOrDefault("CellId", ""),
+                        CellIdentity = result.GetValueOrDefault("cellIdentity", ""),
+                        BeamInfo = result.ContainsKey("BeamIndex") ? $", Beam: {result["BeamIndex"]}" : "",
+                        Confidence = result.GetValueOrDefault("Confidence", "N/A"),
+                        StyleId = "red_circle_style" // Default style
+                    });
+                }
+
+                // 2. Identify groups of three, update styles, and create group placemark
                 for (int i = 0; i <= parsedData.Count - 3; i++)
                 {
                     if (processedIndices.Contains(i)) continue;
@@ -127,14 +144,19 @@ namespace BTS_Location_Estimation
                         double avgLat = group.Average(p => double.Parse(p.Result.GetValueOrDefault("est_Lat2", "0"), System.Globalization.CultureInfo.InvariantCulture));
                         double avgLon = group.Average(p => double.Parse(p.Result.GetValueOrDefault("est_Lon2", "0"), System.Globalization.CultureInfo.InvariantCulture));
 
-                        placemarks.Add(new Placemark
+                        groupPlacemarks.Add(new Placemark
                         {
                             Lat = avgLat.ToString("F6", System.Globalization.CultureInfo.InvariantCulture),
                             Lon = avgLon.ToString("F6", System.Globalization.CultureInfo.InvariantCulture),
                             CellId = string.Join("_", group.Select(p => p.Result.GetValueOrDefault("CellId", ""))),
                             CellIdentity = string.Join("_", group.Select(p => p.Result.GetValueOrDefault("cellIdentity", ""))),
-                            IsGroup = true
+                            StyleId = "pink_pin_style"
                         });
+
+                        // Update style for individual points in the group
+                        placemarks[i].StyleId = "pink_circle_style";
+                        placemarks[i + 1].StyleId = "pink_circle_style";
+                        placemarks[i + 2].StyleId = "pink_circle_style";
 
                         processedIndices.Add(i);
                         processedIndices.Add(i + 1);
@@ -142,7 +164,7 @@ namespace BTS_Location_Estimation
                     }
                 }
 
-                // 3. Identify groups of two
+                // 3. Identify groups of two, update styles, and create group placemark
                 for (int i = 0; i <= parsedData.Count - 2; i++)
                 {
                     if (processedIndices.Contains(i) || processedIndices.Contains(i + 1)) continue;
@@ -158,38 +180,26 @@ namespace BTS_Location_Estimation
                         double avgLat = group.Average(p => double.Parse(p.Result.GetValueOrDefault("est_Lat2", "0"), System.Globalization.CultureInfo.InvariantCulture));
                         double avgLon = group.Average(p => double.Parse(p.Result.GetValueOrDefault("est_Lon2", "0"), System.Globalization.CultureInfo.InvariantCulture));
 
-                        placemarks.Add(new Placemark
+                        groupPlacemarks.Add(new Placemark
                         {
                             Lat = avgLat.ToString("F6", System.Globalization.CultureInfo.InvariantCulture),
                             Lon = avgLon.ToString("F6", System.Globalization.CultureInfo.InvariantCulture),
                             CellId = string.Join("_", group.Select(p => p.Result.GetValueOrDefault("CellId", ""))),
                             CellIdentity = string.Join("_", group.Select(p => p.Result.GetValueOrDefault("cellIdentity", ""))),
-                            IsGroup = true
+                            StyleId = "pink_pin_style"
                         });
+
+                        // Update style for individual points in the group
+                        placemarks[i].StyleId = "pink_circle_style";
+                        placemarks[i + 1].StyleId = "pink_circle_style";
 
                         processedIndices.Add(i);
                         processedIndices.Add(i + 1);
                     }
                 }
 
-                // 4. Add remaining single points
-                for (int i = 0; i < parsedData.Count; i++)
-                {
-                    if (!processedIndices.Contains(i))
-                    {
-                        var result = parsedData[i].Result;
-                        placemarks.Add(new Placemark
-                        {
-                            Lat = result.GetValueOrDefault("est_Lat2", ""),
-                            Lon = result.GetValueOrDefault("est_Lon2", ""),
-                            CellId = result.GetValueOrDefault("CellId", ""),
-                            CellIdentity = result.GetValueOrDefault("cellIdentity", ""),
-                            BeamInfo = result.ContainsKey("BeamIndex") ? $", Beam: {result["BeamIndex"]}" : "",
-                            Confidence = result.GetValueOrDefault("Confidence", "N/A"),
-                            IsGroup = false
-                        });
-                    }
-                }
+                // 4. Combine all placemarks
+                placemarks.AddRange(groupPlacemarks);
 
                 string mapName = Path.GetFileNameWithoutExtension(mapKmlFilename);
                 using (var writer = new StreamWriter(mapKmlFilename))
@@ -209,7 +219,17 @@ namespace BTS_Location_Estimation
                     writer.WriteLine("      </IconStyle>");
                     writer.WriteLine("    </Style>");
 
-                    // Style for grouped points (pink pushpin)
+                    // Style for grouped points (pink circle for individual members)
+                    writer.WriteLine("    <Style id=\"pink_circle_style\">");
+                    writer.WriteLine("      <IconStyle>");
+                    writer.WriteLine("        <Icon>");
+                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/pink-circle.png</href>");
+                    writer.WriteLine("        </Icon>");
+                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
+                    writer.WriteLine("      </IconStyle>");
+                    writer.WriteLine("    </Style>");
+
+                    // Style for grouped points (pink pushpin for average)
                     writer.WriteLine("    <Style id=\"pink_pin_style\">");
                     writer.WriteLine("      <IconStyle>");
                     writer.WriteLine("        <Icon>");
@@ -224,7 +244,7 @@ namespace BTS_Location_Estimation
                         writer.WriteLine("    <Placemark>");
                         writer.WriteLine($"      <name>{p.CellId}</name>");
                         writer.WriteLine("      <description>");
-                        if (p.IsGroup)
+                        if (p.StyleId == "pink_pin_style")
                         {
                             writer.WriteLine($"        <![CDATA[Grouped Cell Identities: {p.CellIdentity}]]>");
                         }
@@ -233,7 +253,7 @@ namespace BTS_Location_Estimation
                             writer.WriteLine($"        <![CDATA[Cell ID: {p.CellId}{p.BeamInfo}<br/>Cell Identity: {p.CellIdentity}<br/>Confidence: {p.Confidence}]]>");
                         }
                         writer.WriteLine("      </description>");
-                        writer.WriteLine($"      <styleUrl>{(p.IsGroup ? "#pink_pin_style" : "#red_circle_style")}</styleUrl>");
+                        writer.WriteLine($"      <styleUrl>#{p.StyleId}</styleUrl>");
                         writer.WriteLine("      <Point>");
                         writer.WriteLine($"        <coordinates>{p.Lon},{p.Lat},0</coordinates>");
                         writer.WriteLine("      </Point>");
