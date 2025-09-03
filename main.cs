@@ -23,7 +23,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.0.4";
+        public const string SW_VERSION = "1.0.0.6";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -58,15 +58,97 @@ namespace BTS_Location_Estimation
             Console.WriteLine($"BTS Location Estimation version {SW_VERSION}");
             // --- Target and File Configuration ---
             // Update the path and filenames as needed
-           string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250828_Gaitherburg-Drive\\";
-           //string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\MatlabRef\\";
-           
+
+            /**********WCDMA Batch */
+            /*
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\Drive test WCDMA MBS_20230111_144045\";
             List<string> inputFilenames = new List<string>
             {
-               
-                //"Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz_Enhanced Top N Signal Auto Bandwidth Channel 39750 - 2506.000000 MHz.csv"
+                //"Gflex Device 019999095_UMTS WCDMA_UB I  2100 (IMT-2000) DL_Blind Scan.csv",
+                "Gflex Device 019999095_UMTS WCDMA_UB III  1800 (DCS) DL_Blind Scan.csv",
+                "Gflex Device 019999095_UMTS WCDMA_UB VII  2600 (IMT Extension) DL_Blind Scan.csv",
+                "Gflex Device 019999095_UMTS WCDMA_UB VIII  900 DL_Blind Scan.csv"
+            };
+            */
+
+            //Batch processing Drive 1 LTE NR
+            /*
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\7.0.2.4\20250813_Drive2-SIB1-onetime\";
+            // List of input filenames to process in batch
+            List<string> inputFilenames = new List<string>
+            {
+                "Gflex Device 019999090_NR_FR1 FDD n5 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 019999090_LTE_EB 25  1990 (Ext US PCS) DL_Blind Scan.csv",
+                "Gflex Device 019999090_LTE_EB 14  Upper 700-D Block DL_Blind Scan.csv",
+                "Gflex Device 019999090_LTE_EB 26  Upper Ext 850 DL_Blind Scan.csv",
+                "Gflex Device 019999090_LTE_EB 29  US 700 DL_Blind Scan.csv",
+                "Gflex Device 019999090_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.csv",
+                "Gflex Device 019999090_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
+                "Gflex Device 019999090_NR_FR1 FDD n25 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 019999090_NR_FR1 TDD n77_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 019999090_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 019999090_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv"
+            };
+            */
+
+            //Batch processing LTE NR Drive 2
+            /*
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\20250825_Sib1-cont\";
+            // List of input filenames to process in batch
+            List<string> inputFilenames = new List<string>
+            {
+                "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 71 DL_Blind Scan.csv",
+                "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz Lower_Blind Scan.csv",
+                "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv"
+            };
+            */
+
+            //Batch processing Drive 3_Washington DC
+            /*
+            string fileDirectory = @"C:\Users\amirsoltanian.PCTELUS\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\";
+            // List of input filenames to process in batch
+            List<string> inputFilenames = new List<string>
+            {
                 "Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
-                "Gflex Device 032201005_NR_FR1 FDD n25 DL_Blind Scan SCS Autodetect.csv"
+                "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 71 DL_Blind Scan.csv",
+                "Gflex Device 032201005_NR_FR1 FDD n25 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz_Blind Scan.csv"
+            };
+            */
+
+            //Batch processing Drive 4_Rockville Pike
+            /*
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Drive_Rockville_Pike\";
+            // List of input filenames to process in batch
+            List<string> inputFilenames = new List<string>
+            {
+                "Gflex Device 032201020_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
+                "Gflex Device 032201020_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
+                "Gflex Device 032201020_LTE_EB 14  Upper 700-D Block DL_Blind Scan.csv",
+                "Gflex Device 032201020_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.csv",
+                "Gflex Device 032201020_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
+                "Gflex Device 032201020_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 032201020_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv"
+            };
+            */
+
+            //Batch processing Drive 5_Gaithersuburg
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250828_Gaitherburg-Drive\";
+            // List of input filenames to process in batch
+            List<string> inputFilenames = new List<string>
+            {
+                "Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
+                "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv"
             };
 
             foreach (var inputFilename in inputFilenames)
@@ -85,14 +167,15 @@ namespace BTS_Location_Estimation
 
                 string filenameOnly = Path.GetFileNameWithoutExtension(inputFilename);
                 string step1Filename = $"step1_{filenameOnly}.csv";
-                save_extrac_step1(allData, step1Filename);
+                //save_extrac_step1(allData, step1Filename);
 
                 var filteredData = InputOutputFileProc.filter_cinr_minimum_PCI(allData, CINR_THRESH, MINIMUM_CELL_ID_COUNT);
                 string step2Filename = $"step2_{filenameOnly}.csv";
-                save_extract_step2(filteredData, step2Filename);
+                //save_extract_step2(filteredData, step2Filename);
 
                 // Group data by channel and cell to process each one individually
-                var groupedData = filteredData.GroupBy(row => new {
+                var groupedData = filteredData.GroupBy(row => new
+                {
                     Channel = row.GetValueOrDefault("channel", "N/A"),
                     CellId = row.GetValueOrDefault("cellId", "N/A")
                 });
@@ -164,8 +247,8 @@ namespace BTS_Location_Estimation
                 var resultsWithBeamIndex = splitCellidBeamforNR(fileType, estimationResults);
 
                 var sortedResults = resultsWithBeamIndex
-                    .OrderBy(d => d["Channel"])
-                    .ThenBy(d => d["CellId"])
+                    .OrderBy(d => int.TryParse(d["Channel"], out int ch) ? ch : int.MaxValue)
+                    .ThenBy(d => int.TryParse(d["CellId"], out int id) ? id : int.MaxValue)
                     .ToList();
                 save_estimation_results(sortedResults, estimateFilename);
             }
