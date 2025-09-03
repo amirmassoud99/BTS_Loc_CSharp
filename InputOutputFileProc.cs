@@ -10,13 +10,116 @@ namespace BTS_Location_Estimation
 
     public static class InputOutputFileProc
     {
-        public static int GetFileType(string filePath)
+        public const int LTE_TOPN_FILE_TYPE = 1;
+        public const int LTE_BLIND_FILE_TYPE = 2;
+        public const int NR_TOPN_FILE_TYPE = 3;
+        public const int NR_FILE_TYPE = 4;
+        public const int WCDMA_FILE_TYPE = 5;
+
+        public static (string fileDirectory, List<string> inputFilenames) GetFileConfigurations()
         {
-            if (filePath.Contains("LTE") && filePath.Contains("Top N")) return 1;
-            if (filePath.Contains("LTE") && filePath.Contains("Blind")) return 2;
-            if (filePath.Contains("NR") && (filePath.Contains("Topn") || filePath.Contains("Top N"))) return 3;
-            if (filePath.Contains("NR") && filePath.Contains("Blind")) return 4;
-            if (filePath.Contains("WCDMA")) return 5;
+            /**********WCDMA Batch */
+            /*
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\Drive test WCDMA MBS_20230111_144045\";
+            List<string> inputFilenames = new List<string>
+            {
+                //"Gflex Device 019999095_UMTS WCDMA_UB I  2100 (IMT-2000) DL_Blind Scan.csv",
+                "Gflex Device 019999095_UMTS WCDMA_UB III  1800 (DCS) DL_Blind Scan.csv",
+                "Gflex Device 019999095_UMTS WCDMA_UB VII  2600 (IMT Extension) DL_Blind Scan.csv",
+                "Gflex Device 019999095_UMTS WCDMA_UB VIII  900 DL_Blind Scan.csv"
+            };
+            */
+
+            //Batch processing Drive 1 LTE NR
+            /*
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\7.0.2.4\20250813_Drive2-SIB1-onetime\";
+            // List of input filenames to process in batch
+            List<string> inputFilenames = new List<string>
+            {
+                "Gflex Device 019999090_NR_FR1 FDD n5 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 019999090_LTE_EB 25  1990 (Ext US PCS) DL_Blind Scan.csv",
+                "Gflex Device 019999090_LTE_EB 14  Upper 700-D Block DL_Blind Scan.csv",
+                "Gflex Device 019999090_LTE_EB 26  Upper Ext 850 DL_Blind Scan.csv",
+                "Gflex Device 019999090_LTE_EB 29  US 700 DL_Blind Scan.csv",
+                "Gflex Device 019999090_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.csv",
+                "Gflex Device 019999090_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
+                "Gflex Device 019999090_NR_FR1 FDD n25 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 019999090_NR_FR1 TDD n77_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 019999090_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 019999090_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv"
+            };
+            */
+
+            //Batch processing LTE NR Drive 2
+            /*
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\20250825_Sib1-cont\";
+            // List of input filenames to process in batch
+            List<string> inputFilenames = new List<string>
+            {
+                "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 71 DL_Blind Scan.csv",
+                "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz Lower_Blind Scan.csv",
+                "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv"
+            };
+            */
+
+            //Batch processing Drive 3_Washington DC
+            /*
+            string fileDirectory = @"C:\Users\amirsoltanian.PCTELUS\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\";
+            // List of input filenames to process in batch
+            List<string> inputFilenames = new List<string>
+            {
+                "Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 71 DL_Blind Scan.csv",
+                "Gflex Device 032201005_NR_FR1 FDD n25 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz_Blind Scan.csv"
+            };
+            */
+
+            //Batch processing Drive 4_Rockville Pike
+            /*
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Drive_Rockville_Pike\";
+            // List of input filenames to process in batch
+            List<string> inputFilenames = new List<string>
+            {
+                "Gflex Device 032201020_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
+                "Gflex Device 032201020_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
+                "Gflex Device 032201020_LTE_EB 14  Upper 700-D Block DL_Blind Scan.csv",
+                "Gflex Device 032201020_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.csv",
+                "Gflex Device 032201020_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
+                "Gflex Device 032201020_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 032201020_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv"
+            };
+            */
+
+            //Batch processing Drive 5_Gaithersuburg
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250828_Gaitherburg-Drive\";
+            // List of input filenames to process in batch
+            List<string> inputFilenames = new List<string>
+            {
+                "Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
+                "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv"
+            };
+
+            return (fileDirectory, inputFilenames);
+        }
+
+        public static int GetFileType(string filename)
+        {
+            if (filename.Contains("LTE") && filename.Contains("Top N")) return 1;
+            if (filename.Contains("LTE") && filename.Contains("Blind")) return 2;
+            if (filename.Contains("NR") && (filename.Contains("Topn") || filename.Contains("Top N"))) return 3;
+            if (filename.Contains("NR") && filename.Contains("Blind")) return 4;
+            if (filename.Contains("WCDMA")) return 5;
             return 1; // Default to LTE Top N
         }
 
