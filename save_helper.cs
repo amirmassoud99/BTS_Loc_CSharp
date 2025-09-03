@@ -76,10 +76,121 @@ namespace BTS_Location_Estimation
             }
         }
 
+        private class Placemark
+        {
+            public string Lat { get; set; } = "";
+            public string Lon { get; set; } = "";
+            public string CellId { get; set; } = "";
+            public string CellIdentity { get; set; } = "";
+            public string BeamInfo { get; set; } = "";
+            public string Confidence { get; set; } = "";
+            public bool IsGroup { get; set; } = false;
+        }
+
         private static void generate_map_kml(List<Dictionary<string, string>> estimationResults, string mapKmlFilename)
         {
             try
             {
+                // 1. Parse and sort the data
+                var parsedData = estimationResults
+                    .Select(r =>
+                    {
+                        int.TryParse(r.GetValueOrDefault("cellIdentity", "-1"), out int id);
+                        return new
+                        {
+                            Result = r,
+                            CellIdentityNum = id
+                        };
+                    })
+                    .Where(x => x.CellIdentityNum != -1)
+                    .OrderBy(x => x.CellIdentityNum)
+                    .ToList();
+
+                var placemarks = new List<Placemark>();
+                var processedIndices = new HashSet<int>();
+
+                // 2. Identify groups of three
+                for (int i = 0; i <= parsedData.Count - 3; i++)
+                {
+                    if (processedIndices.Contains(i)) continue;
+
+                    var p1 = parsedData[i];
+                    var p2 = parsedData[i + 1];
+                    var p3 = parsedData[i + 2];
+
+                    int diff1 = p2.CellIdentityNum - p1.CellIdentityNum;
+                    int diff2 = p3.CellIdentityNum - p2.CellIdentityNum;
+
+                    if ((diff1 == 1 || diff1 == 2) && (diff2 == 1 || diff2 == 2))
+                    {
+                        var group = new[] { p1, p2, p3 };
+                        double avgLat = group.Average(p => double.Parse(p.Result.GetValueOrDefault("est_Lat2", "0"), System.Globalization.CultureInfo.InvariantCulture));
+                        double avgLon = group.Average(p => double.Parse(p.Result.GetValueOrDefault("est_Lon2", "0"), System.Globalization.CultureInfo.InvariantCulture));
+
+                        placemarks.Add(new Placemark
+                        {
+                            Lat = avgLat.ToString("F6", System.Globalization.CultureInfo.InvariantCulture),
+                            Lon = avgLon.ToString("F6", System.Globalization.CultureInfo.InvariantCulture),
+                            CellId = string.Join("_", group.Select(p => p.Result.GetValueOrDefault("CellId", ""))),
+                            CellIdentity = string.Join("_", group.Select(p => p.Result.GetValueOrDefault("cellIdentity", ""))),
+                            IsGroup = true
+                        });
+
+                        processedIndices.Add(i);
+                        processedIndices.Add(i + 1);
+                        processedIndices.Add(i + 2);
+                    }
+                }
+
+                // 3. Identify groups of two
+                for (int i = 0; i <= parsedData.Count - 2; i++)
+                {
+                    if (processedIndices.Contains(i) || processedIndices.Contains(i + 1)) continue;
+
+                    var p1 = parsedData[i];
+                    var p2 = parsedData[i + 1];
+
+                    int diff = p2.CellIdentityNum - p1.CellIdentityNum;
+
+                    if (diff == 1 || diff == 2)
+                    {
+                        var group = new[] { p1, p2 };
+                        double avgLat = group.Average(p => double.Parse(p.Result.GetValueOrDefault("est_Lat2", "0"), System.Globalization.CultureInfo.InvariantCulture));
+                        double avgLon = group.Average(p => double.Parse(p.Result.GetValueOrDefault("est_Lon2", "0"), System.Globalization.CultureInfo.InvariantCulture));
+
+                        placemarks.Add(new Placemark
+                        {
+                            Lat = avgLat.ToString("F6", System.Globalization.CultureInfo.InvariantCulture),
+                            Lon = avgLon.ToString("F6", System.Globalization.CultureInfo.InvariantCulture),
+                            CellId = string.Join("_", group.Select(p => p.Result.GetValueOrDefault("CellId", ""))),
+                            CellIdentity = string.Join("_", group.Select(p => p.Result.GetValueOrDefault("cellIdentity", ""))),
+                            IsGroup = true
+                        });
+
+                        processedIndices.Add(i);
+                        processedIndices.Add(i + 1);
+                    }
+                }
+
+                // 4. Add remaining single points
+                for (int i = 0; i < parsedData.Count; i++)
+                {
+                    if (!processedIndices.Contains(i))
+                    {
+                        var result = parsedData[i].Result;
+                        placemarks.Add(new Placemark
+                        {
+                            Lat = result.GetValueOrDefault("est_Lat2", ""),
+                            Lon = result.GetValueOrDefault("est_Lon2", ""),
+                            CellId = result.GetValueOrDefault("CellId", ""),
+                            CellIdentity = result.GetValueOrDefault("cellIdentity", ""),
+                            BeamInfo = result.ContainsKey("BeamIndex") ? $", Beam: {result["BeamIndex"]}" : "",
+                            Confidence = result.GetValueOrDefault("Confidence", "N/A"),
+                            IsGroup = false
+                        });
+                    }
+                }
+
                 string mapName = Path.GetFileNameWithoutExtension(mapKmlFilename);
                 using (var writer = new StreamWriter(mapKmlFilename))
                 {
@@ -87,7 +198,9 @@ namespace BTS_Location_Estimation
                     writer.WriteLine("<kml xmlns=\"http://www.opengis.net/kml/2.2\">");
                     writer.WriteLine("  <Document>");
                     writer.WriteLine($"    <name>{mapName}</name>");
-                    writer.WriteLine("    <Style id=\"red_balloon\">");
+
+                    // Style for single points (red circle)
+                    writer.WriteLine("    <Style id=\"red_circle_style\">");
                     writer.WriteLine("      <IconStyle>");
                     writer.WriteLine("        <Icon>");
                     writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>");
@@ -96,22 +209,33 @@ namespace BTS_Location_Estimation
                     writer.WriteLine("      </IconStyle>");
                     writer.WriteLine("    </Style>");
 
-                    foreach (var result in estimationResults)
-                    {
-                        string lat = result.GetValueOrDefault("est_Lat2", "");
-                        string lon = result.GetValueOrDefault("est_Lon2", "");
-                        string cellId = result.GetValueOrDefault("CellId", "");
-                        string cellIdentity = result.GetValueOrDefault("cellIdentity", "");
-                        string beamInfo = result.ContainsKey("BeamIndex") ? $", Beam: {result["BeamIndex"]}" : "";
+                    // Style for grouped points (pink pushpin)
+                    writer.WriteLine("    <Style id=\"pink_pin_style\">");
+                    writer.WriteLine("      <IconStyle>");
+                    writer.WriteLine("        <Icon>");
+                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/pushpin/pink-pushpin.png</href>");
+                    writer.WriteLine("        </Icon>");
+                    writer.WriteLine("        <hotSpot x=\"20\" y=\"2\" xunits=\"pixels\" yunits=\"pixels\"/>");
+                    writer.WriteLine("      </IconStyle>");
+                    writer.WriteLine("    </Style>");
 
+                    foreach (var p in placemarks)
+                    {
                         writer.WriteLine("    <Placemark>");
-                        writer.WriteLine($"      <name>{cellId}</name>");
+                        writer.WriteLine($"      <name>{p.CellId}</name>");
                         writer.WriteLine("      <description>");
-                        writer.WriteLine($"        <![CDATA[Cell ID: {cellId}{beamInfo}<br/>Cell Identity: {cellIdentity}]]>");
+                        if (p.IsGroup)
+                        {
+                            writer.WriteLine($"        <![CDATA[Grouped Cell Identities: {p.CellIdentity}]]>");
+                        }
+                        else
+                        {
+                            writer.WriteLine($"        <![CDATA[Cell ID: {p.CellId}{p.BeamInfo}<br/>Cell Identity: {p.CellIdentity}<br/>Confidence: {p.Confidence}]]>");
+                        }
                         writer.WriteLine("      </description>");
-                        writer.WriteLine("      <styleUrl>#red_balloon</styleUrl>");
+                        writer.WriteLine($"      <styleUrl>{(p.IsGroup ? "#pink_pin_style" : "#red_circle_style")}</styleUrl>");
                         writer.WriteLine("      <Point>");
-                        writer.WriteLine($"        <coordinates>{lon},{lat},0</coordinates>");
+                        writer.WriteLine($"        <coordinates>{p.Lon},{p.Lat},0</coordinates>");
                         writer.WriteLine("      </Point>");
                         writer.WriteLine("    </Placemark>");
                     }
