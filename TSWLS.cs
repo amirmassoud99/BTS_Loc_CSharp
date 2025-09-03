@@ -190,7 +190,7 @@ namespace BTS_Location_Estimation
                 double lon = double.Parse(points[i]["longitude"]);
                 sx[i] = lon * metersPerDegree * Math.Cos(latRef * PI / 180.0) - xRef;
                 sy[i] = lat * metersPerDegree - yRef;
-                ts[i] = double.Parse(points[i]["timeOffset"]);
+                ts[i] = double.Parse(points[i]["TimeOffset"]);
             }
 
             Vector<double>? tswls_results = tswls2(N, sx, sy, ts, c);

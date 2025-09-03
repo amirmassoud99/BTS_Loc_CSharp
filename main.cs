@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.0.1";
+        public const string SW_VERSION = "1.0.0.2";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -32,6 +32,7 @@ namespace BTS_Location_Estimation
         public const double WCDMA_SAMPLING_RATE_DIVISOR = 4.0;
         public const double WCDMA_TIME_OFFSET_WRAP_VALUE = 38400.0;
         public const int MINIMUM_POINTS_FOR_TSWLS = 4;
+        public const double SPEED_OF_LIGHT = 3e8; // Speed of light in m/s
         public const double CINR_THRESH = 0.0;
         public const double EC_IO_THRESHOLD = -18.0;
         public const double DISTANCE_THRESH = 100.0;
@@ -94,6 +95,8 @@ namespace BTS_Location_Estimation
                     CellId = row.GetValueOrDefault("cellId", "N/A")
                 });
 
+                var estimationResults = new List<Dictionary<string, string>>();
+
                 foreach (var group in groupedData)
                 {
                     var pointsForCell = group.ToList();
@@ -106,11 +109,48 @@ namespace BTS_Location_Estimation
                     // For example, save to a new CSV file for step 3
                     string step3Filename = $"step3_{filenameOnly}_ch{group.Key.Channel}_cell{group.Key.CellId}.csv";
                     save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
+
+                    // Run the TSWLS algorithm
+                    var tswlsResult = TSWLS.run_tswls(timeAdjustedPoints, MINIMUM_POINTS_FOR_TSWLS, SPEED_OF_LIGHT, METERS_PER_DEGREE, SEARCH_DIRECTION, DISTANCE_THRESH);
+
+                    if (tswlsResult != null)
+                    {
+                        var resultDict = new Dictionary<string, string>
+                        {
+                            { "Channel", group.Key.Channel },
+                            { "CellId", group.Key.CellId },
+                            { "xhat1", tswlsResult[0].ToString("F4", CultureInfo.InvariantCulture) },
+                            { "yhat1", tswlsResult[1].ToString("F4", CultureInfo.InvariantCulture) },
+                            { "xhat2", tswlsResult[2].ToString("F4", CultureInfo.InvariantCulture) },
+                            { "yhat2", tswlsResult[3].ToString("F4", CultureInfo.InvariantCulture) }
+                        };
+                        estimationResults.Add(resultDict);
+                    }
                 }
 
-
+                // Save the final estimation results
+                string estimateFilename = $"Estimate_{filenameOnly}.csv";
+                save_estimation_results(estimationResults, estimateFilename);
             }
             Console.WriteLine("Batch processing complete.");
+        }
+
+        private static void save_estimation_results(List<Dictionary<string, string>> estimationResults, string outputFilename)
+        {
+            using (var writer = new StreamWriter(outputFilename))
+            {
+                if (estimationResults.Any())
+                {
+                    var headers = estimationResults.First().Keys;
+                    writer.WriteLine(string.Join(",", headers));
+
+                    foreach (var result in estimationResults)
+                    {
+                        writer.WriteLine(string.Join(",", result.Values));
+                    }
+                }
+            }
+            Console.WriteLine($"\nFinal estimation results saved to {outputFilename}");
         }
 
         private static void save_extract_step3(List<Dictionary<string, string>> finalPoints, string outputFilename, double maxCinr)
