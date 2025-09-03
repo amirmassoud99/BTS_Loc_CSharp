@@ -21,6 +21,9 @@ namespace BTS_Location_Estimation
 
     public static class MainModule
     {
+        // --- Software Version ---
+        public const string SW_VERSION = "1.0.0.0";
+
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
         public const double LTE_SAMPLING_RATE_HZ = 30.72e6;
@@ -49,6 +52,7 @@ namespace BTS_Location_Estimation
         // ************************************************************************************
         public static void Main(string[] args)
         {
+            Console.WriteLine($"BTS Location Estimation version {SW_VERSION}");
             // --- Target and File Configuration ---
             // Update the path and filenames as needed
             //string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\7.0.2.4\20250813_Drive2-SIB1-onetime\\";
@@ -83,11 +87,50 @@ namespace BTS_Location_Estimation
                 string step2Filename = $"step2_{filenameOnly}.csv";
                 save_extract_step2(filteredData, step2Filename);
 
+                // Group data by channel and cell to process each one individually
+                var groupedData = filteredData.GroupBy(row => new {
+                    Channel = row.GetValueOrDefault("channel", "N/A"),
+                    CellId = row.GetValueOrDefault("cellId", "N/A")
+                });
 
+                foreach (var group in groupedData)
+                {
+                    var pointsForCell = group.ToList();
+                    var (finalPoints, maxCinr) = InputOutputFileProc.ExtractPointsWithDistance(pointsForCell, DISTANCE_THRESH, MAX_POINTS, METERS_PER_DEGREE);
+
+                    // You can now save or process the 'finalPoints' and 'maxCinr' for each cell
+                    // For example, save to a new CSV file for step 3
+                    string step3Filename = $"step3_{filenameOnly}_ch{group.Key.Channel}_cell{group.Key.CellId}.csv";
+                    save_extract_step3(finalPoints, step3Filename, maxCinr);
+                }
 
 
             }
             Console.WriteLine("Batch processing complete.");
+        }
+
+        private static void save_extract_step3(List<Dictionary<string, string>> finalPoints, string outputFilename, double maxCinr)
+        {
+            // This function saves the final, distance-filtered points for a single cell
+            // to a CSV file. It includes all the original data for the selected points
+            // and can be used as input for the final location estimation algorithms.
+            // The maximum CINR value is also available if needed for reporting.
+            using (var writer = new StreamWriter(outputFilename))
+            {
+                if (finalPoints.Any())
+                {
+                    // Write header from the keys of the first point
+                    var headers = finalPoints.First().Keys;
+                    writer.WriteLine(string.Join(",", headers));
+
+                    // Write data rows
+                    foreach (var point in finalPoints)
+                    {
+                        writer.WriteLine(string.Join(",", point.Values));
+                    }
+                }
+            }
+            Console.WriteLine($"Step 3 data for cell saved to {outputFilename} (Max CINR: {maxCinr:F2})");
         }
 
         private static void save_extract_step2(List<Dictionary<string, string>> filteredData, string outputFilename)

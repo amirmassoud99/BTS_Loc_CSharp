@@ -6,14 +6,7 @@ using System.Linq;
 
 namespace BTS_Location_Estimation
 {
-    public class RowData
-    {
-        public double Lat { get; set; }
-        public double Lon { get; set; }
-        public string CellId { get; set; }
-        public string CellIdentity { get; set; }
-        // ...existing code...
-    }
+
 
     public static class InputOutputFileProc
     {
@@ -27,11 +20,7 @@ namespace BTS_Location_Estimation
             return 1; // Default to LTE Top N
         }
 
-        public static void SaveCinrDistResultsCsv(List<Dictionary<string, string>> selectedPoints, string outputFilename, int channel, int cellId, int beamIndex)
-        {
-            // ...full implementation from previous port...
-            throw new NotImplementedException();
-        }
+
 
         public static string Trim(string s) => s?.Trim() ?? "";
 
@@ -45,7 +34,7 @@ namespace BTS_Location_Estimation
             //
             // A special handling is implemented for NR Blind Scan files (fileType = 4).
             // For these files, the 'Cell ID' and 'Beam Index' are combined into a single,
-            // unique identifier using the formula: new_cell_id = (original_cell_id * 10) + beam_index.
+            // unique identifier using the formula: new_cell_id = (original_cell_id * 100) + beam_index.
             // This composite ID is then stored under the "cellId" key, and the "beamIndex" key is omitted.
             var results = new List<Dictionary<string, string>>();
             if (!File.Exists(filePath))
@@ -150,7 +139,7 @@ namespace BTS_Location_Estimation
                         int.TryParse(values[cellIdIndex], out int cellId) &&
                         int.TryParse(values[beamIndexCol], out int beamIndex))
                     {
-                        genericRow["cellId"] = (cellId * 10 + beamIndex).ToString();
+                        genericRow["cellId"] = (cellId * 100 + beamIndex).ToString();
                     }
                     else
                     {
@@ -216,6 +205,78 @@ namespace BTS_Location_Estimation
 
             Console.WriteLine($"Filtered data down to {finalFilteredData.Count} rows after CINR and minimum count check.");
             return finalFilteredData;
+        }
+
+        public static Tuple<List<Dictionary<string, string>>, double> ExtractPointsWithDistance(
+            List<Dictionary<string, string>> extractedData,
+            double distanceThreshold,
+            int maxPoints,
+            double metersPerDegree)
+        {
+            // This function processes a list of data points for a single cell,
+            // filtering them based on geographic distance and signal quality (CINR).
+            // It ensures that the selected points are not too close to each other,
+            // picking the one with the best CINR if they are. This helps to
+            // select geographically distinct points with strong signals, which is
+            // crucial for accurate location estimation algorithms. The function
+            // returns the filtered list of points and the maximum CINR found.
+            if (extractedData == null || !extractedData.Any())
+            {
+                return Tuple.Create(new List<Dictionary<string, string>>(), -999.0);
+            }
+
+            var selectedPoints = new List<Dictionary<string, string>> { extractedData.First() };
+
+            double CalculateDistance(Dictionary<string, string> p1, Dictionary<string, string> p2)
+            {
+                if (p1 == null || p2 == null ||
+                    !p1.TryGetValue("latitude", out var latStr1) || !p1.TryGetValue("longitude", out var lonStr1) ||
+                    !p2.TryGetValue("latitude", out var latStr2) || !p2.TryGetValue("longitude", out var lonStr2) ||
+                    !double.TryParse(latStr1, NumberStyles.Any, CultureInfo.InvariantCulture, out double lat1) ||
+                    !double.TryParse(lonStr1, NumberStyles.Any, CultureInfo.InvariantCulture, out double lon1) ||
+                    !double.TryParse(latStr2, NumberStyles.Any, CultureInfo.InvariantCulture, out double lat2) ||
+                    !double.TryParse(lonStr2, NumberStyles.Any, CultureInfo.InvariantCulture, out double lon2))
+                {
+                    return -1.0; // Invalid data
+                }
+                return Math.Sqrt(Math.Pow(lat2 - lat1, 2) + Math.Pow(lon2 - lon1, 2)) * metersPerDegree;
+            }
+
+            for (int i = 1; i < extractedData.Count; ++i)
+            {
+                if (selectedPoints.Count >= maxPoints)
+                {
+                    break;
+                }
+                var currentPoint = extractedData[i];
+                var lastSelectedPoint = selectedPoints.Last();
+
+                double distance = CalculateDistance(currentPoint, lastSelectedPoint);
+                if (distance < 0) continue;
+
+                if (distance < distanceThreshold)
+                {
+                    if (currentPoint.TryGetValue("cinr", out var currentCinrStr) &&
+                        lastSelectedPoint.TryGetValue("cinr", out var lastCinrStr) &&
+                        double.TryParse(currentCinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double currentCinr) &&
+                        double.TryParse(lastCinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lastCinr) &&
+                        currentCinr > lastCinr)
+                    {
+                        selectedPoints[selectedPoints.Count - 1] = currentPoint; // Replace last point
+                    }
+                }
+                else
+                {
+                    selectedPoints.Add(currentPoint);
+                }
+            }
+
+            double maxCinr = selectedPoints
+                .Select(row => row.TryGetValue("cinr", out var cinrStr) && double.TryParse(cinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double cinr) ? cinr : -999.0)
+                .DefaultIfEmpty(-999.0)
+                .Max();
+
+            return Tuple.Create(selectedPoints, maxCinr);
         }
     }
 }
