@@ -9,6 +9,12 @@ namespace BTS_Location_Estimation
     {
         public static void save_estimation_results(List<Dictionary<string, string>> estimationResults, string outputFilename)
         {
+            // Delete the file if it exists to ensure a clean run
+            if (File.Exists(outputFilename))
+            {
+                File.Delete(outputFilename);
+            }
+
             using (var writer = new StreamWriter(outputFilename))
             {
                 if (estimationResults.Any())

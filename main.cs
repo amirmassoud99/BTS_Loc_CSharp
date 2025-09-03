@@ -58,14 +58,15 @@ namespace BTS_Location_Estimation
             Console.WriteLine($"BTS Location Estimation version {SW_VERSION}");
             // --- Target and File Configuration ---
             // Update the path and filenames as needed
-            //string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\7.0.2.4\20250813_Drive2-SIB1-onetime\\";
-           string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\MatlabRef\\";
+           string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250828_Gaitherburg-Drive\\";
+           //string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\MatlabRef\\";
            
             List<string> inputFilenames = new List<string>
             {
-                
-                "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz_Enhanced Top N Signal Auto Bandwidth Channel 39750 - 2506.000000 MHz.csv"
-                // ...other files...
+               
+                //"Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz_Enhanced Top N Signal Auto Bandwidth Channel 39750 - 2506.000000 MHz.csv"
+                "Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
+                "Gflex Device 032201005_NR_FR1 FDD n25 DL_Blind Scan SCS Autodetect.csv"
             };
 
             foreach (var inputFilename in inputFilenames)
@@ -159,9 +160,55 @@ namespace BTS_Location_Estimation
 
                 // Save the final estimation results
                 string estimateFilename = $"Estimate_{filenameOnly}.csv";
-                save_estimation_results(estimationResults, estimateFilename);
+
+                var resultsWithBeamIndex = splitCellidBeamforNR(fileType, estimationResults);
+
+                var sortedResults = resultsWithBeamIndex
+                    .OrderBy(d => d["Channel"])
+                    .ThenBy(d => d["CellId"])
+                    .ToList();
+                save_estimation_results(sortedResults, estimateFilename);
             }
             Console.WriteLine("Batch processing complete.");
+        }
+
+        private static List<Dictionary<string, string>> splitCellidBeamforNR(int fileType, List<Dictionary<string, string>> estimationResults)
+        {
+            if (fileType != 4)
+            {
+                return estimationResults;
+            }
+
+            var newEstimationResults = new List<Dictionary<string, string>>();
+            foreach (var result in estimationResults)
+            {
+                if (int.TryParse(result["CellId"], out int compositeCellId))
+                {
+                    int newCellId = compositeCellId / 100;
+                    int beamIndex = compositeCellId % 100;
+
+                    var newResult = new Dictionary<string, string>();
+                    foreach (var kvp in result)
+                    {
+                        if (kvp.Key == "CellId")
+                        {
+                            newResult.Add("CellId", newCellId.ToString());
+                            newResult.Add("BeamIndex", beamIndex.ToString());
+                        }
+                        else
+                        {
+                            newResult.Add(kvp.Key, kvp.Value);
+                        }
+                    }
+                    newEstimationResults.Add(newResult);
+                }
+                else
+                {
+                    // If parsing fails, add the original result back
+                    newEstimationResults.Add(result);
+                }
+            }
+            return newEstimationResults;
         }
     }
 }
