@@ -23,7 +23,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.0.8";
+        public const string SW_VERSION = "1.0.0.9";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;

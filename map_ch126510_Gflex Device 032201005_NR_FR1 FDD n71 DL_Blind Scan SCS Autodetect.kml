@@ -27,13 +27,13 @@
       </IconStyle>
     </Style>
     <Placemark>
-      <name>191</name>
+      <name>705</name>
       <description>
-        <![CDATA[Cell ID: 191, Beam: 1<br/>Cell Identity: 5497360385<br/>Confidence: N/A]]>
+        <![CDATA[Cell ID: 705, Beam: 1<br/>Cell Identity: 5488136194<br/>Confidence: N/A]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#pink_circle_style</styleUrl>
       <Point>
-        <coordinates>-77.289403,39.237056,0</coordinates>
+        <coordinates>-77.250163,39.224135,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -41,9 +41,19 @@
       <description>
         <![CDATA[Cell ID: 370, Beam: 1<br/>Cell Identity: 5488136195<br/>Confidence: N/A]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#pink_circle_style</styleUrl>
       <Point>
         <coordinates>-77.330836,39.198647,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>191</name>
+      <description>
+        <![CDATA[Cell ID: 191, Beam: 1<br/>Cell Identity: 5497360385<br/>Confidence: N/A]]>
+      </description>
+      <styleUrl>#pink_circle_style</styleUrl>
+      <Point>
+        <coordinates>-77.289403,39.237056,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -51,19 +61,29 @@
       <description>
         <![CDATA[Cell ID: 691, Beam: 1<br/>Cell Identity: 5497360386<br/>Confidence: N/A]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#pink_circle_style</styleUrl>
       <Point>
         <coordinates>-77.281613,39.228642,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
-      <name>705</name>
+      <name>705_370</name>
       <description>
-        <![CDATA[Cell ID: 705, Beam: 1<br/>Cell Identity: 5488136194<br/>Confidence: N/A]]>
+        <![CDATA[Grouped Cell Identities: 5488136194_5488136195]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#pink_pin_style</styleUrl>
       <Point>
-        <coordinates>-77.250163,39.224135,0</coordinates>
+        <coordinates>-77.290500,39.211391,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>191_691</name>
+      <description>
+        <![CDATA[Grouped Cell Identities: 5497360385_5497360386]]>
+      </description>
+      <styleUrl>#pink_pin_style</styleUrl>
+      <Point>
+        <coordinates>-77.285508,39.232849,0</coordinates>
       </Point>
     </Placemark>
   </Document>

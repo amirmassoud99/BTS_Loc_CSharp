@@ -95,7 +95,7 @@ namespace BTS_Location_Estimation
                 var parsedData = estimationResults
                     .Select(r =>
                     {
-                        int.TryParse(r.GetValueOrDefault("cellIdentity", "-1"), out int id);
+                        long.TryParse(r.GetValueOrDefault("cellIdentity", "-1"), out long id);
                         return new
                         {
                             Result = r,
@@ -135,8 +135,8 @@ namespace BTS_Location_Estimation
                     var p2 = parsedData[i + 1];
                     var p3 = parsedData[i + 2];
 
-                    int diff1 = p2.CellIdentityNum - p1.CellIdentityNum;
-                    int diff2 = p3.CellIdentityNum - p2.CellIdentityNum;
+                    long diff1 = p2.CellIdentityNum - p1.CellIdentityNum;
+                    long diff2 = p3.CellIdentityNum - p2.CellIdentityNum;
 
                     if ((diff1 == 1 || diff1 == 2) && (diff2 == 1 || diff2 == 2))
                     {
@@ -172,7 +172,7 @@ namespace BTS_Location_Estimation
                     var p1 = parsedData[i];
                     var p2 = parsedData[i + 1];
 
-                    int diff = p2.CellIdentityNum - p1.CellIdentityNum;
+                    long diff = p2.CellIdentityNum - p1.CellIdentityNum;
 
                     if (diff == 1 || diff == 2)
                     {
