@@ -318,6 +318,19 @@ namespace BTS_Location_Estimation
 
             return Vector<double>.Build.Dense(new double[] { xHat, yHat, r_0 });
         }
+
+        /// <summary>
+        /// C# implementation of the xy2LatLon function from MATLAB.
+        /// Converts local x, y coordinates back to latitude and longitude.
+        /// </summary>
+        /// <returns>A tuple containing the calculated Latitude and Longitude.</returns>
+        public static (double Lat, double Lon) xy2LatLon(double x, double y, double latRef, double lonRef, double metersPerDegree)
+        {
+            const double PI = Math.PI;
+            double lon = (x / metersPerDegree) / Math.Cos(latRef * PI / 180.0) + lonRef;
+            double lat = y / metersPerDegree + latRef;
+            return (lat, lon);
+        }
     }
 }
 

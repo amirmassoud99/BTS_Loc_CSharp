@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.0.2";
+        public const string SW_VERSION = "1.0.0.3";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -115,14 +115,27 @@ namespace BTS_Location_Estimation
 
                     if (tswlsResult != null)
                     {
+                        double xhat1 = tswlsResult[0];
+                        double yhat1 = tswlsResult[1];
+                        double xhat2 = tswlsResult[2];
+                        double yhat2 = tswlsResult[3];
+
+                        double latRef = double.Parse(timeAdjustedPoints[0]["latitude"], CultureInfo.InvariantCulture);
+                        double lonRef = double.Parse(timeAdjustedPoints[0]["longitude"], CultureInfo.InvariantCulture);
+
+                        var (est_Lat1, est_Lon1) = TSWLS.xy2LatLon(xhat1, yhat1, latRef, lonRef, METERS_PER_DEGREE);
+                        var (est_Lat2, est_Lon2) = TSWLS.xy2LatLon(xhat2, yhat2, latRef, lonRef, METERS_PER_DEGREE);
+
+                        Console.WriteLine($"Estimated Final Location for Cell {group.Key.CellId} (Lat, Lon): ({est_Lat2:F6}, {est_Lon2:F6})");
+
                         var resultDict = new Dictionary<string, string>
                         {
                             { "Channel", group.Key.Channel },
                             { "CellId", group.Key.CellId },
-                            { "xhat1", tswlsResult[0].ToString("F4", CultureInfo.InvariantCulture) },
-                            { "yhat1", tswlsResult[1].ToString("F4", CultureInfo.InvariantCulture) },
-                            { "xhat2", tswlsResult[2].ToString("F4", CultureInfo.InvariantCulture) },
-                            { "yhat2", tswlsResult[3].ToString("F4", CultureInfo.InvariantCulture) }
+                            { "est_Lat1", est_Lat1.ToString("F6", CultureInfo.InvariantCulture) },
+                            { "est_Lon1", est_Lon1.ToString("F6", CultureInfo.InvariantCulture) },
+                            { "est_Lat2", est_Lat2.ToString("F6", CultureInfo.InvariantCulture) },
+                            { "est_Lon2", est_Lon2.ToString("F6", CultureInfo.InvariantCulture) }
                         };
                         estimationResults.Add(resultDict);
                     }
