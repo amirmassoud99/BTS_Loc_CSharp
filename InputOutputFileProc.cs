@@ -44,12 +44,12 @@ namespace BTS_Location_Estimation
             }
 
             // Define keywords based on file type
-            string cellIdKeyword = "", channelKeyword = "", cinrKeyword = "", beamIndexKeyword = "", latKeyword = "Latitude", lonKeyword = "Longitude", rssiKeyword = "", timeOffsetKeyword = "";
+            string cellIdKeyword = "", cellIdentityKeyword = "", channelKeyword = "", cinrKeyword = "", beamIndexKeyword = "", latKeyword = "Latitude", lonKeyword = "Longitude", rssiKeyword = "", timeOffsetKeyword = "";
             switch (fileType)
             {
                 case 1: // LTE eTOPN Scan
                     cellIdKeyword = "Cell ID";
-                    
+                    cellIdentityKeyword = "cellIdentity";
                     cinrKeyword = "Ref Signal - CINR";
                     rssiKeyword = "Carrier RSSI Antenna Port 0";
                     timeOffsetKeyword = "Ref Signal - Timeoffset";
@@ -57,6 +57,7 @@ namespace BTS_Location_Estimation
 
                 case 2: // LTE Blind Scan
                     cellIdKeyword = "Cell Id";
+                    cellIdentityKeyword = "cellIdentity";
                     channelKeyword = "Channel Number";
                     cinrKeyword = "Ref Signal - CINR";
                     rssiKeyword = "Channel RSSI";
@@ -64,11 +65,18 @@ namespace BTS_Location_Estimation
                     break;
                 case 4: // NR Blind Scan
                     cellIdKeyword = "Cell ID";
+                    cellIdentityKeyword = "Cell Identity";
                     channelKeyword = "Channel Number";
                     cinrKeyword = "Secondary Sync Signal - CINR";
                     beamIndexKeyword = "Beam Index";
                     rssiKeyword = "SSB RSSI";
                     timeOffsetKeyword = "Time Offset";
+                    break;
+                case 5: // WCDMA
+                    cellIdKeyword = "Cell ID";
+                    cellIdentityKeyword = "cellIdentity";
+                    cinrKeyword = "Ref Signal - Ec/Io";
+                    timeOffsetKeyword = "Ref Signal - Timeoffset";
                     break;
                 default: // Fallback for other types if needed
                     Console.WriteLine($"File type {fileType} not fully configured for extraction. Using defaults.");
@@ -103,6 +111,7 @@ namespace BTS_Location_Estimation
                 int latIndex = headers.FindIndex(h => h.Equals(latKeyword, StringComparison.OrdinalIgnoreCase));
                 int lonIndex = headers.FindIndex(h => h.Equals(lonKeyword, StringComparison.OrdinalIgnoreCase));
                 int cellIdIndex = headers.FindIndex(h => h.Equals(cellIdKeyword, StringComparison.OrdinalIgnoreCase));
+                int cellIdentityIndex = !string.IsNullOrEmpty(cellIdentityKeyword) ? headers.FindIndex(h => h.Equals(cellIdentityKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
                 int channelNumIndex = !string.IsNullOrEmpty(channelKeyword) ? headers.FindIndex(h => h.Equals(channelKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
                 int cinrIndex = headers.FindIndex(h => h.Equals(cinrKeyword, StringComparison.OrdinalIgnoreCase));
                 int beamIndexCol = !string.IsNullOrEmpty(beamIndexKeyword) ? headers.FindIndex(h => h.Equals(beamIndexKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
@@ -117,7 +126,7 @@ namespace BTS_Location_Estimation
                 }
 
                 // Determine the highest index we'll need to access
-                int maxIndex = new[] { latIndex, lonIndex, cellIdIndex, channelNumIndex, cinrIndex, beamIndexCol, rssiIndex, timeOffsetIndex }.Max();
+                int maxIndex = new[] { latIndex, lonIndex, cellIdIndex, channelNumIndex, cinrIndex, beamIndexCol, rssiIndex, timeOffsetIndex, cellIdentityIndex }.Max();
 
                 // Process data rows
                 int rowCounter = 0; // Start counting data rows after the header
@@ -133,6 +142,11 @@ namespace BTS_Location_Estimation
                     genericRow["latitude"] = values[latIndex];
                     genericRow["longitude"] = values[lonIndex];
                     genericRow["cinr"] = values[cinrIndex];
+
+                    if (cellIdentityIndex != -1 && !string.IsNullOrWhiteSpace(values[cellIdentityIndex]))
+                    {
+                        genericRow["cellIdentity"] = values[cellIdentityIndex];
+                    }
 
                     // Handle Cell ID and Beam Index combination for fileType 4
                     if (fileType == 4 && beamIndexCol != -1 &&

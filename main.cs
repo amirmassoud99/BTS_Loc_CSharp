@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using static BTS_Location_Estimation.InputOutputFileProc;
+using static BTS_Location_Estimation.SaveHelper;
 
 namespace BTS_Location_Estimation
 {
@@ -22,7 +23,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.0.3";
+        public const string SW_VERSION = "1.0.0.4";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -108,7 +109,7 @@ namespace BTS_Location_Estimation
                     // You can now save or process the 'finalPoints' and 'maxCinr' for each cell
                     // For example, save to a new CSV file for step 3
                     string step3Filename = $"step3_{filenameOnly}_ch{group.Key.Channel}_cell{group.Key.CellId}.csv";
-                    save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
+                    //save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
 
                     // Run the TSWLS algorithm
                     var tswlsResult = TSWLS.run_tswls(timeAdjustedPoints, MINIMUM_POINTS_FOR_TSWLS, SPEED_OF_LIGHT, METERS_PER_DEGREE, SEARCH_DIRECTION, DISTANCE_THRESH);
@@ -128,14 +129,29 @@ namespace BTS_Location_Estimation
 
                         Console.WriteLine($"Estimated Final Location for Cell {group.Key.CellId} (Lat, Lon): ({est_Lat2:F6}, {est_Lon2:F6})");
 
+                        // Extract and combine unique cellIdentity values for the group
+                        var cellIdentities = group
+                            .Where(p => p.ContainsKey("cellIdentity") && !string.IsNullOrWhiteSpace(p["cellIdentity"]))
+                            .Select(p => p["cellIdentity"])
+                            .Distinct()
+                            .ToList();
+                        string combinedCellIdentity = string.Join("-", cellIdentities);
+
                         var resultDict = new Dictionary<string, string>
                         {
                             { "Channel", group.Key.Channel },
                             { "CellId", group.Key.CellId },
+                            { "cellIdentity", combinedCellIdentity },
+                            { "xhat1", xhat1.ToString("F4", CultureInfo.InvariantCulture) },
+                            { "yhat1", yhat1.ToString("F4", CultureInfo.InvariantCulture) },
+                            { "xhat2", xhat2.ToString("F4", CultureInfo.InvariantCulture) },
+                            { "yhat2", yhat2.ToString("F4", CultureInfo.InvariantCulture) },
                             { "est_Lat1", est_Lat1.ToString("F6", CultureInfo.InvariantCulture) },
                             { "est_Lon1", est_Lon1.ToString("F6", CultureInfo.InvariantCulture) },
                             { "est_Lat2", est_Lat2.ToString("F6", CultureInfo.InvariantCulture) },
-                            { "est_Lon2", est_Lon2.ToString("F6", CultureInfo.InvariantCulture) }
+                            { "est_Lon2", est_Lon2.ToString("F6", CultureInfo.InvariantCulture) },
+                            { "Max_cinr", maxCinr.ToString("F2", CultureInfo.InvariantCulture) },
+                            { "Num_points", timeAdjustedPoints.Count.ToString() }
                         };
                         estimationResults.Add(resultDict);
                     }
@@ -146,114 +162,6 @@ namespace BTS_Location_Estimation
                 save_estimation_results(estimationResults, estimateFilename);
             }
             Console.WriteLine("Batch processing complete.");
-        }
-
-        private static void save_estimation_results(List<Dictionary<string, string>> estimationResults, string outputFilename)
-        {
-            using (var writer = new StreamWriter(outputFilename))
-            {
-                if (estimationResults.Any())
-                {
-                    var headers = estimationResults.First().Keys;
-                    writer.WriteLine(string.Join(",", headers));
-
-                    foreach (var result in estimationResults)
-                    {
-                        writer.WriteLine(string.Join(",", result.Values));
-                    }
-                }
-            }
-            Console.WriteLine($"\nFinal estimation results saved to {outputFilename}");
-        }
-
-        private static void save_extract_step3(List<Dictionary<string, string>> finalPoints, string outputFilename, double maxCinr)
-        {
-            // This function saves the final, distance-filtered points for a single cell
-            // to a CSV file. It includes all the original data for the selected points
-            // and can be used as input for the final location estimation algorithms.
-            // The maximum CINR value is also available if needed for reporting.
-            using (var writer = new StreamWriter(outputFilename))
-            {
-                if (finalPoints.Any())
-                {
-                    // Write header from the keys of the first point
-                    var headers = finalPoints.First().Keys;
-                    writer.WriteLine(string.Join(",", headers));
-
-                    // Write data rows
-                    foreach (var point in finalPoints)
-                    {
-                        writer.WriteLine(string.Join(",", point.Values));
-                    }
-                }
-            }
-            Console.WriteLine($"Step 3 data for cell saved to {outputFilename} (Max CINR: {maxCinr:F2})");
-        }
-
-        private static void save_extract_step2(List<Dictionary<string, string>> filteredData, string outputFilename)
-        {
-            // Group data by channel and cell ID, count occurrences, and sort
-            var step2Data = filteredData
-                .GroupBy(row => new
-                {
-                    Channel = row.GetValueOrDefault("channel", "N/A"),
-                    CellId = row.GetValueOrDefault("cellId", "N/A")
-                })
-                .Select(group => new
-                {
-                    group.Key.Channel,
-                    group.Key.CellId,
-                    Count = group.Count()
-                })
-                .OrderBy(item => item.Channel)
-                .ThenBy(item => item.CellId)
-                .ToList();
-
-            using (var writer = new StreamWriter(outputFilename))
-            {
-                writer.WriteLine("Channel,CellID,Count");
-                foreach (var item in step2Data)
-                {
-                    writer.WriteLine($"{item.Channel},{item.CellId},{item.Count}");
-                }
-            }
-            Console.WriteLine($"Step 2 data saved to {outputFilename}");
-        }
-
-        private static void save_extrac_step1(List<Dictionary<string, string>> allData, string outputFilename)
-        {
-            // Group data by channel, cell ID, and beam index and count occurrences
-            var processedData = allData
-                .GroupBy(row => new
-                {
-                    Channel = row.ContainsKey("channel") ? row["channel"] : "N/A",
-                    CellId = row.ContainsKey("cellId") ? row["cellId"] : "N/A",
-                    BeamIndex = row.ContainsKey("beamIndex") ? row["beamIndex"] : "N/A"
-                })
-                .Select(group => new
-                {
-                    group.Key.Channel,
-                    group.Key.CellId,
-                    group.Key.BeamIndex,
-                    Count = group.Count()
-                })
-                .OrderBy(item => item.Channel)
-                .ThenBy(item => item.CellId)
-                .ThenBy(item => item.BeamIndex)
-                .ToList();
-
-            using (var writer = new StreamWriter(outputFilename))
-            {
-                // Write header
-                writer.WriteLine("Channel,CellID,BeamIndex,Count");
-
-                // Write data
-                foreach (var item in processedData)
-                {
-                    writer.WriteLine($"{item.Channel},{item.CellId},{item.BeamIndex},{item.Count}");
-                }
-            }
-            Console.WriteLine($"Step 1 data saved to {outputFilename}");
         }
     }
 }
