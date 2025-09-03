@@ -1,139 +1,323 @@
 using System;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
 using System.Collections.Generic;
-using System.Linq;
 
-public static class TSWLS
+namespace BTS_Location_Estimation
 {
-    // Helper: Create an identity matrix
-    public static double[,] IdentityMatrix(int size)
+    public static class TSWLS
     {
-        var I = new double[size, size];
-        for (int i = 0; i < size; i++) I[i, i] = 1.0;
-        return I;
-    }
-
-    // Helper: Transpose a matrix
-    public static double[,] Transpose(double[,] A)
-    {
-        int rows = A.GetLength(0), cols = A.GetLength(1);
-        var T = new double[cols, rows];
-        for (int i = 0; i < rows; i++)
-            for (int j = 0; j < cols; j++)
-                T[j, i] = A[i, j];
-        return T;
-    }
-
-    // Helper: Multiply two matrices
-    public static double[,] Multiply(double[,] A, double[,] B)
-    {
-        int rowsA = A.GetLength(0), colsA = A.GetLength(1), colsB = B.GetLength(1);
-        var C = new double[rowsA, colsB];
-        for (int i = 0; i < rowsA; i++)
-            for (int j = 0; j < colsB; j++)
-                for (int k = 0; k < colsA; k++)
-                    C[i, j] += A[i, k] * B[k, j];
-        return C;
-    }
-
-    // Helper: Multiply matrix by vector
-    public static double[] Multiply(double[,] A, double[] v)
-    {
-        int rows = A.GetLength(0), cols = A.GetLength(1);
-        var result = new double[rows];
-        for (int i = 0; i < rows; i++)
-            for (int j = 0; j < cols; j++)
-                result[i] += A[i, j] * v[j];
-        return result;
-    }
-
-    // Helper: Inverse of a square matrix (Gauss-Jordan, not for production)
-    public static double[,] Inverse(double[,] A)
-    {
-        int n = A.GetLength(0);
-        var I = IdentityMatrix(n);
-        var copy = (double[,])A.Clone();
-        for (int i = 0; i < n; i++)
+        /// <summary>
+        /// C# implementation of the WLS (Weighted Least Squares) function from MATLAB.
+        /// z = (G' * inv(W) * G)^-1 * G' * inv(W) * h
+        /// </summary>
+        /// <param name="G">Matrix G</param>
+        /// <param name="W">Matrix W</param>
+        /// <param name="h">Vector h</param>
+        /// <returns>The result vector z, or null if a matrix is singular.</returns>
+        public static Vector<double>? WLS_Matlab(Matrix<double> G, Matrix<double> W, Vector<double> h)
         {
-            // Find pivot
-            int pivot = i;
-            for (int j = i + 1; j < n; j++)
-                if (Math.Abs(copy[j, i]) > Math.Abs(copy[pivot, i])) pivot = j;
-            // Swap rows
-            for (int k = 0; k < n; k++)
+            try
             {
-                (copy[i, k], copy[pivot, k]) = (copy[pivot, k], copy[i, k]);
-                (I[i, k], I[pivot, k]) = (I[pivot, k], I[i, k]);
+                Matrix<double> Winv = W.Inverse();
+                Matrix<double> G_transpose = G.Transpose();
+                Matrix<double> temp1 = G_transpose * Winv;
+                Matrix<double> temp2 = temp1 * G;
+                Matrix<double> covZ = temp2.Inverse();
+                
+                Vector<double> temp3 = temp1 * h;
+                Vector<double> result = covZ * temp3;
+                
+                return result;
             }
-            if (Math.Abs(copy[i, i]) < 1e-12) throw new InvalidOperationException("Matrix is singular");
-            double div = copy[i, i];
-            for (int k = 0; k < n; k++)
+            catch (System.InvalidOperationException ex)
             {
-                copy[i, k] /= div;
-                I[i, k] /= div;
+                Console.Error.WriteLine($"Error: A matrix in WLS_Matlab is singular and cannot be inverted. Details: {ex.Message}");
+                return null;
             }
-            for (int j = 0; j < n; j++)
+        }
+
+        /// <summary>
+        /// C# implementation of the TSWLS2 algorithm.
+        /// </summary>
+        /// <returns>A vector containing xHat, yHat, and r_0, or null on failure.</returns>
+        public static Vector<double>? tswls2(int N, Vector<double> sx, Vector<double> sy, Vector<double> ts, double c)
+        {
+            // Step 1: First WLS Pass
+            var Ga = Matrix<double>.Build.Dense(N - 1, 3);
+            var h = Vector<double>.Build.Dense(N - 1);
+            double K0 = sx[0] * sx[0] + sy[0] * sy[0];
+
+            for (int i = 0; i < N - 1; ++i)
             {
-                if (i == j) continue;
-                double mult = copy[j, i];
-                for (int k = 0; k < n; k++)
+                Ga[i, 0] = sx[i + 1] - sx[0];
+                Ga[i, 1] = sy[i + 1] - sy[0];
+                double r_i0 = c * (ts[i + 1] - ts[0]);
+                Ga[i, 2] = r_i0;
+                double Ki = sx[i + 1] * sx[i + 1] + sy[i + 1] * sy[i + 1];
+                h[i] = 0.5 * (Ki - K0 - r_i0 * r_i0);
+            }
+
+            var Q = Matrix<double>.Build.Dense(N - 1, N - 1, 0.5);
+            for (int i = 0; i < N - 1; ++i)
+            {
+                Q[i, i] += 0.5;
+            }
+
+            Vector<double>? z1 = WLS_Matlab(Ga, Q, h);
+            if (z1 == null || z1.Count < 2)
+            {
+                Console.Error.WriteLine("First pass of WLS failed.");
+                return null;
+            }
+            double x = z1[0];
+            double y = z1[1];
+
+            // Step 2: Second WLS Pass
+            var B = Matrix<double>.Build.DenseDiagonal(N - 1, N - 1, 0.0);
+            for (int i = 0; i < N - 1; ++i)
+            {
+                B[i, i] = Math.Sqrt(Math.Pow(x - sx[i + 1], 2) + Math.Pow(y - sy[i + 1], 2));
+            }
+            Matrix<double> W2 = B * Q * B;
+
+            Vector<double>? z2 = WLS_Matlab(Ga, W2, h);
+            if (z2 == null || z2.Count < 3)
+            {
+                Console.Error.WriteLine("Second pass of WLS failed.");
+                return null;
+            }
+
+            // Step 3: Covariance and Final WLS Pass
+            Matrix<double> covZ2;
+            try
+            {
+                covZ2 = (Ga.Transpose() * W2 * Ga).Inverse();
+            }
+            catch (System.InvalidOperationException)
+            {
+                Console.Error.WriteLine("Failed to calculate covariance matrix.");
+                return null;
+            }
+
+            var Gap = Matrix<double>.Build.DenseOfArray(new double[,] { { 1, 0 }, { 0, 1 }, { 1, 1 } });
+            x = z2[0];
+            y = z2[1];
+            var hp = Vector<double>.Build.Dense(new double[] {
+                (x - sx[0]) * (x - sx[0]),
+                (y - sy[0]) * (y - sy[0]),
+                z2[2] * z2[2]
+            });
+
+            var Bp = Matrix<double>.Build.DenseDiagonal(3, 3, 0.0);
+            Bp[0, 0] = x - sx[0];
+            Bp[1, 1] = y - sy[0];
+            Bp[2, 2] = z2[2];
+
+            Matrix<double> Wp_inv = 4 * Bp * covZ2 * Bp;
+            Matrix<double> Wp;
+            try
+            {
+                Wp = Wp_inv.Inverse();
+            }
+            catch (System.InvalidOperationException)
+            {
+                Console.Error.WriteLine("Failed to calculate final weighting matrix.");
+                return null;
+            }
+
+            Vector<double>? zp = WLS_Matlab(Gap, Wp, hp);
+            if (zp == null || zp.Count < 2)
+            {
+                Console.Error.WriteLine("Final pass of WLS failed.");
+                return null;
+            }
+
+            // Step 4: Final Result Calculation
+            double xHat, yHat;
+            if (zp[0] >= 0 && zp[1] >= 0)
+            {
+                xHat = (x >= 0) ? Math.Sqrt(zp[0]) + sx[0] : -Math.Sqrt(zp[0]) + sx[0];
+                yHat = (y >= 0) ? Math.Sqrt(zp[1]) + sy[0] : -Math.Sqrt(zp[1]) + sy[0];
+            }
+            else
+            {
+                xHat = x;
+                yHat = y;
+            }
+
+            double r_0 = Math.Sqrt(xHat * xHat + yHat * yHat);
+
+            return Vector<double>.Build.Dense(new double[] { xHat, yHat, r_0 });
+        }
+
+        /// <summary>
+        /// Main workflow function for the TSWLS process. It converts lat/lon to local x/y,
+        /// runs the core TSWLS algorithm, and returns the estimated location.
+        /// </summary>
+        /// <param name="points">The list of filtered and time-adjusted data points.</param>
+        /// <param name="minimum_points_for_TSWLS">The minimum number of points required.</param>
+        /// <param name="c">The speed of light constant.</param>
+        /// <param name="metersPerDegree">Conversion factor for lat/lon to meters.</param>
+        /// <param name="range">The search range for the grid search.</param>
+        /// <param name="step">The step size for the grid search.</param>
+        /// <returns>A vector containing xHat, yHat, xHat2, yHat2, or null on failure.</returns>
+        public static Vector<double>? run_tswls(List<Dictionary<string, string>> points, int minimum_points_for_TSWLS, double c, double metersPerDegree, double range, double step)
+        {
+            if (points.Count < minimum_points_for_TSWLS)
+            {
+                Console.WriteLine($"TSWLS requires at least {minimum_points_for_TSWLS} points. Cannot run with {points.Count} points.");
+                return null;
+            }
+
+            int N = points.Count;
+            var sx = Vector<double>.Build.Dense(N);
+            var sy = Vector<double>.Build.Dense(N);
+            var ts = Vector<double>.Build.Dense(N);
+
+            // Convert lat/lon to local cartesian x/y coordinates.
+            const double PI = Math.PI;
+            
+            double latRef = double.Parse(points[0]["latitude"]);
+            double lonRef = double.Parse(points[0]["longitude"]);
+            
+            double xRef = lonRef * metersPerDegree * Math.Cos(latRef * PI / 180.0);
+            double yRef = latRef * metersPerDegree;
+
+            for (int i = 0; i < N; i++)
+            {
+                double lat = double.Parse(points[i]["latitude"]);
+                double lon = double.Parse(points[i]["longitude"]);
+                sx[i] = lon * metersPerDegree * Math.Cos(latRef * PI / 180.0) - xRef;
+                sy[i] = lat * metersPerDegree - yRef;
+                ts[i] = double.Parse(points[i]["timeOffset"]);
+            }
+
+            Vector<double>? tswls_results = tswls2(N, sx, sy, ts, c);
+
+            if (tswls_results == null)
+            {
+                Console.WriteLine("TSWLS algorithm failed to produce a result.");
+                return null;
+            }
+
+            double xHat = tswls_results[0];
+            double yHat = tswls_results[1];
+            double r_0 = tswls_results[2];
+
+            Console.WriteLine("\n--- TSWLS Algorithm Results ---");
+            Console.WriteLine($"Estimated Location (xHat, yHat): ({xHat:F4}, {yHat:F4})");
+            Console.WriteLine($"Estimated Distance (r_0): {r_0:F4} meters");
+
+            // Call GridSearch to refine the result
+            Console.WriteLine("\n--- Running Grid Search ---");
+            Vector<double> grid_search_results = GridSearch2(N, sx, sy, ts, c, xHat, yHat, range, step);
+
+            double xHat2 = 0.0;
+            double yHat2 = 0.0;
+            if (grid_search_results != null && grid_search_results.Count > 1)
+            {
+                xHat2 = grid_search_results[0];
+                yHat2 = grid_search_results[1];
+                Console.WriteLine($"Grid Search Location (xHat2, yHat2): ({xHat2:F4}, {yHat2:F4})");
+            }
+
+            return Vector<double>.Build.Dense(new double[] { xHat, yHat, xHat2, yHat2 });
+        }
+
+        /// <summary>
+        /// C# implementation of the CalcAME function from MATLAB.
+        /// </summary>
+        public static double CalcAME(int N, Vector<double> sx, Vector<double> sy, Vector<double> ts, double c, double bx, double by)
+        {
+            double ame = 0.0;
+            var dist = Vector<double>.Build.Dense(N);
+
+            dist[0] = Math.Sqrt(Math.Pow(sx[0] - bx, 2) + Math.Pow(sy[0] - by, 2));
+            for (int n = 1; n < N; ++n)
+            {
+                dist[n] = Math.Sqrt(Math.Pow(sx[n] - bx, 2) + Math.Pow(sy[n] - by, 2));
+                double distDiff = dist[n] - dist[0];
+                double tdistDiff = (ts[n] - ts[0]) * c;
+                ame += Math.Abs(distDiff - tdistDiff);
+            }
+
+            if (N > 1)
+            {
+                ame /= (N - 1);
+            }
+            return ame;
+        }
+
+        /// <summary>
+        /// C# implementation of the GridSearch2 function from MATLAB.
+        /// </summary>
+        public static Vector<double> GridSearch2(int N, Vector<double> sx, Vector<double> sy, Vector<double> ts, double c, double x, double y, double range, double step)
+        {
+            int M = (int)Math.Ceiling(range / step);
+            int gridSize = 2 * M + 1;
+            var rmse = Matrix<double>.Build.Dense(gridSize, gridSize);
+
+            Console.WriteLine("Populating grid for search...");
+            for (int xcnt = -M; xcnt <= M; ++xcnt)
+            {
+                for (int ycnt = -M; ycnt <= M; ++ycnt)
                 {
-                    copy[j, k] -= mult * copy[i, k];
-                    I[j, k] -= mult * I[i, k];
+                    double xTmp = x + xcnt * step;
+                    double yTmp = y + ycnt * step;
+                    double rmseTmp = CalcAME(N, sx, sy, ts, c, xTmp, yTmp);
+                    rmse[ycnt + M, xcnt + M] = rmseTmp;
                 }
             }
+            Console.WriteLine("Grid populated.");
+
+            // Walk search to find the minimum
+            Console.WriteLine("Performing walk search...");
+            var wk = (Row: M, Col: M); // Start walk from the center [row, col] -> [y, x]
+            while (true)
+            {
+                int wy = wk.Row;
+                int wx = wk.Col;
+                
+                var wkNew = wk;
+                double wVue = rmse[wy, wx];
+
+                // Search neighbors (Up, Down, Left, Right)
+                int[] dx = { 0, 0, -1, 1 }; 
+                int[] dy = { -1, 1, 0, 0 }; 
+
+                for (int i = 0; i < 4; ++i)
+                {
+                    int wxTmp = wx + dx[i];
+                    int wyTmp = wy + dy[i];
+
+                    if (wxTmp >= 0 && wxTmp < gridSize && wyTmp >= 0 && wyTmp < gridSize)
+                    {
+                        double wVueTmp = rmse[wyTmp, wxTmp];
+                        if (wVueTmp < wVue)
+                        {
+                            wVue = wVueTmp;
+                            wkNew = (wyTmp, wxTmp);
+                        }
+                    }
+                }
+
+                if (wk == wkNew)
+                {
+                    break; // No change, found local minimum
+                }
+                wk = wkNew;
+            }
+            Console.WriteLine("Walk search complete.");
+
+            double yAdj = (wk.Row - M) * step;
+            double xAdj = (wk.Col - M) * step;
+            double xHat = x + xAdj;
+            double yHat = y + yAdj;
+            double r_0 = Math.Sqrt(xHat * xHat + yHat * yHat);
+
+            return Vector<double>.Build.Dense(new double[] { xHat, yHat, r_0 });
         }
-        return I;
-    }
-
-    // Weighted Least Squares (AI interpretation)
-    public static double[] WLS_AI(double[,] G, double[,] W, double[] h)
-    {
-        var GT = Transpose(G);
-        var temp1 = Multiply(GT, W);
-        var temp2 = Multiply(temp1, G);
-        var tempInv = Inverse(temp2);
-        var temp3 = Multiply(temp1, h);
-        return Multiply(tempInv, temp3);
-    }
-
-    // Weighted Least Squares (Matlab style)
-    public static double[] WLS_Matlab(double[,] G, double[,] W, double[] h)
-    {
-        var Winv = Inverse(W);
-        var GT = Transpose(G);
-        var temp1 = Multiply(GT, Winv);
-        var temp2 = Multiply(temp1, G);
-        var covZ = Inverse(temp2);
-        var temp3 = Multiply(temp1, h);
-        return Multiply(covZ, temp3);
-    }
-
-    // Two-Stage Weighted Least Squares (TSWLS2)
-    public static double[] TSWLS2(int N, double[] sx, double[] sy, double[] ts, double c)
-    {
-        var Ga = new double[N - 1, 3];
-        var h = new double[N - 1];
-        double K0 = sx[0] * sx[0] + sy[0] * sy[0];
-        for (int i = 0; i < N - 1; i++)
-        {
-            Ga[i, 0] = sx[i + 1] - sx[0];
-            Ga[i, 1] = sy[i + 1] - sy[0];
-            double r_i0 = c * (ts[i + 1] - ts[0]);
-            Ga[i, 2] = r_i0;
-            double Ki = sx[i + 1] * sx[i + 1] + sy[i + 1] * sy[i + 1];
-            h[i] = 0.5 * (Ki - K0 - r_i0 * r_i0);
-        }
-        var Q = new double[N - 1, N - 1];
-        for (int i = 0; i < N - 1; i++) Q[i, i] = 1.0;
-        var z1 = WLS_Matlab(Ga, Q, h);
-        if (z1.Length < 2) throw new Exception("First pass of WLS failed");
-        double x = z1[0], y = z1[1];
-        var B = new double[N - 1, N - 1];
-        for (int i = 0; i < N - 1; i++) B[i, i] = Math.Sqrt(Math.Pow(x - sx[i + 1], 2) + Math.Pow(y - sy[i + 1], 2));
-        var W2 = Multiply(Multiply(B, Q), B);
-        var z2 = WLS_Matlab(Ga, W2, h);
-        if (z2.Length < 3) throw new Exception("Second pass of WLS failed");
-        // Final pass omitted for brevity
-        return z2;
     }
 }
+

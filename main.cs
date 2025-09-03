@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.0.0";
+        public const string SW_VERSION = "1.0.0.1";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -35,6 +35,7 @@ namespace BTS_Location_Estimation
         public const double CINR_THRESH = 0.0;
         public const double EC_IO_THRESHOLD = -18.0;
         public const double DISTANCE_THRESH = 100.0;
+        public const double SEARCH_DIRECTION = 600.0;
         public const int MAX_POINTS = 60;
         public const int MINIMUM_CELL_ID_COUNT = 20;
 
@@ -98,10 +99,13 @@ namespace BTS_Location_Estimation
                     var pointsForCell = group.ToList();
                     var (finalPoints, maxCinr) = InputOutputFileProc.ExtractPointsWithDistance(pointsForCell, DISTANCE_THRESH, MAX_POINTS, METERS_PER_DEGREE);
 
+                    // Adjust time offset values for the filtered points
+                    var timeAdjustedPoints = InputOutputFileProc.ProcessTimeOffset(finalPoints, fileType, TIME_OFFSET_WRAP_VALUE, WCDMA_TIME_OFFSET_WRAP_VALUE, LTE_SAMPLING_RATE_HZ, NR_SAMPLING_RATE_MULTIPLIER, WCDMA_SAMPLING_RATE_DIVISOR);
+
                     // You can now save or process the 'finalPoints' and 'maxCinr' for each cell
                     // For example, save to a new CSV file for step 3
                     string step3Filename = $"step3_{filenameOnly}_ch{group.Key.Channel}_cell{group.Key.CellId}.csv";
-                    save_extract_step3(finalPoints, step3Filename, maxCinr);
+                    save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
                 }
 
 

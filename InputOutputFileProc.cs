@@ -278,6 +278,84 @@ namespace BTS_Location_Estimation
 
             return Tuple.Create(selectedPoints, maxCinr);
         }
+
+        public static List<Dictionary<string, string>> ProcessTimeOffset(
+            List<Dictionary<string, string>> data,
+            int fileType,
+            double timeOffsetWrapValue,
+            double wcdmaTimeOffsetWrapValue,
+            double lteSamplingRateHz,
+            double nrSamplingRateMultiplier,
+            double wcdmaSamplingRateDivisor)
+        {
+            // This function adjusts the 'TimeOffset' values for a given set of data points.
+            // Cellular timing measurements can "wrap around" a zero point, leading to
+            // large jumps in raw data (e.g., from a large positive to a large negative value).
+            // This logic detects such wrapping by checking if values fall on opposite ends
+            // of the possible range. If wrapping is detected, it adjusts the values to make
+            // them continuous. Finally, it normalizes the adjusted time offset by the
+            // technology-specific sampling rate.
+            if (data == null || !data.Any())
+            {
+                return new List<Dictionary<string, string>>();
+            }
+
+            double wrapValue = timeOffsetWrapValue; // Default for LTE
+            if (fileType == 4) // NR
+            {
+                const double ssbPeriod = 20e-3; // 20 ms
+                wrapValue = lteSamplingRateHz * nrSamplingRateMultiplier * ssbPeriod;
+            }
+            else if (fileType == 5) // WCDMA
+            {
+                wrapValue = wcdmaTimeOffsetWrapValue;
+            }
+
+            var timeOffsets = data.Select(row =>
+                row.TryGetValue("TimeOffset", out var tsStr) &&
+                double.TryParse(tsStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double ts) ? ts : 0.0)
+                .ToList();
+
+            if (!timeOffsets.Any()) return data;
+
+            double tsMin = timeOffsets.Min();
+            double tsMax = timeOffsets.Max();
+
+            // Adjust for wrapping
+            if (tsMin < wrapValue / 4.0 && tsMax > wrapValue * 3.0 / 4.0)
+            {
+                for (int i = 0; i < data.Count; i++)
+                {
+                    if (timeOffsets[i] > wrapValue * 3.0 / 4.0)
+                    {
+                        data[i]["TimeOffset"] = (timeOffsets[i] - wrapValue).ToString(CultureInfo.InvariantCulture);
+                    }
+                }
+            }
+
+            // Normalize the time offset by the sampling rate
+            double samplingRateHz = lteSamplingRateHz; // Default for LTE
+            if (fileType == 4) // NR
+            {
+                samplingRateHz = lteSamplingRateHz * nrSamplingRateMultiplier;
+            }
+            else if (fileType == 5) // WCDMA
+            {
+                samplingRateHz = lteSamplingRateHz / wcdmaSamplingRateDivisor;
+            }
+
+            foreach (var row in data)
+            {
+                if (row.TryGetValue("TimeOffset", out var tsStr) &&
+                    double.TryParse(tsStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double ts))
+                {
+                    // Use "G17" format specifier for full double precision
+                    row["TimeOffset"] = (ts / samplingRateHz).ToString("G17", CultureInfo.InvariantCulture);
+                }
+            }
+
+            return data;
+        }
     }
 }
 
