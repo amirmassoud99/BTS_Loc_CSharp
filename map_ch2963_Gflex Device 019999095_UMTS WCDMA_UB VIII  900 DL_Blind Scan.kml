@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>map_ch2963_Gflex Device 019999095_UMTS WCDMA_UB VIII  900 DL_Blind Scan</name>
+    <Style id="red_circle_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Style id="yellow_circle_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Style id="pink_circle_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/pink-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Style id="pink_pin_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pushpin/pink-pushpin.png</href>
+        </Icon>
+        <hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Placemark>
+      <name>149</name>
+      <description>
+        <![CDATA[Cell ID: 149<br/>Cell Identity: 10-20<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.191146,50.822903,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>209</name>
+      <description>
+        <![CDATA[Cell ID: 209<br/>Cell Identity: 10-30<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.182443,50.872420,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>235</name>
+      <description>
+        <![CDATA[Cell ID: 235<br/>Cell Identity: 10-20<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.222356,50.847213,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>253</name>
+      <description>
+        <![CDATA[Cell ID: 253<br/>Cell Identity: 10-20<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.144366,50.812467,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>260</name>
+      <description>
+        <![CDATA[Cell ID: 260<br/>Cell Identity: 10-30<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.234855,50.879090,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>276</name>
+      <description>
+        <![CDATA[Cell ID: 276<br/>Cell Identity: 10-30<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.187239,50.857080,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>309</name>
+      <description>
+        <![CDATA[Cell ID: 309<br/>Cell Identity: 10-30<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.197768,50.861468,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>326</name>
+      <description>
+        <![CDATA[Cell ID: 326<br/>Cell Identity: 10-30<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.184498,50.863102,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>413</name>
+      <description>
+        <![CDATA[Cell ID: 413<br/>Cell Identity: 10-30<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.187382,50.852696,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>459</name>
+      <description>
+        <![CDATA[Cell ID: 459<br/>Cell Identity: 10-20<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.219670,50.846073,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>460</name>
+      <description>
+        <![CDATA[Cell ID: 460<br/>Cell Identity: 10-30<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.215062,50.850907,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>461</name>
+      <description>
+        <![CDATA[Cell ID: 461<br/>Cell Identity: 10-30-20<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.226354,50.856351,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>12</name>
+      <description>
+        <![CDATA[Cell ID: 12<br/>Cell Identity: 10<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.203486,50.842754,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>27</name>
+      <description>
+        <![CDATA[Cell ID: 27<br/>Cell Identity: 10<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.185802,50.850090,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>29</name>
+      <description>
+        <![CDATA[Cell ID: 29<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.197096,50.859699,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>85</name>
+      <description>
+        <![CDATA[Cell ID: 85<br/>Cell Identity: 10<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.211184,50.849200,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>150</name>
+      <description>
+        <![CDATA[Cell ID: 150<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.208632,50.839708,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>155</name>
+      <description>
+        <![CDATA[Cell ID: 155<br/>Cell Identity: 10<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.220272,50.854902,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>157</name>
+      <description>
+        <![CDATA[Cell ID: 157<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.170376,50.852446,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>176</name>
+      <description>
+        <![CDATA[Cell ID: 176<br/>Cell Identity: 10<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.191579,50.823002,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>187</name>
+      <description>
+        <![CDATA[Cell ID: 187<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.217883,50.859887,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>188</name>
+      <description>
+        <![CDATA[Cell ID: 188<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.175967,50.843076,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>195</name>
+      <description>
+        <![CDATA[Cell ID: 195<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.180983,50.831523,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>224</name>
+      <description>
+        <![CDATA[Cell ID: 224<br/>Cell Identity: 10<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.172366,50.859793,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>228</name>
+      <description>
+        <![CDATA[Cell ID: 228<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.194460,50.856136,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>236</name>
+      <description>
+        <![CDATA[Cell ID: 236<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.221890,50.845096,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>245</name>
+      <description>
+        <![CDATA[Cell ID: 245<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.192877,50.824998,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>251</name>
+      <description>
+        <![CDATA[Cell ID: 251<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.215209,50.827038,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>330</name>
+      <description>
+        <![CDATA[Cell ID: 330<br/>Cell Identity: 10<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.358156,50.902169,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>381</name>
+      <description>
+        <![CDATA[Cell ID: 381<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.170105,50.845685,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>429</name>
+      <description>
+        <![CDATA[Cell ID: 429<br/>Cell Identity: 10<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.193174,50.844330,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>437</name>
+      <description>
+        <![CDATA[Cell ID: 437<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.178870,50.841005,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>451</name>
+      <description>
+        <![CDATA[Cell ID: 451<br/>Cell Identity: 10<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.174923,50.844018,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>456</name>
+      <description>
+        <![CDATA[Cell ID: 456<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.178125,50.850607,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>488</name>
+      <description>
+        <![CDATA[Cell ID: 488<br/>Cell Identity: 10<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.175132,50.854606,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

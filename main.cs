@@ -24,7 +24,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.1.0";
+        public const string SW_VERSION = "1.0.2.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -76,9 +76,10 @@ namespace BTS_Location_Estimation
 
                 string filenameOnly = Path.GetFileNameWithoutExtension(inputFilename);
                 string step1Filename = $"step1_{filenameOnly}.csv";
-                //save_extrac_step1(allData, step1Filename);
+                save_extrac_step1(allData, step1Filename);
 
-                var filteredData = InputOutputFileProc.filter_cinr_minimum_PCI(allData, CINR_THRESH, MINIMUM_CELL_ID_COUNT);
+                double cinrThreshold = (fileType == WCDMA_FILE_TYPE) ? EC_IO_THRESHOLD : CINR_THRESH;
+                var filteredData = InputOutputFileProc.filter_cinr_minimum_PCI(allData, cinrThreshold, MINIMUM_CELL_ID_COUNT);
                 string step2Filename = $"step2_{filenameOnly}.csv";
                 //save_extract_step2(filteredData, step2Filename);
 
@@ -152,12 +153,7 @@ namespace BTS_Location_Estimation
 
             Console.WriteLine($"Estimated Final Location for Cell {group.Key.CellId} (Lat, Lon): ({est_Lat2:F6}, {est_Lon2:F6})");
 
-            // Debugging trap for a specific channel and cell ID
-            if (group.Key.Channel == "125530" && group.Key.CellId == "1101")
-            {
-                // You can set a breakpoint here to examine the 'group' variable and its cell identities.
-                Console.WriteLine("Debug Trap Hit for Channel 125530 and CellId 11");
-            }
+
 
             // Extract and combine unique cellIdentity values for the group
             var cellIdentities = group
