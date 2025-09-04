@@ -293,22 +293,30 @@ namespace BTS_Location_Estimation
         public static void save_extract_step3(List<Dictionary<string, string>> finalPoints, string outputFilename, double maxCinr)
         {
             // This function saves the final, distance-filtered points for a single cell
-            // to a CSV file. It includes all the original data for the selected points
-            // and can be used as input for the final location estimation algorithms.
-            // The maximum CINR value is also available if needed for reporting.
+            // to a CSV file. It ensures all columns are correctly aligned, even if some
+            // rows are missing certain keys like 'cellIdentity'.
+            if (!finalPoints.Any())
+            {
+                Console.WriteLine($"No data to save for {outputFilename}");
+                return;
+            }
+
             using (var writer = new StreamWriter(outputFilename))
             {
-                if (finalPoints.Any())
-                {
-                    // Write header from the keys of the first point
-                    var headers = finalPoints.First().Keys;
-                    writer.WriteLine(string.Join(",", headers));
+                // Get a comprehensive list of all possible headers from all points
+                var allHeaders = finalPoints.SelectMany(p => p.Keys).Distinct().ToList();
 
-                    // Write data rows
-                    foreach (var point in finalPoints)
-                    {
-                        writer.WriteLine(string.Join(",", point.Values));
-                    }
+                // Ensure a consistent order, e.g., by sorting
+                allHeaders.Sort();
+
+                // Write the header row
+                writer.WriteLine(string.Join(",", allHeaders));
+
+                // Write data rows, ensuring values align with the headers
+                foreach (var point in finalPoints)
+                {
+                    var values = allHeaders.Select(header => point.GetValueOrDefault(header, ""));
+                    writer.WriteLine(string.Join(",", values));
                 }
             }
             Console.WriteLine($"Step 3 data for cell saved to {outputFilename} (Max CINR: {maxCinr:F2})");
@@ -378,6 +386,39 @@ namespace BTS_Location_Estimation
                 }
             }
             Console.WriteLine($"Step 1 data saved to {outputFilename}");
+        }
+
+        public static void save_debug_map(List<Dictionary<string, string>> results, string outputFilename)
+        {
+            if (results == null || !results.Any())
+            {
+                return;
+            }
+
+            // Get the first channel and cell ID from the dataset
+            var firstEntry = results.First();
+            string channelToFind = firstEntry.GetValueOrDefault("channel", "N/A");
+            string cellIdToFind = firstEntry.GetValueOrDefault("cellId", "N/A");
+
+            // Find all row numbers for that specific channel and cell ID
+            var rowNumbers = results
+                .Where(row => row.GetValueOrDefault("channel", "N/A") == channelToFind &&
+                              row.GetValueOrDefault("cellId", "N/A") == cellIdToFind)
+                .Select(row => row.GetValueOrDefault("rowNumber", "N/A"))
+                .ToList();
+
+            // Get the total count
+            int count = rowNumbers.Count;
+
+            // Join the row numbers into a single string, e.g., "1;230;550"
+            string rowNumbersString = string.Join(";", rowNumbers);
+
+            using (var writer = new StreamWriter(outputFilename))
+            {
+                writer.WriteLine("Channel,CellID,Count,RowNumbers");
+                writer.WriteLine($"{channelToFind},{cellIdToFind},{count},\"{rowNumbersString}\"");
+            }
+            Console.WriteLine($"Debug map for Channel {channelToFind}, CellID {cellIdToFind} saved to {outputFilename}");
         }
     }
 }

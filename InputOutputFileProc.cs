@@ -28,15 +28,16 @@ namespace BTS_Location_Estimation
             
             /**********WCDMA Batch */
             
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\Drive test WCDMA MBS_20230111_144045\";
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\Drive test WCDMA MBS_20230111_144045\";
             List<string> inputFilenames = new List<string>
             {
-                /*"Gflex Device 019999095_UMTS WCDMA_UB I  2100 (IMT-2000) DL_Blind Scan.csv"
+                "Gflex Device 019999095_UMTS WCDMA_UB I  2100 (IMT-2000) DL_Blind Scan.csv"
                 "Gflex Device 019999095_UMTS WCDMA_UB III  1800 (DCS) DL_Blind Scan.csv",
                 "Gflex Device 019999095_UMTS WCDMA_UB VII  2600 (IMT Extension) DL_Blind Scan.csv",
-                "Gflex Device 019999095_UMTS WCDMA_UB VIII  900 DL_Blind Scan.csv"*/
                 "Gflex Device 019999095_UMTS WCDMA_UB VIII  900 DL_Blind Scan.csv"
-            };
+                ""
+                "Gflex Device 019999095_UMTS WCDMA_UB VIII  900 DL_Blind Scan.dtr"
+            };*/
             
 
             //Batch processing Drive 1 LTE NR
@@ -108,16 +109,16 @@ namespace BTS_Location_Estimation
             */
 
             //Batch processing Drive 5_Gaithersuburg
-            //string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250828_Gaitherburg-Drive\";
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250828_Gaitherburg-Drive\";
             // List of input filenames to process in batch
-            /*List<string> inputFilenames = new List<string>
+            List<string> inputFilenames = new List<string>
             {
-                "Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
-                "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
-                "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
-                "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
+                //"Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
+                //"Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
+                //"Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
+                //"Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
                 "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv"
-            };*/
+            };
 
             return (fileDirectory, inputFilenames);
         }
@@ -189,7 +190,8 @@ namespace BTS_Location_Estimation
                     cellIdentityKeyword = "cellIdentity";
                     channelKeyword = "Channel Number";
                     cinrKeyword = "Ec/Io";
-                    timeOffsetKeyword = "Time Offset";
+                    rssiKeyword = "Channel RSSI";
+                    timeOffsetKeyword = "TimeOffset";//DTR code
                     break;
                 default: // Fallback for other types if needed
                     Console.WriteLine($"File type {fileType} not fully configured for extraction. Using defaults.");
@@ -247,6 +249,9 @@ namespace BTS_Location_Estimation
                 {
                     rowCounter++;
                     var values = line.Split(',').Select(Trim).ToList();
+                    // Ensure the row has the same number of columns as the header.
+
+
                     // Ensure the row has enough columns to access all required fields
                     if (values.Count <= maxIndex) continue;
 
@@ -304,6 +309,9 @@ namespace BTS_Location_Estimation
                 Console.WriteLine($"Full path: {filePath}");
                 Console.WriteLine($"Details: {ex.Message}");
             }
+
+            //SaveHelper.save_debug_map(results, "debug.csv");
+
             return results;
         }
 

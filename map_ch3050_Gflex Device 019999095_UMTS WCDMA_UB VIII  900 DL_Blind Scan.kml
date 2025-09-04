@@ -37,41 +37,51 @@
     <Placemark>
       <name>41</name>
       <description>
-        <![CDATA[Cell ID: 41<br/>Cell Identity: 10-30<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 41<br/>Cell Identity: 20445-11581<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_circle_style</styleUrl>
       <Point>
-        <coordinates>-1.221337,50.847679,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>309</name>
-      <description>
-        <![CDATA[Cell ID: 309<br/>Cell Identity: 10-30<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_circle_style</styleUrl>
-      <Point>
-        <coordinates>-1.192028,50.858025,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>90</name>
-      <description>
-        <![CDATA[Cell ID: 90<br/>Cell Identity: 10<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_circle_style</styleUrl>
-      <Point>
-        <coordinates>-1.160049,50.819036,0</coordinates>
+        <coordinates>-1.221400,50.847450,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
       <name>155</name>
       <description>
-        <![CDATA[Cell ID: 155<br/>Cell Identity: 10<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 155<br/>Cell Identity: 57775-8589<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_circle_style</styleUrl>
       <Point>
-        <coordinates>-1.197089,50.849794,0</coordinates>
+        <coordinates>-1.195762,50.848796,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>309</name>
+      <description>
+        <![CDATA[Cell ID: 309<br/>Cell Identity: 47775-13921<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.174617,50.845560,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>257</name>
+      <description>
+        <![CDATA[Cell ID: 257<br/>Cell Identity: 45898<br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.160396,50.892473,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>90</name>
+      <description>
+        <![CDATA[Cell ID: 90<br/>Cell Identity: 55052<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_circle_style</styleUrl>
+      <Point>
+        <coordinates>-1.156859,50.817685,0</coordinates>
       </Point>
     </Placemark>
   </Document>
