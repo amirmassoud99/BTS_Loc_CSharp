@@ -4,10 +4,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
-using static BTS_Location_Estimation.DataBaseProc;
-using static BTS_Location_Estimation.InputOutputFileProc;
-using static BTS_Location_Estimation.SaveHelper;
-using static BTS_Location_Estimation.TSWLS;
 
 namespace BTS_Location_Estimation
 {
@@ -26,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.12.0";
+        public const string SW_VERSION = "1.0.13.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -94,9 +90,9 @@ namespace BTS_Location_Estimation
                 string step1Filename = $"step1_{filenameOnly}.csv";
                 //save_extrac_step1(allData, step1Filename);
 
-                bool isWcdma = fileType == WCDMA_FILE_TYPE_CSV || fileType == WCDMA_FILE_TYPE_DTR;
+                bool isWcdma = fileType == DataBaseProc.WCDMA_FILE_TYPE_CSV || fileType == DataBaseProc.WCDMA_FILE_TYPE_DTR;
                 double cinrThreshold = isWcdma ? EC_IO_THRESHOLD : CINR_THRESH;
-                var filteredData = filter_cinr_minimum_PCI(allData, cinrThreshold, MINIMUM_CELL_ID_COUNT);
+                var filteredData = DataBaseProc.filter_cinr_minimum_PCI(allData, cinrThreshold, MINIMUM_CELL_ID_COUNT);
                 string step2Filename = $"step2_{filenameOnly}.csv";
                 //save_extract_step2(filteredData, step2Filename);
 
@@ -112,12 +108,12 @@ namespace BTS_Location_Estimation
                 foreach (var group in groupedData)
                 {
                     var pointsForCell = group.ToList();
-                    var (finalPoints, maxCinr) = ExtractPointsWithDistance(pointsForCell, DISTANCE_THRESH, MAX_POINTS, METERS_PER_DEGREE);
+                    var (finalPoints, maxCinr) = DataBaseProc.ExtractPointsWithDistance(pointsForCell, DISTANCE_THRESH, MAX_POINTS, METERS_PER_DEGREE);
 
 
 
                     // Adjust time offset values for the filtered points
-                    var timeAdjustedPoints = ProcessTimeOffset(finalPoints, fileType, TIME_OFFSET_WRAP_VALUE, WCDMA_TIME_OFFSET_WRAP_VALUE, LTE_SAMPLING_RATE_HZ, NR_SAMPLING_RATE_MULTIPLIER, WCDMA_SAMPLING_RATE_DIVISOR);
+                    var timeAdjustedPoints = DataBaseProc.ProcessTimeOffset(finalPoints, fileType, TIME_OFFSET_WRAP_VALUE, WCDMA_TIME_OFFSET_WRAP_VALUE, LTE_SAMPLING_RATE_HZ, NR_SAMPLING_RATE_MULTIPLIER, WCDMA_SAMPLING_RATE_DIVISOR);
 
 
 
@@ -131,20 +127,20 @@ namespace BTS_Location_Estimation
 
                     if (tswlsResult != null)
                     {
-                        ProcessTswlsResult(tswlsResult, timeAdjustedPoints, group, maxCinr, estimationResults, fileType, METERS_PER_DEGREE, WCDMA_FILE_TYPE_CSV, WCDMA_FILE_TYPE_DTR, CONFIDENCE_MIN_POINTS_WCDMA, CONFIDENCE_MIN_ECIO_WCDMA, CONFIDENCE_MIN_POINTS_LTE_NR, CONFIDENCE_MIN_CINR_LTE_NR);
+                        TSWLS.ProcessTswlsResult(tswlsResult, timeAdjustedPoints, group, maxCinr, estimationResults, fileType, METERS_PER_DEGREE, DataBaseProc.WCDMA_FILE_TYPE_CSV, DataBaseProc.WCDMA_FILE_TYPE_DTR, CONFIDENCE_MIN_POINTS_WCDMA, CONFIDENCE_MIN_ECIO_WCDMA, CONFIDENCE_MIN_POINTS_LTE_NR, CONFIDENCE_MIN_CINR_LTE_NR);
                     }
                 }
 
                 // Save the final estimation results
                 string estimateFilename = $"Estimate_{filenameOnly}.csv";
 
-                var resultsWithBeamIndex = splitCellidBeamforNR(fileType, estimationResults);
+                var resultsWithBeamIndex = DataBaseProc.splitCellidBeamforNR(fileType, estimationResults);
 
                 var sortedResults = resultsWithBeamIndex
                     .OrderBy(d => int.TryParse(d["Channel"], out int ch) ? ch : int.MaxValue)
                     .ThenBy(d => int.TryParse(d["CellId"], out int id) ? id : int.MaxValue)
                     .ToList();
-                save_estimation_results(sortedResults, estimateFilename);
+                SaveHelper.save_estimation_results(sortedResults, estimateFilename);
             }
             Console.WriteLine("Batch processing complete.");
         }
