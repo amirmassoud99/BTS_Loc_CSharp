@@ -2,7 +2,7 @@
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
     <name>map_ch67086_Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan</name>
-    <Style id="red_circle_style">
+    <Style id="red_balloon_style">
       <IconStyle>
         <Icon>
           <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
@@ -10,7 +10,15 @@
         <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
       </IconStyle>
     </Style>
-    <Style id="yellow_circle_style">
+    <Style id="blue_balloon_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Style id="yellow_balloon_style">
       <IconStyle>
         <Icon>
           <href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href>
@@ -18,48 +26,20 @@
         <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
       </IconStyle>
     </Style>
-    <Style id="pink_circle_style">
+    <Style id="blue_pin_style">
       <IconStyle>
         <Icon>
-          <href>http://maps.google.com/mapfiles/kml/paddle/pink-circle.png</href>
-        </Icon>
-        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
-      </IconStyle>
-    </Style>
-    <Style id="pink_pin_style">
-      <IconStyle>
-        <Icon>
-          <href>http://maps.google.com/mapfiles/kml/pushpin/pink-pushpin.png</href>
+          <href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href>
         </Icon>
         <hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
       </IconStyle>
     </Style>
     <Placemark>
-      <name>60</name>
-      <description>
-        <![CDATA[Cell ID: 60<br/>Cell Identity: 27141394<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_circle_style</styleUrl>
-      <Point>
-        <coordinates>-77.234302,39.128636,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>61</name>
-      <description>
-        <![CDATA[Cell ID: 61<br/>Cell Identity: 27141404<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_circle_style</styleUrl>
-      <Point>
-        <coordinates>-77.239482,39.130286,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
       <name>59</name>
       <description>
         <![CDATA[Cell ID: 59<br/>Cell Identity: 104096028<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.222468,39.142697,0</coordinates>
       </Point>
@@ -69,7 +49,7 @@
       <description>
         <![CDATA[Cell ID: 355<br/>Cell Identity: 104099612<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.222626,39.142855,0</coordinates>
       </Point>
@@ -79,9 +59,29 @@
       <description>
         <![CDATA[Cell ID: 356<br/>Cell Identity: 104099622<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.201922,39.144161,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>60</name>
+      <description>
+        <![CDATA[Cell ID: 60<br/>Cell Identity: 27141394<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.234302,39.128636,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>61</name>
+      <description>
+        <![CDATA[Cell ID: 61<br/>Cell Identity: 27141404<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.239482,39.130286,0</coordinates>
       </Point>
     </Placemark>
   </Document>

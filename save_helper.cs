@@ -67,7 +67,7 @@ namespace BTS_Location_Estimation
                 string mapKmlFilename = Path.Combine(directory, mapBaseFilename + ".kml");
 
                 generate_map_csv(channelResults, mapCsvFilename);
-                //generate_map_kml(channelResults, mapKmlFilename);
+                generate_map_kml(channelResults, mapKmlFilename);
             }
         }
 
@@ -111,122 +111,63 @@ namespace BTS_Location_Estimation
         {
             try
             {
-                // 1. Parse and sort the data
-                var parsedData = estimationResults
-                    .Select(r =>
-                    {
-                        long.TryParse(r.GetValueOrDefault("cellIdentity", "-1"), out long id);
-                        return new
-                        {
-                            Result = r,
-                            CellIdentityNum = id
-                        };
-                    })
-                    .Where(x => x.CellIdentityNum != -1)
-                    .OrderBy(x => x.CellIdentityNum)
-                    .ToList();
+                var cellPlacemarks = new Dictionary<string, Placemark>();
+                var towerPlacemarks = new List<Placemark>();
 
-                var placemarks = new List<Placemark>();
-                var groupPlacemarks = new List<Placemark>(); // Separate list for averaged groups
-                var processedIndices = new HashSet<int>();
-
-                // 1. Create placemarks for all individual points first
-                foreach (var dataPoint in parsedData)
+                // First pass: Create all placemark objects
+                foreach (var result in estimationResults)
                 {
-                    var result = dataPoint.Result;
-                    placemarks.Add(new Placemark
+                    string cellId = result.GetValueOrDefault("CellId", "");
+                    if (string.IsNullOrEmpty(cellId) || !result.ContainsKey("est_Lat2") || !result.ContainsKey("est_Lon2"))
                     {
-                        Lat = result.GetValueOrDefault("est_Lat2", ""),
-                        Lon = result.GetValueOrDefault("est_Lon2", ""),
-                        CellId = result.GetValueOrDefault("CellId", ""),
+                        continue;
+                    }
+
+                    var placemark = new Placemark
+                    {
+                        Lat = result["est_Lat2"],
+                        Lon = result["est_Lon2"],
+                        CellId = cellId,
                         CellIdentity = result.GetValueOrDefault("cellIdentity", ""),
-                        BeamInfo = result.ContainsKey("BeamIndex") ? $", Beam: {result["BeamIndex"]}" : "",
                         Confidence = result.GetValueOrDefault("Confidence", "N/A"),
-                        StyleId = "red_circle_style" // Default style
-                    });
-                }
+                        BeamInfo = result.ContainsKey("BeamIndex") ? $", Beam: {result["BeamIndex"]}" : ""
+                    };
 
-                // 2. Identify groups of three, update styles, and create group placemark
-                for (int i = 0; i <= parsedData.Count - 3; i++)
-                {
-                    if (processedIndices.Contains(i)) continue;
-
-                    var p1 = parsedData[i];
-                    var p2 = parsedData[i + 1];
-                    var p3 = parsedData[i + 2];
-
-                    long diff1 = p2.CellIdentityNum - p1.CellIdentityNum;
-                    long diff2 = p3.CellIdentityNum - p2.CellIdentityNum;
-
-                    if ((diff1 == 1 || diff1 == 2) && (diff2 == 1 || diff2 == 2))
+                    // Note: Assuming tower CellIds are joined by '_'.
+                    if (cellId.Contains("_"))
                     {
-                        var group = new[] { p1, p2, p3 };
-                        double avgLat = group.Average(p => double.Parse(p.Result.GetValueOrDefault("est_Lat2", "0"), System.Globalization.CultureInfo.InvariantCulture));
-                        double avgLon = group.Average(p => double.Parse(p.Result.GetValueOrDefault("est_Lon2", "0"), System.Globalization.CultureInfo.InvariantCulture));
-
-                        groupPlacemarks.Add(new Placemark
+                        placemark.StyleId = "blue_pin_style";
+                        towerPlacemarks.Add(placemark);
+                    }
+                    else
+                    {
+                        placemark.StyleId = "red_balloon_style"; // Default style
+                        if (!cellPlacemarks.ContainsKey(cellId))
                         {
-                            Lat = avgLat.ToString("F6", System.Globalization.CultureInfo.InvariantCulture),
-                            Lon = avgLon.ToString("F6", System.Globalization.CultureInfo.InvariantCulture),
-                            CellId = string.Join("_", group.Select(p => p.Result.GetValueOrDefault("CellId", ""))),
-                            CellIdentity = string.Join("_", group.Select(p => p.Result.GetValueOrDefault("cellIdentity", ""))),
-                            StyleId = "pink_pin_style"
-                        });
-
-                        // Update style for individual points in the group
-                        placemarks[i].StyleId = "pink_circle_style";
-                        placemarks[i + 1].StyleId = "pink_circle_style";
-                        placemarks[i + 2].StyleId = "pink_circle_style";
-
-                        processedIndices.Add(i);
-                        processedIndices.Add(i + 1);
-                        processedIndices.Add(i + 2);
+                            cellPlacemarks.Add(cellId, placemark);
+                        }
                     }
                 }
 
-                // 3. Identify groups of two, update styles, and create group placemark
-                for (int i = 0; i <= parsedData.Count - 2; i++)
+                // Second pass: Update styles for cells that are part of a tower
+                foreach (var tower in towerPlacemarks)
                 {
-                    if (processedIndices.Contains(i) || processedIndices.Contains(i + 1)) continue;
-
-                    var p1 = parsedData[i];
-                    var p2 = parsedData[i + 1];
-
-                    long diff = p2.CellIdentityNum - p1.CellIdentityNum;
-
-                    if (diff == 1 || diff == 2)
+                    var individualCellIds = tower.CellId.Split('_');
+                    foreach (var id in individualCellIds)
                     {
-                        var group = new[] { p1, p2 };
-                        double avgLat = group.Average(p => double.Parse(p.Result.GetValueOrDefault("est_Lat2", "0"), System.Globalization.CultureInfo.InvariantCulture));
-                        double avgLon = group.Average(p => double.Parse(p.Result.GetValueOrDefault("est_Lon2", "0"), System.Globalization.CultureInfo.InvariantCulture));
-
-                        groupPlacemarks.Add(new Placemark
+                        if (cellPlacemarks.TryGetValue(id, out var placemarkToUpdate))
                         {
-                            Lat = avgLat.ToString("F6", System.Globalization.CultureInfo.InvariantCulture),
-                            Lon = avgLon.ToString("F6", System.Globalization.CultureInfo.InvariantCulture),
-                            CellId = string.Join("_", group.Select(p => p.Result.GetValueOrDefault("CellId", ""))),
-                            CellIdentity = string.Join("_", group.Select(p => p.Result.GetValueOrDefault("cellIdentity", ""))),
-                            StyleId = "pink_pin_style"
-                        });
-
-                        // Update style for individual points in the group
-                        placemarks[i].StyleId = "pink_circle_style";
-                        placemarks[i + 1].StyleId = "pink_circle_style";
-
-                        processedIndices.Add(i);
-                        processedIndices.Add(i + 1);
+                            placemarkToUpdate.StyleId = "blue_balloon_style";
+                        }
                     }
                 }
 
-                // 4. Combine all placemarks
-                placemarks.AddRange(groupPlacemarks);
-
-                // 5. Override styles for low confidence points
-                foreach (var p in placemarks)
+                // Third pass: Override styles for low confidence points
+                foreach (var placemark in cellPlacemarks.Values)
                 {
-                    if (p.Confidence == "Low")
+                    if (placemark.Confidence == "Low")
                     {
-                        p.StyleId = "yellow_circle_style";
+                        placemark.StyleId = "yellow_balloon_style";
                     }
                 }
 
@@ -239,7 +180,7 @@ namespace BTS_Location_Estimation
                     writer.WriteLine($"    <name>{mapName}</name>");
 
                     // Style for single points (red circle)
-                    writer.WriteLine("    <Style id=\"red_circle_style\">");
+                    writer.WriteLine("    <Style id=\"red_balloon_style\">");
                     writer.WriteLine("      <IconStyle>");
                     writer.WriteLine("        <Icon>");
                     writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>");
@@ -248,8 +189,18 @@ namespace BTS_Location_Estimation
                     writer.WriteLine("      </IconStyle>");
                     writer.WriteLine("    </Style>");
 
+                    // Style for tower member points (blue circle)
+                    writer.WriteLine("    <Style id=\"blue_balloon_style\">");
+                    writer.WriteLine("      <IconStyle>");
+                    writer.WriteLine("        <Icon>");
+                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href>");
+                    writer.WriteLine("        </Icon>");
+                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
+                    writer.WriteLine("      </IconStyle>");
+                    writer.WriteLine("    </Style>");
+
                     // Style for low confidence points (yellow circle)
-                    writer.WriteLine("    <Style id=\"yellow_circle_style\">");
+                    writer.WriteLine("    <Style id=\"yellow_balloon_style\">");
                     writer.WriteLine("      <IconStyle>");
                     writer.WriteLine("        <Icon>");
                     writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href>");
@@ -258,34 +209,26 @@ namespace BTS_Location_Estimation
                     writer.WriteLine("      </IconStyle>");
                     writer.WriteLine("    </Style>");
 
-                    // Style for grouped points (pink circle for individual members)
-                    writer.WriteLine("    <Style id=\"pink_circle_style\">");
+                    // Style for tower points (blue pushpin)
+                    writer.WriteLine("    <Style id=\"blue_pin_style\">");
                     writer.WriteLine("      <IconStyle>");
                     writer.WriteLine("        <Icon>");
-                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/pink-circle.png</href>");
-                    writer.WriteLine("        </Icon>");
-                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
-                    writer.WriteLine("      </IconStyle>");
-                    writer.WriteLine("    </Style>");
-
-                    // Style for grouped points (pink pushpin for average)
-                    writer.WriteLine("    <Style id=\"pink_pin_style\">");
-                    writer.WriteLine("      <IconStyle>");
-                    writer.WriteLine("        <Icon>");
-                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/pushpin/pink-pushpin.png</href>");
+                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href>");
                     writer.WriteLine("        </Icon>");
                     writer.WriteLine("        <hotSpot x=\"20\" y=\"2\" xunits=\"pixels\" yunits=\"pixels\"/>");
                     writer.WriteLine("      </IconStyle>");
                     writer.WriteLine("    </Style>");
 
-                    foreach (var p in placemarks)
+                    // Write Placemarks
+                    var allPlacemarks = cellPlacemarks.Values.Concat(towerPlacemarks);
+                    foreach (var p in allPlacemarks)
                     {
                         writer.WriteLine("    <Placemark>");
                         writer.WriteLine($"      <name>{p.CellId}</name>");
                         writer.WriteLine("      <description>");
-                        if (p.StyleId == "pink_pin_style")
+                        if (p.StyleId == "blue_pin_style")
                         {
-                            writer.WriteLine($"        <![CDATA[Grouped Cell Identities: {p.CellIdentity}]]>");
+                            writer.WriteLine($"        <![CDATA[Tower containing Cell IDs: {p.CellId.Replace("_", ", ")}<br/>Cell Identities: {p.CellIdentity.Replace("_", ", ")}]]>");
                         }
                         else
                         {

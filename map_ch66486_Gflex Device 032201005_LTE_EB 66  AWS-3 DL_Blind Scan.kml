@@ -2,7 +2,7 @@
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
     <name>map_ch66486_Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan</name>
-    <Style id="red_circle_style">
+    <Style id="red_balloon_style">
       <IconStyle>
         <Icon>
           <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
@@ -10,7 +10,15 @@
         <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
       </IconStyle>
     </Style>
-    <Style id="yellow_circle_style">
+    <Style id="blue_balloon_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Style id="yellow_balloon_style">
       <IconStyle>
         <Icon>
           <href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href>
@@ -18,18 +26,10 @@
         <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
       </IconStyle>
     </Style>
-    <Style id="pink_circle_style">
+    <Style id="blue_pin_style">
       <IconStyle>
         <Icon>
-          <href>http://maps.google.com/mapfiles/kml/paddle/pink-circle.png</href>
-        </Icon>
-        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
-      </IconStyle>
-    </Style>
-    <Style id="pink_pin_style">
-      <IconStyle>
-        <Icon>
-          <href>http://maps.google.com/mapfiles/kml/pushpin/pink-pushpin.png</href>
+          <href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href>
         </Icon>
         <hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
       </IconStyle>
@@ -39,7 +39,7 @@
       <description>
         <![CDATA[Cell ID: 263<br/>Cell Identity: 18036502<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.195048,39.120245,0</coordinates>
       </Point>
@@ -49,7 +49,7 @@
       <description>
         <![CDATA[Cell ID: 308<br/>Cell Identity: 18071318<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.257422,39.178928,0</coordinates>
       </Point>
@@ -59,9 +59,19 @@
       <description>
         <![CDATA[Cell ID: 294<br/>Cell Identity: 18215446<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.213313,39.152403,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>294/203/268</name>
+      <description>
+        <![CDATA[Cell ID: 294/203/268, Beam: Tower<br/>Cell Identity: 18215446_447_448<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.213429,39.150459,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -69,7 +79,7 @@
       <description>
         <![CDATA[Cell ID: 203<br/>Cell Identity: 18215447<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.213453,39.149615,0</coordinates>
       </Point>
@@ -79,7 +89,7 @@
       <description>
         <![CDATA[Cell ID: 268<br/>Cell Identity: 18215448<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.213521,39.149358,0</coordinates>
       </Point>
@@ -89,7 +99,7 @@
       <description>
         <![CDATA[Cell ID: 327<br/>Cell Identity: 18440726<br/>Confidence: Low]]>
       </description>
-      <styleUrl>#yellow_circle_style</styleUrl>
+      <styleUrl>#yellow_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.235401,39.121479,0</coordinates>
       </Point>
@@ -99,9 +109,19 @@
       <description>
         <![CDATA[Cell ID: 431<br/>Cell Identity: 18445078<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.224116,39.141120,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>431/445</name>
+      <description>
+        <![CDATA[Cell ID: 431/445, Beam: Tower<br/>Cell Identity: 18445078_079<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.221165,39.140748,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -109,7 +129,7 @@
       <description>
         <![CDATA[Cell ID: 445<br/>Cell Identity: 18445079<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.218214,39.140375,0</coordinates>
       </Point>
@@ -119,9 +139,19 @@
       <description>
         <![CDATA[Cell ID: 484<br/>Cell Identity: 18498327<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.275469,39.213190,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>484/395</name>
+      <description>
+        <![CDATA[Cell ID: 484/395, Beam: Tower<br/>Cell Identity: 18498327_328<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.276685,39.212355,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -129,7 +159,7 @@
       <description>
         <![CDATA[Cell ID: 395<br/>Cell Identity: 18498328<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.277900,39.211519,0</coordinates>
       </Point>
@@ -139,9 +169,19 @@
       <description>
         <![CDATA[Cell ID: 147<br/>Cell Identity: 18513942<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.283798,39.231308,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>147/260</name>
+      <description>
+        <![CDATA[Cell ID: 147/260, Beam: Tower<br/>Cell Identity: 18513942_943<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.283193,39.230143,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -149,7 +189,7 @@
       <description>
         <![CDATA[Cell ID: 260<br/>Cell Identity: 18513943<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.282588,39.228978,0</coordinates>
       </Point>
@@ -159,9 +199,19 @@
       <description>
         <![CDATA[Cell ID: 183<br/>Cell Identity: 18586134<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.207235,39.135318,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>183/367/41</name>
+      <description>
+        <![CDATA[Cell ID: 183/367/41, Beam: Tower<br/>Cell Identity: 18586134_135_136<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.206772,39.135583,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -169,7 +219,7 @@
       <description>
         <![CDATA[Cell ID: 367<br/>Cell Identity: 18586135<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.206036,39.135125,0</coordinates>
       </Point>
@@ -179,7 +229,7 @@
       <description>
         <![CDATA[Cell ID: 41<br/>Cell Identity: 18586136<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.207044,39.136306,0</coordinates>
       </Point>
@@ -189,7 +239,7 @@
       <description>
         <![CDATA[Cell ID: 359<br/>Cell Identity: 18587672<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.227114,39.160622,0</coordinates>
       </Point>
@@ -199,9 +249,19 @@
       <description>
         <![CDATA[Cell ID: 426<br/>Cell Identity: 18625304<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.260865,39.198695,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>426/76</name>
+      <description>
+        <![CDATA[Cell ID: 426/76, Beam: Tower<br/>Cell Identity: 18625304_305<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.264165,39.196828,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -209,7 +269,7 @@
       <description>
         <![CDATA[Cell ID: 76<br/>Cell Identity: 18625305<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.267466,39.194962,0</coordinates>
       </Point>
@@ -219,9 +279,19 @@
       <description>
         <![CDATA[Cell ID: 353<br/>Cell Identity: 18719510<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.233296,39.125865,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>353/352/474</name>
+      <description>
+        <![CDATA[Cell ID: 353/352/474, Beam: Tower<br/>Cell Identity: 18719510_511_512<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.223469,39.139136,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -229,7 +299,7 @@
       <description>
         <![CDATA[Cell ID: 352<br/>Cell Identity: 18719511<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.234881,39.128341,0</coordinates>
       </Point>
@@ -239,7 +309,7 @@
       <description>
         <![CDATA[Cell ID: 474<br/>Cell Identity: 18719512<br/>Confidence: High]]>
       </description>
-      <styleUrl>#pink_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.202229,39.163203,0</coordinates>
       </Point>
@@ -249,7 +319,7 @@
       <description>
         <![CDATA[Cell ID: 251<br/>Cell Identity: 19156504<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.258234,39.166995,0</coordinates>
       </Point>
@@ -259,7 +329,7 @@
       <description>
         <![CDATA[Cell ID: 365<br/>Cell Identity: 19828595<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.195783,39.138825,0</coordinates>
       </Point>
@@ -269,7 +339,7 @@
       <description>
         <![CDATA[Cell ID: 43<br/>Cell Identity: 19938865<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.213714,39.123332,0</coordinates>
       </Point>
@@ -279,7 +349,7 @@
       <description>
         <![CDATA[Cell ID: 408<br/>Cell Identity: 19938893<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.209022,39.129301,0</coordinates>
       </Point>
@@ -289,7 +359,7 @@
       <description>
         <![CDATA[Cell ID: 137<br/>Cell Identity: 19938931<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.217840,39.116327,0</coordinates>
       </Point>
@@ -299,79 +369,9 @@
       <description>
         <![CDATA[Cell ID: 421<br/>Cell Identity: 19939633<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.218102,39.110809,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>294_203_268</name>
-      <description>
-        <![CDATA[Grouped Cell Identities: 18215446_18215447_18215448]]>
-      </description>
-      <styleUrl>#pink_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.213429,39.150459,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>183_367_41</name>
-      <description>
-        <![CDATA[Grouped Cell Identities: 18586134_18586135_18586136]]>
-      </description>
-      <styleUrl>#pink_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.206772,39.135583,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>353_352_474</name>
-      <description>
-        <![CDATA[Grouped Cell Identities: 18719510_18719511_18719512]]>
-      </description>
-      <styleUrl>#pink_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.223469,39.139136,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>431_445</name>
-      <description>
-        <![CDATA[Grouped Cell Identities: 18445078_18445079]]>
-      </description>
-      <styleUrl>#pink_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.221165,39.140748,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>484_395</name>
-      <description>
-        <![CDATA[Grouped Cell Identities: 18498327_18498328]]>
-      </description>
-      <styleUrl>#pink_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.276685,39.212355,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>147_260</name>
-      <description>
-        <![CDATA[Grouped Cell Identities: 18513942_18513943]]>
-      </description>
-      <styleUrl>#pink_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.283193,39.230143,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>426_76</name>
-      <description>
-        <![CDATA[Grouped Cell Identities: 18625304_18625305]]>
-      </description>
-      <styleUrl>#pink_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.264165,39.196828,0</coordinates>
       </Point>
     </Placemark>
   </Document>
