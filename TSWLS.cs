@@ -2,6 +2,8 @@ using System;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace BTS_Location_Estimation
 {
@@ -419,6 +421,109 @@ namespace BTS_Location_Estimation
             double lon = (x / metersPerDegree) / Math.Cos(latRef * PI / 180.0) + lonRef;
             double lat = y / metersPerDegree + latRef;
             return (lat, lon);
+        }
+
+        /***************************************************************************************************
+        *
+        *   Function:       ProcessTswlsResult
+        *
+        *   Description:    Processes the successful result from the TSWLS algorithm for a single cell.
+        *                   It converts the estimated x,y coordinates to latitude/longitude,
+        *                   calculates a confidence level, and formats the output for saving.
+        *
+        *   Input:          tswlsResult (Vector<double>) - Vector with estimated x,y coordinates.
+        *                   timeAdjustedPoints (List<...>) - Data points used for the estimation.
+        *                   group (IGrouping<...>) - Grouping metadata (Channel, CellId).
+        *                   maxCinr (double) - Maximum CINR for the cell.
+        *                   estimationResults (List<...>) - The list to which the final result is added.
+        *                   fileType (int) - The type of the processed file.
+        *                   metersPerDegree (double) - Conversion factor for lat/lon to meters.
+        *                   wcdmaFileTypeCsv (int) - Constant for WCDMA CSV file type.
+        *                   wcdmaFileTypeDtr (int) - Constant for WCDMA DTR file type.
+        *                   confidenceMinPointsWcdma (int) - Minimum points for WCDMA confidence.
+        *                   confidenceMinEcioWcdma (double) - Minimum EC/IO for WCDMA confidence.
+        *                   confidenceMinPointsLteNr (int) - Minimum points for LTE/NR confidence.
+        *                   confidenceMinCinrLteNr (double) - Minimum CINR for LTE/NR confidence.
+        *
+        *   Output:         None (void). Modifies the 'estimationResults' list by adding a new
+        *                   dictionary containing the full estimation result for the cell.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
+        public static void ProcessTswlsResult(
+            Vector<double> tswlsResult,
+            List<Dictionary<string, string>> timeAdjustedPoints,
+            IGrouping<dynamic, Dictionary<string, string>> group,
+            double maxCinr,
+            List<Dictionary<string, string>> estimationResults,
+            int fileType,
+            double metersPerDegree,
+            int wcdmaFileTypeCsv,
+            int wcdmaFileTypeDtr,
+            int confidenceMinPointsWcdma,
+            double confidenceMinEcioWcdma,
+            int confidenceMinPointsLteNr,
+            double confidenceMinCinrLteNr)
+        {
+            double xhat1 = tswlsResult[0];
+            double yhat1 = tswlsResult[1];
+            double xhat2 = tswlsResult[2];
+            double yhat2 = tswlsResult[3];
+
+            double latRef = double.Parse(timeAdjustedPoints[0]["latitude"], CultureInfo.InvariantCulture);
+            double lonRef = double.Parse(timeAdjustedPoints[0]["longitude"], CultureInfo.InvariantCulture);
+
+            var (est_Lat1, est_Lon1) = xy2LatLon(xhat1, yhat1, latRef, lonRef, metersPerDegree);
+            var (est_Lat2, est_Lon2) = xy2LatLon(xhat2, yhat2, latRef, lonRef, metersPerDegree);
+
+            Console.WriteLine($"Estimated Final Location for Cell {group.Key.CellId} (Lat, Lon): ({est_Lat2:F6}, {est_Lon2:F6})");
+
+            // Extract and combine unique cellIdentity values for the group
+            var cellIdentities = group
+                .Where(p => p.ContainsKey("cellIdentity") && !string.IsNullOrWhiteSpace(p["cellIdentity"]))
+                .Select(p => p["cellIdentity"])
+                .Distinct()
+                .ToList();
+            string combinedCellIdentity = string.Join("-", cellIdentities);
+
+            string confidence = "High";
+            bool isWcdma = fileType == wcdmaFileTypeCsv || fileType == wcdmaFileTypeDtr;
+            if (isWcdma)
+            {
+                if (timeAdjustedPoints.Count < confidenceMinPointsWcdma && maxCinr < confidenceMinEcioWcdma)
+                {
+                    confidence = "Low";
+                }
+            }
+            else // LTE and NR
+            {
+                if (timeAdjustedPoints.Count < confidenceMinPointsLteNr && maxCinr < confidenceMinCinrLteNr)
+                {
+                    confidence = "Low";
+                }
+            }
+
+            var resultDict = new Dictionary<string, string>
+            {
+                { "Channel", group.Key.Channel },
+                { "CellId", group.Key.CellId },
+                { "cellIdentity", combinedCellIdentity },
+                { "xhat1", xhat1.ToString("F4", CultureInfo.InvariantCulture) },
+                { "yhat1", yhat1.ToString("F4", CultureInfo.InvariantCulture) },
+                { "xhat2", xhat2.ToString("F4", CultureInfo.InvariantCulture) },
+                { "yhat2", yhat2.ToString("F4", CultureInfo.InvariantCulture) },
+                { "est_Lat1", est_Lat1.ToString("F6", CultureInfo.InvariantCulture) },
+                { "est_Lon1", est_Lon1.ToString("F6", CultureInfo.InvariantCulture) },
+                { "est_Lat2", est_Lat2.ToString("F6", CultureInfo.InvariantCulture) },
+                { "est_Lon2", est_Lon2.ToString("F6", CultureInfo.InvariantCulture) },
+                { "Max_cinr", maxCinr.ToString("F2", CultureInfo.InvariantCulture) },
+                { "Num_points", timeAdjustedPoints.Count.ToString() },
+                { "Confidence", confidence }
+            };
+            estimationResults.Add(resultDict);
         }
     }
 }

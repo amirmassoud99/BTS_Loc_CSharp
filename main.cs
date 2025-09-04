@@ -7,6 +7,7 @@ using MathNet.Numerics.LinearAlgebra;
 using static BTS_Location_Estimation.DataBaseProc;
 using static BTS_Location_Estimation.InputOutputFileProc;
 using static BTS_Location_Estimation.SaveHelper;
+using static BTS_Location_Estimation.TSWLS;
 
 namespace BTS_Location_Estimation
 {
@@ -25,7 +26,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.10.0";
+        public const string SW_VERSION = "1.0.11.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -130,7 +131,7 @@ namespace BTS_Location_Estimation
 
                     if (tswlsResult != null)
                     {
-                        ProcessTswlsResult(tswlsResult, timeAdjustedPoints, group, maxCinr, estimationResults, fileType);
+                        ProcessTswlsResult(tswlsResult, timeAdjustedPoints, group, maxCinr, estimationResults, fileType, METERS_PER_DEGREE, WCDMA_FILE_TYPE_CSV, WCDMA_FILE_TYPE_DTR, CONFIDENCE_MIN_POINTS_WCDMA, CONFIDENCE_MIN_ECIO_WCDMA, CONFIDENCE_MIN_POINTS_LTE_NR, CONFIDENCE_MIN_CINR_LTE_NR);
                     }
                 }
 
@@ -146,90 +147,6 @@ namespace BTS_Location_Estimation
                 save_estimation_results(sortedResults, estimateFilename);
             }
             Console.WriteLine("Batch processing complete.");
-        }
-
-        /***************************************************************************************************
-        *
-        *   Function:       ProcessTswlsResult
-        *
-        *   Description:    Processes the successful result from the TSWLS algorithm for a single cell.
-        *                   It converts the estimated x,y coordinates to latitude/longitude,
-        *                   calculates a confidence level, and formats the output for saving.
-        *
-        *   Input:          tswlsResult (Vector<double>) - Vector with estimated x,y coordinates.
-        *                   timeAdjustedPoints (List<...>) - Data points used for the estimation.
-        *                   group (IGrouping<...>) - Grouping metadata (Channel, CellId).
-        *                   maxCinr (double) - Maximum CINR for the cell.
-        *                   estimationResults (List<...>) - The list to which the final result is added.
-        *
-        *   Output:         None (void). Modifies the 'estimationResults' list by adding a new
-        *                   dictionary containing the full estimation result for the cell.
-        *
-        *   Author:         Amir Soltanian
-        *
-        *   Date:           September 4, 2025
-        *
-        ***************************************************************************************************/
-        private static void ProcessTswlsResult(Vector<double> tswlsResult, List<Dictionary<string, string>> timeAdjustedPoints, IGrouping<dynamic, Dictionary<string, string>> group, double maxCinr, List<Dictionary<string, string>> estimationResults, int fileType)
-        {
-            double xhat1 = tswlsResult[0];
-            double yhat1 = tswlsResult[1];
-            double xhat2 = tswlsResult[2];
-            double yhat2 = tswlsResult[3];
-
-            double latRef = double.Parse(timeAdjustedPoints[0]["latitude"], CultureInfo.InvariantCulture);
-            double lonRef = double.Parse(timeAdjustedPoints[0]["longitude"], CultureInfo.InvariantCulture);
-
-            var (est_Lat1, est_Lon1) = TSWLS.xy2LatLon(xhat1, yhat1, latRef, lonRef, METERS_PER_DEGREE);
-            var (est_Lat2, est_Lon2) = TSWLS.xy2LatLon(xhat2, yhat2, latRef, lonRef, METERS_PER_DEGREE);
-
-            Console.WriteLine($"Estimated Final Location for Cell {group.Key.CellId} (Lat, Lon): ({est_Lat2:F6}, {est_Lon2:F6})");
-
-
-
-            // Extract and combine unique cellIdentity values for the group
-            var cellIdentities = group
-                .Where(p => p.ContainsKey("cellIdentity") && !string.IsNullOrWhiteSpace(p["cellIdentity"]))
-                .Select(p => p["cellIdentity"])
-                .Distinct()
-                .ToList();
-            string combinedCellIdentity = string.Join("-", cellIdentities);
-
-            string confidence = "High";
-            bool isWcdma = fileType == WCDMA_FILE_TYPE_CSV || fileType == WCDMA_FILE_TYPE_DTR;
-            if (isWcdma)
-            {
-                if (timeAdjustedPoints.Count < CONFIDENCE_MIN_POINTS_WCDMA && maxCinr < CONFIDENCE_MIN_ECIO_WCDMA)
-                {
-                    confidence = "Low";
-                }
-            }
-            else // LTE and NR
-            {
-                if (timeAdjustedPoints.Count < CONFIDENCE_MIN_POINTS_LTE_NR && maxCinr < CONFIDENCE_MIN_CINR_LTE_NR)
-                {
-                    confidence = "Low";
-                }
-            }
-
-            var resultDict = new Dictionary<string, string>
-            {
-                { "Channel", group.Key.Channel },
-                { "CellId", group.Key.CellId },
-                { "cellIdentity", combinedCellIdentity },
-                { "xhat1", xhat1.ToString("F4", CultureInfo.InvariantCulture) },
-                { "yhat1", yhat1.ToString("F4", CultureInfo.InvariantCulture) },
-                { "xhat2", xhat2.ToString("F4", CultureInfo.InvariantCulture) },
-                { "yhat2", yhat2.ToString("F4", CultureInfo.InvariantCulture) },
-                { "est_Lat1", est_Lat1.ToString("F6", CultureInfo.InvariantCulture) },
-                { "est_Lon1", est_Lon1.ToString("F6", CultureInfo.InvariantCulture) },
-                { "est_Lat2", est_Lat2.ToString("F6", CultureInfo.InvariantCulture) },
-                { "est_Lon2", est_Lon2.ToString("F6", CultureInfo.InvariantCulture) },
-                { "Max_cinr", maxCinr.ToString("F2", CultureInfo.InvariantCulture) },
-                { "Num_points", timeAdjustedPoints.Count.ToString() },
-                { "Confidence", confidence }
-            };
-            estimationResults.Add(resultDict);
         }
 
         /***************************************************************************************************
