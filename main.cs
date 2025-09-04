@@ -24,7 +24,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.4.0";
+        public const string SW_VERSION = "1.0.5.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -36,11 +36,17 @@ namespace BTS_Location_Estimation
         public const int MINIMUM_POINTS_FOR_TSWLS = 4;
         public const double SPEED_OF_LIGHT = 3e8; // Speed of light in m/s
         public const double CINR_THRESH = 0.0;
-        public const double EC_IO_THRESHOLD = -18.0;
+        public const double EC_IO_THRESHOLD = -12.0;
         public const double DISTANCE_THRESH = 100.0;
         public const double SEARCH_DIRECTION = 600.0;
         public const int MAX_POINTS = 60;
         public const int MINIMUM_CELL_ID_COUNT = 20;
+
+        // Confidence Thresholds
+        public const int CONFIDENCE_MIN_POINTS_LTE_NR = 8;
+        public const double CONFIDENCE_MIN_CINR_LTE_NR = 12.0;
+        public const int CONFIDENCE_MIN_POINTS_WCDMA = 8;
+        public const double CONFIDENCE_MIN_ECIO_WCDMA = -10.0;
 
         /***************************************************************************************************
         *
@@ -84,7 +90,8 @@ namespace BTS_Location_Estimation
                 string step1Filename = $"step1_{filenameOnly}.csv";
                 //save_extrac_step1(allData, step1Filename);
 
-                double cinrThreshold = (fileType == WCDMA_FILE_TYPE) ? EC_IO_THRESHOLD : CINR_THRESH;
+                bool isWcdma = fileType == WCDMA_FILE_TYPE_CSV || fileType == WCDMA_FILE_TYPE_DTR;
+                double cinrThreshold = isWcdma ? EC_IO_THRESHOLD : CINR_THRESH;
                 var filteredData = InputOutputFileProc.filter_cinr_minimum_PCI(allData, cinrThreshold, MINIMUM_CELL_ID_COUNT);
                 string step2Filename = $"step2_{filenameOnly}.csv";
                 //save_extract_step2(filteredData, step2Filename);
@@ -120,7 +127,7 @@ namespace BTS_Location_Estimation
 
                     if (tswlsResult != null)
                     {
-                        ProcessTswlsResult(tswlsResult, timeAdjustedPoints, group, maxCinr, estimationResults);
+                        ProcessTswlsResult(tswlsResult, timeAdjustedPoints, group, maxCinr, estimationResults, fileType);
                     }
                 }
 
@@ -160,7 +167,7 @@ namespace BTS_Location_Estimation
         *   Date:           September 4, 2025
         *
         ***************************************************************************************************/
-        private static void ProcessTswlsResult(Vector<double> tswlsResult, List<Dictionary<string, string>> timeAdjustedPoints, IGrouping<dynamic, Dictionary<string, string>> group, double maxCinr, List<Dictionary<string, string>> estimationResults)
+        private static void ProcessTswlsResult(Vector<double> tswlsResult, List<Dictionary<string, string>> timeAdjustedPoints, IGrouping<dynamic, Dictionary<string, string>> group, double maxCinr, List<Dictionary<string, string>> estimationResults, int fileType)
         {
             double xhat1 = tswlsResult[0];
             double yhat1 = tswlsResult[1];
@@ -186,9 +193,20 @@ namespace BTS_Location_Estimation
             string combinedCellIdentity = string.Join("-", cellIdentities);
 
             string confidence = "High";
-            if (timeAdjustedPoints.Count < 8 && maxCinr < 12)
+            bool isWcdma = fileType == WCDMA_FILE_TYPE_CSV || fileType == WCDMA_FILE_TYPE_DTR;
+            if (isWcdma)
             {
-                confidence = "Low";
+                if (timeAdjustedPoints.Count < CONFIDENCE_MIN_POINTS_WCDMA && maxCinr < CONFIDENCE_MIN_ECIO_WCDMA)
+                {
+                    confidence = "Low";
+                }
+            }
+            else // LTE and NR
+            {
+                if (timeAdjustedPoints.Count < CONFIDENCE_MIN_POINTS_LTE_NR && maxCinr < CONFIDENCE_MIN_CINR_LTE_NR)
+                {
+                    confidence = "Low";
+                }
             }
 
             var resultDict = new Dictionary<string, string>

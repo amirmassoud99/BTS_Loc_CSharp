@@ -14,7 +14,8 @@ namespace BTS_Location_Estimation
         public const int LTE_BLIND_FILE_TYPE = 2;
         public const int NR_TOPN_FILE_TYPE = 3;
         public const int NR_FILE_TYPE = 4;
-        public const int WCDMA_FILE_TYPE = 5;
+        public const int WCDMA_FILE_TYPE_CSV = 5;
+        public const int WCDMA_FILE_TYPE_DTR = 50;
 
         /***************************************************************************************************
         *
@@ -45,16 +46,14 @@ namespace BTS_Location_Estimation
             
             /**********WCDMA Batch */
             
-            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\Drive test WCDMA MBS_20230111_144045\";
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\Drive test WCDMA MBS_20230111_144045\";
             List<string> inputFilenames = new List<string>
             {
-                "Gflex Device 019999095_UMTS WCDMA_UB I  2100 (IMT-2000) DL_Blind Scan.csv"
-                "Gflex Device 019999095_UMTS WCDMA_UB III  1800 (DCS) DL_Blind Scan.csv",
-                "Gflex Device 019999095_UMTS WCDMA_UB VII  2600 (IMT Extension) DL_Blind Scan.csv",
-                "Gflex Device 019999095_UMTS WCDMA_UB VIII  900 DL_Blind Scan.csv"
-                ""
+                "Gflex Device 019999095_UMTS WCDMA_UB I  2100 (IMT-2000) DL_Blind Scan.dtr",
+                "Gflex Device 019999095_UMTS WCDMA_UB III  1800 (DCS) DL_Blind Scan.dtrv",
+                "Gflex Device 019999095_UMTS WCDMA_UB VII  2600 (IMT Extension) DL_Blind Scan.dtr",
                 "Gflex Device 019999095_UMTS WCDMA_UB VIII  900 DL_Blind Scan.dtr"
-            };*/
+            };
             
 
             //Batch processing Drive 1 LTE NR
@@ -126,16 +125,16 @@ namespace BTS_Location_Estimation
             */
 
             //Batch processing Drive 5_Gaithersuburg
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250828_Gaitherburg-Drive\";
+            //string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250828_Gaitherburg-Drive\";
             // List of input filenames to process in batch
-            List<string> inputFilenames = new List<string>
+            /*List<string> inputFilenames = new List<string>
             {
                 //"Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
                 //"Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
                 "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
                 //"Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
                 "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr"
-            };
+            };*/
 
             return (fileDirectory, inputFilenames);
         }
@@ -349,7 +348,7 @@ namespace BTS_Location_Estimation
                 if (!string.IsNullOrEmpty(timeOffsetKeyword))
                 {
                     bool isNrDtrFile = fileType == 30 || fileType == 40;
-                    bool isWcdmaDtrFile = fileType == 50;
+                    bool isWcdmaDtrFile = fileType == WCDMA_FILE_TYPE_DTR;
 
                     if (isNrDtrFile)
                     {
@@ -629,7 +628,7 @@ namespace BTS_Location_Estimation
             }
 
             bool isNr = fileType == 3 || fileType == 4 || fileType == 30 || fileType == 40;
-            bool isWcdma = fileType == 5 || fileType == 50;
+            bool isWcdma = fileType == WCDMA_FILE_TYPE_CSV || fileType == WCDMA_FILE_TYPE_DTR;
 
             double wrapValue;
             double samplingRateHz;

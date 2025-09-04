@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>map_ch67086_Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan</name>
+    <name>map_ch3050_Gflex Device 019999095_UMTS WCDMA_UB VIII  900 DL_Blind Scan</name>
     <Style id="red_circle_style">
       <IconStyle>
         <Icon>
@@ -35,53 +35,33 @@
       </IconStyle>
     </Style>
     <Placemark>
-      <name>60</name>
+      <name>309</name>
       <description>
-        <![CDATA[Cell ID: 60<br/>Cell Identity: 27141394<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 309<br/>Cell Identity: 47775-13921<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_circle_style</styleUrl>
       <Point>
-        <coordinates>-77.234302,39.128636,0</coordinates>
+        <coordinates>-1.199174,50.855505,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
-      <name>61</name>
+      <name>41</name>
       <description>
-        <![CDATA[Cell ID: 61<br/>Cell Identity: 27141404<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 41<br/>Cell Identity: 20445<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_circle_style</styleUrl>
       <Point>
-        <coordinates>-77.239482,39.130286,0</coordinates>
+        <coordinates>-1.222423,50.846820,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
-      <name>59</name>
+      <name>155</name>
       <description>
-        <![CDATA[Cell ID: 59<br/>Cell Identity: 104096028<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 155<br/>Cell Identity: 57775<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_circle_style</styleUrl>
       <Point>
-        <coordinates>-77.222468,39.142697,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>355</name>
-      <description>
-        <![CDATA[Cell ID: 355<br/>Cell Identity: 104099612<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_circle_style</styleUrl>
-      <Point>
-        <coordinates>-77.222626,39.142855,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>356</name>
-      <description>
-        <![CDATA[Cell ID: 356<br/>Cell Identity: 104099622<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_circle_style</styleUrl>
-      <Point>
-        <coordinates>-77.201922,39.144161,0</coordinates>
+        <coordinates>-1.209370,50.859502,0</coordinates>
       </Point>
     </Placemark>
   </Document>
