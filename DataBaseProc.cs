@@ -249,5 +249,64 @@ namespace BTS_Location_Estimation
 
             return data;
         }
+
+        /***************************************************************************************************
+        *
+        *   Function:       splitCellidBeamforNR
+        *
+        *   Description:    For NR Blind Scan files (fileType = 4), this function takes the composite
+        *                   Cell ID (which includes the Beam Index) and splits it back into separate
+        *                   'CellId' and 'BeamIndex' fields in the final results.
+        *
+        *   Input:          fileType (int) - The integer code for the file type.
+        *                   estimationResults (List<...>) - The list of estimation results.
+        *
+        *   Output:         A new list of dictionaries with 'CellId' and 'BeamIndex' separated.
+        *                   If the fileType is not 4, it returns the original list unmodified.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
+        public static List<Dictionary<string, string>> splitCellidBeamforNR(int fileType, List<Dictionary<string, string>> estimationResults)
+        {
+            bool isNrFile = fileType == NR_TOPN_FILE_TYPE || fileType == NR_FILE_TYPE || fileType == NR_TOPN_FILE_TYPE * 10 || fileType == NR_FILE_TYPE * 10;
+            if (!isNrFile)
+            {
+                return estimationResults;
+            }
+
+            var newEstimationResults = new List<Dictionary<string, string>>();
+            foreach (var result in estimationResults)
+            {
+                if (int.TryParse(result["CellId"], out int compositeCellId))
+                {
+                    int newCellId = compositeCellId / 100;
+                    int beamIndex = compositeCellId % 100;
+
+                    var newResult = new Dictionary<string, string>();
+                    foreach (var kvp in result)
+                    {
+                        if (kvp.Key == "CellId")
+                        {
+                            newResult.Add("CellId", newCellId.ToString());
+                            newResult.Add("BeamIndex", beamIndex.ToString());
+                        }
+                        else
+                        {
+                            newResult.Add(kvp.Key, kvp.Value);
+                        }
+                    }
+                    newEstimationResults.Add(newResult);
+                }
+                else
+                {
+                    // If parsing fails, add the original result back
+                    newEstimationResults.Add(result);
+                }
+            }
+            return newEstimationResults;
+        }
     }
 }
