@@ -25,7 +25,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.9.0";
+        public const string SW_VERSION = "1.0.10.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -87,7 +87,7 @@ namespace BTS_Location_Estimation
                 // grouping and processing directly on this list in memory.
                 Console.WriteLine($"Extracted {allData.Count} rows from {inputFilename}");
 
-                Save_Drive_Route(allData, inputFilename);
+                InputOutputFileProc.Save_Drive_Route(allData, inputFilename);
 
                 string filenameOnly = Path.GetFileNameWithoutExtension(inputFilename);
                 string step1Filename = $"step1_{filenameOnly}.csv";
@@ -116,7 +116,7 @@ namespace BTS_Location_Estimation
 
 
                     // Adjust time offset values for the filtered points
-                    var timeAdjustedPoints = InputOutputFileProc.ProcessTimeOffset(finalPoints, fileType, TIME_OFFSET_WRAP_VALUE, WCDMA_TIME_OFFSET_WRAP_VALUE, LTE_SAMPLING_RATE_HZ, NR_SAMPLING_RATE_MULTIPLIER, WCDMA_SAMPLING_RATE_DIVISOR);
+                    var timeAdjustedPoints = ProcessTimeOffset(finalPoints, fileType, TIME_OFFSET_WRAP_VALUE, WCDMA_TIME_OFFSET_WRAP_VALUE, LTE_SAMPLING_RATE_HZ, NR_SAMPLING_RATE_MULTIPLIER, WCDMA_SAMPLING_RATE_DIVISOR);
 
 
 
@@ -253,7 +253,7 @@ namespace BTS_Location_Estimation
         ***************************************************************************************************/
         private static List<Dictionary<string, string>> splitCellidBeamforNR(int fileType, List<Dictionary<string, string>> estimationResults)
         {
-            bool isNrFile = fileType == 3 || fileType == 4 || fileType == 30 || fileType == 40;
+            bool isNrFile = fileType == NR_TOPN_FILE_TYPE || fileType == NR_FILE_TYPE || fileType == NR_TOPN_FILE_TYPE * 10 || fileType == NR_FILE_TYPE * 10;
             if (!isNrFile)
             {
                 return estimationResults;

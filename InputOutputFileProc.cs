@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using static BTS_Location_Estimation.DataBaseProc;
 
 namespace BTS_Location_Estimation
 {
@@ -10,12 +11,6 @@ namespace BTS_Location_Estimation
 
     public static class InputOutputFileProc
     {
-        public const int LTE_TOPN_FILE_TYPE = 1;
-        public const int LTE_BLIND_FILE_TYPE = 2;
-        public const int NR_TOPN_FILE_TYPE = 3;
-        public const int NR_FILE_TYPE = 4;
-        public const int WCDMA_FILE_TYPE_CSV = 5;
-        public const int WCDMA_FILE_TYPE_DTR = 50;
 
         /***************************************************************************************************
         *
@@ -159,11 +154,11 @@ namespace BTS_Location_Estimation
         public static int GetFileType(string filename)
         {
             int baseFileType;
-            if (filename.Contains("LTE") && filename.Contains("Top N")) baseFileType = 1;
-            else if (filename.Contains("LTE") && filename.Contains("Blind")) baseFileType = 2;
-            else if (filename.Contains("NR") && (filename.Contains("Topn") || filename.Contains("Top N"))) baseFileType = 3;
-            else if (filename.Contains("NR") && filename.Contains("Blind")) baseFileType = 4;
-            else if (filename.Contains("WCDMA")) baseFileType = 5;
+            if (filename.Contains("LTE") && filename.Contains("Top N")) baseFileType = LTE_TOPN_FILE_TYPE;
+            else if (filename.Contains("LTE") && filename.Contains("Blind")) baseFileType = LTE_BLIND_FILE_TYPE;
+            else if (filename.Contains("NR") && (filename.Contains("Topn") || filename.Contains("Top N"))) baseFileType = NR_TOPN_FILE_TYPE;
+            else if (filename.Contains("NR") && filename.Contains("Blind")) baseFileType = NR_FILE_TYPE;
+            else if (filename.Contains("WCDMA")) baseFileType = WCDMA_FILE_TYPE_CSV;
             else baseFileType = 1; // Default to LTE Top N
 
             if (Path.GetExtension(filename).Equals(".dtr", StringComparison.OrdinalIgnoreCase))
@@ -235,14 +230,14 @@ namespace BTS_Location_Estimation
             string cellIdKeyword = "", cellIdentityKeyword = "", channelKeyword = "", cinrKeyword = "", beamIndexKeyword = "", latKeyword = "Latitude", lonKeyword = "Longitude", rssiKeyword = "", timeOffsetKeyword = "";
             switch (fileType)
             {
-                case 1: // LTE eTOPN Scan (.csv)
+                case LTE_TOPN_FILE_TYPE: // LTE eTOPN Scan (.csv)
                     cellIdKeyword = "Cell ID";
                     cellIdentityKeyword = "cellIdentity";
                     cinrKeyword = "Ref Signal - CINR";
                     rssiKeyword = "Carrier RSSI Antenna Port 0";
                     timeOffsetKeyword = "Ref Signal - Timeoffset";
                     break;
-                case 10: // LTE eTOPN Scan (.dtr)
+                case LTE_TOPN_FILE_TYPE*10: // LTE eTOPN Scan (.dtr)
                     cellIdKeyword = "Cell ID";
                     cellIdentityKeyword = "cellIdentity";
                     cinrKeyword = "Ref Signal - CINR";
@@ -250,7 +245,7 @@ namespace BTS_Location_Estimation
                     timeOffsetKeyword = "Ref Signal - Timeoffset";
                     break;
 
-                case 2: // LTE Blind Scan (.csv)
+                case LTE_BLIND_FILE_TYPE: // LTE Blind Scan (.csv)
                     cellIdKeyword = "Cell Id";
                     cellIdentityKeyword = "cellIdentity";
                     channelKeyword = "Channel Number";
@@ -258,7 +253,7 @@ namespace BTS_Location_Estimation
                     rssiKeyword = "Channel RSSI";
                     timeOffsetKeyword = "Ref Signal - Timeoffset";
                     break;
-                case 20: // LTE Blind Scan (.dtr)
+                case LTE_BLIND_FILE_TYPE*10: // LTE Blind Scan (.dtr)
                     cellIdKeyword = "Cell Id";
                     cellIdentityKeyword = "cellIdentity";
                     channelKeyword = "Channel Number";
@@ -267,8 +262,8 @@ namespace BTS_Location_Estimation
                     timeOffsetKeyword = "RS_TimeOffset";
                     break;
 
-                case 3: // NR TopN Scan (.csv)
-                case 4: // NR Blind Scan (.csv)
+                case NR_TOPN_FILE_TYPE: // NR TopN Scan (.csv)
+                case NR_FILE_TYPE: // NR Blind Scan (.csv)
                     cellIdKeyword = "Cell ID";
                     cellIdentityKeyword = "Cell Identity";
                     channelKeyword = "Channel Number";
@@ -277,8 +272,8 @@ namespace BTS_Location_Estimation
                     rssiKeyword = "SSB RSSI";
                     timeOffsetKeyword = "Time Offset";
                     break;
-                case 30: // NR TopN Scan (.dtr)
-                case 40: // NR Blind Scan (.dtr)
+                case NR_TOPN_FILE_TYPE*10: // NR TopN Scan (.dtr)
+                case NR_FILE_TYPE*10: // NR Blind Scan (.dtr)
                     cellIdKeyword = "Cell Id";
                     cellIdentityKeyword = "cellIdentity";
                     channelKeyword = "Channel Number";
@@ -288,7 +283,7 @@ namespace BTS_Location_Estimation
                     timeOffsetKeyword = "Time Offset";
                     break;
 
-                case 5: // WCDMA (.csv)
+                case WCDMA_FILE_TYPE_CSV: // WCDMA (.csv)
                     cellIdKeyword = "Pilot";
                     cellIdentityKeyword = "cellIdentity";
                     channelKeyword = "Channel Number";
@@ -296,7 +291,7 @@ namespace BTS_Location_Estimation
                     rssiKeyword = "Channel RSSI";
                     timeOffsetKeyword = "TimeOffset";//DTR code
                     break;
-                case 50: // WCDMA (.dtr)
+                case WCDMA_FILE_TYPE_DTR: // WCDMA (.dtr)
                     cellIdKeyword = "Pilot";
                     cellIdentityKeyword = "cellIdentity";
                     channelKeyword = "Channel Number";
@@ -347,7 +342,7 @@ namespace BTS_Location_Estimation
                 int timeOffsetIndex = -1;
                 if (!string.IsNullOrEmpty(timeOffsetKeyword))
                 {
-                    bool isNrDtrFile = fileType == 30 || fileType == 40;
+                    bool isNrDtrFile = fileType == NR_TOPN_FILE_TYPE * 10 || fileType == NR_FILE_TYPE * 10;
                     bool isWcdmaDtrFile = fileType == WCDMA_FILE_TYPE_DTR;
 
                     if (isNrDtrFile)
@@ -401,7 +396,7 @@ namespace BTS_Location_Estimation
                     }
 
                     // Handle Cell ID and Beam Index combination for all NR file types
-                    bool isNrFile = fileType == 3 || fileType == 4 || fileType == 30 || fileType == 40;
+                    bool isNrFile = fileType == NR_TOPN_FILE_TYPE || fileType == NR_FILE_TYPE || fileType == NR_TOPN_FILE_TYPE * 10 || fileType == NR_FILE_TYPE * 10;
                     if (isNrFile && beamIndexCol != -1 &&
                         int.TryParse(values[cellIdIndex], out int cellId) &&
                         int.TryParse(values[beamIndexCol], out int beamIndex))
@@ -452,112 +447,19 @@ namespace BTS_Location_Estimation
 
         /***************************************************************************************************
         *
-        *   Function:       ProcessTimeOffset
-        *
-        *   Description:    Adjusts the 'TimeOffset' values for a given set of data points.
-        *                   Cellular timing measurements can "wrap around" a zero point, leading to
-        *                   large jumps in raw data. This logic detects such wrapping and adjusts the
-        *                   values to make them continuous. Finally, it normalizes the adjusted time
-        *                   offset by the technology-specific sampling rate.
-        *
-        *   Input:          data (List<...>) - The list of data points to process.
-        *                   fileType (int) - The file type code to determine the correct wrap value and sampling rate.
-        *                   timeOffsetWrapValue, wcdmaTimeOffsetWrapValue (double) - Wrap-around thresholds.
-        *                   lteSamplingRateHz, nrSamplingRateMultiplier, wcdmaSamplingRateDivisor (double) - Sampling rate parameters.
-        *
-        *   Output:         The input list with 'TimeOffset' values adjusted and normalized.
-        *
-        *   Author:         Amir Soltanian
-        *
-        *   Date:           September 4, 2025
-        *
-        ***************************************************************************************************/
-        public static List<Dictionary<string, string>> ProcessTimeOffset(
-            List<Dictionary<string, string>> data,
-            int fileType,
-            double timeOffsetWrapValue,
-            double wcdmaTimeOffsetWrapValue,
-            double lteSamplingRateHz,
-            double nrSamplingRateMultiplier,
-            double wcdmaSamplingRateDivisor)
-        {
-            if (data == null || !data.Any())
-            {
-                return new List<Dictionary<string, string>>();
-            }
-
-            bool isNr = fileType == 3 || fileType == 4 || fileType == 30 || fileType == 40;
-            bool isWcdma = fileType == WCDMA_FILE_TYPE_CSV || fileType == WCDMA_FILE_TYPE_DTR;
-
-            double wrapValue;
-            double samplingRateHz;
-
-            if (isNr)
-            {
-                const double ssbPeriod = 20e-3; // 20 ms
-                wrapValue = lteSamplingRateHz * nrSamplingRateMultiplier * ssbPeriod;
-                samplingRateHz = lteSamplingRateHz * nrSamplingRateMultiplier;
-            }
-            else if (isWcdma)
-            {
-                wrapValue = wcdmaTimeOffsetWrapValue;
-                samplingRateHz = lteSamplingRateHz / wcdmaSamplingRateDivisor;
-            }
-            else // LTE cases (1, 2, 10, 20) and any other defaults
-            {
-                wrapValue = timeOffsetWrapValue;
-                samplingRateHz = lteSamplingRateHz;
-            }
-
-            var timeOffsets = data.Select(row =>
-                row.TryGetValue("TimeOffset", out var tsStr) &&
-                double.TryParse(tsStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double ts) ? ts : 0.0)
-                .ToList();
-
-            if (!timeOffsets.Any()) return data;
-
-            double tsMin = timeOffsets.Min();
-            double tsMax = timeOffsets.Max();
-
-            // Adjust for wrapping
-            if (tsMin < wrapValue / 4.0 && tsMax > wrapValue * 3.0 / 4.0)
-            {
-                for (int i = 0; i < data.Count; i++)
-                {
-                    if (timeOffsets[i] > wrapValue * 3.0 / 4.0)
-                    {
-                        data[i]["TimeOffset"] = (timeOffsets[i] - wrapValue).ToString(CultureInfo.InvariantCulture);
-                    }
-                }
-            }
-
-            // Normalize the time offset by the sampling rate
-            foreach (var row in data)
-            {
-                if (row.TryGetValue("TimeOffset", out var tsStr) &&
-                    double.TryParse(tsStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double ts))
-                {
-                    // Use "G17" format specifier for full double precision
-                    row["TimeOffset"] = (ts / samplingRateHz).ToString("G17", CultureInfo.InvariantCulture);
-                }
-            }
-
-            return data;
-        }
-
-        /***************************************************************************************************
-        *
         *   Function:       Save_Drive_Route
         *
-        *   Description:    Creates a KML file to visualize the drive route from the collected data points.
-        *                   The data is downsampled to reduce the number of points in the KML file,
-        *                   and each point is represented as a small red dot on the map.
+        *   Description:    Saves the drive route data to a KML file for visualization in mapping software.
+        *                   It generates a KML document with the drive route represented as a LineString
+        *                   placemark, allowing the route to be displayed on geographic maps.
         *
-        *   Input:          allData (List<...>) - The full list of data points from the input file.
-        *                   inputFilename (string) - The name of the original input file, used to generate the output filename.
-        *                   downsampleSize (int) - The factor by which to downsample the data. Default is 10.
+        *   Input:          allData (List<Dictionary<string, string>>) - The drive route data, where each dictionary
+        *                   represents a point on the route with keys for latitude, longitude, and other metrics.
+        *                   inputFilename (string) - The name of the input file, used to derive the KML file name.
+        *                   downsampleSize (int) - The factor by which to downsample the data for KML output.
+        *                   Default is 10, meaning every 10th data point is used.
         *
-        *   Output:         None (void). A .kml file is written to the same directory as the executable.
+        *   Output:         None. A KML file is written to the file system.
         *
         *   Author:         Amir Soltanian
         *
