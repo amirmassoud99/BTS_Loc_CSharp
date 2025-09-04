@@ -96,82 +96,27 @@ namespace BTS_Location_Estimation
             }
         }
 
-        private class Placemark
-        {
-            public string Lat { get; set; } = "";
-            public string Lon { get; set; } = "";
-            public string CellId { get; set; } = "";
-            public string CellIdentity { get; set; } = "";
-            public string BeamInfo { get; set; } = "";
-            public string Confidence { get; set; } = "";
-            public string StyleId { get; set; } = "red_circle_style"; // Default to red circle
-        }
-
         private static void generate_map_kml(List<Dictionary<string, string>> estimationResults, string mapKmlFilename)
         {
             try
             {
-                var cellPlacemarks = new Dictionary<string, Placemark>();
-                var towerPlacemarks = new List<Placemark>();
+                string mapName = Path.GetFileNameWithoutExtension(mapKmlFilename);
 
-                // First pass: Create all placemark objects
+                // First pass: identify all cell IDs that are part of a tower
+                var towerMemberCellIds = new HashSet<string>();
                 foreach (var result in estimationResults)
                 {
                     string cellId = result.GetValueOrDefault("CellId", "");
-                    if (string.IsNullOrEmpty(cellId) || !result.ContainsKey("est_Lat2") || !result.ContainsKey("est_Lon2"))
+                    if (cellId.Contains("/"))
                     {
-                        continue;
-                    }
-
-                    var placemark = new Placemark
-                    {
-                        Lat = result["est_Lat2"],
-                        Lon = result["est_Lon2"],
-                        CellId = cellId,
-                        CellIdentity = result.GetValueOrDefault("cellIdentity", ""),
-                        Confidence = result.GetValueOrDefault("Confidence", "N/A"),
-                        BeamInfo = result.ContainsKey("BeamIndex") ? $", Beam: {result["BeamIndex"]}" : ""
-                    };
-
-                    // Note: Assuming tower CellIds are joined by '_'.
-                    if (cellId.Contains("_"))
-                    {
-                        placemark.StyleId = "blue_pin_style";
-                        towerPlacemarks.Add(placemark);
-                    }
-                    else
-                    {
-                        placemark.StyleId = "red_balloon_style"; // Default style
-                        if (!cellPlacemarks.ContainsKey(cellId))
+                        var individualCellIds = cellId.Split('/');
+                        foreach (var id in individualCellIds)
                         {
-                            cellPlacemarks.Add(cellId, placemark);
+                            towerMemberCellIds.Add(id);
                         }
                     }
                 }
 
-                // Second pass: Update styles for cells that are part of a tower
-                foreach (var tower in towerPlacemarks)
-                {
-                    var individualCellIds = tower.CellId.Split('_');
-                    foreach (var id in individualCellIds)
-                    {
-                        if (cellPlacemarks.TryGetValue(id, out var placemarkToUpdate))
-                        {
-                            placemarkToUpdate.StyleId = "blue_balloon_style";
-                        }
-                    }
-                }
-
-                // Third pass: Override styles for low confidence points
-                foreach (var placemark in cellPlacemarks.Values)
-                {
-                    if (placemark.Confidence == "Low")
-                    {
-                        placemark.StyleId = "yellow_balloon_style";
-                    }
-                }
-
-                string mapName = Path.GetFileNameWithoutExtension(mapKmlFilename);
                 using (var writer = new StreamWriter(mapKmlFilename))
                 {
                     writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -179,37 +124,7 @@ namespace BTS_Location_Estimation
                     writer.WriteLine("  <Document>");
                     writer.WriteLine($"    <name>{mapName}</name>");
 
-                    // Style for single points (red circle)
-                    writer.WriteLine("    <Style id=\"red_balloon_style\">");
-                    writer.WriteLine("      <IconStyle>");
-                    writer.WriteLine("        <Icon>");
-                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>");
-                    writer.WriteLine("        </Icon>");
-                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
-                    writer.WriteLine("      </IconStyle>");
-                    writer.WriteLine("    </Style>");
-
-                    // Style for tower member points (blue circle)
-                    writer.WriteLine("    <Style id=\"blue_balloon_style\">");
-                    writer.WriteLine("      <IconStyle>");
-                    writer.WriteLine("        <Icon>");
-                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href>");
-                    writer.WriteLine("        </Icon>");
-                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
-                    writer.WriteLine("      </IconStyle>");
-                    writer.WriteLine("    </Style>");
-
-                    // Style for low confidence points (yellow circle)
-                    writer.WriteLine("    <Style id=\"yellow_balloon_style\">");
-                    writer.WriteLine("      <IconStyle>");
-                    writer.WriteLine("        <Icon>");
-                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href>");
-                    writer.WriteLine("        </Icon>");
-                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
-                    writer.WriteLine("      </IconStyle>");
-                    writer.WriteLine("    </Style>");
-
-                    // Style for tower points (blue pushpin)
+                    // Style for towers (blue pushpin)
                     writer.WriteLine("    <Style id=\"blue_pin_style\">");
                     writer.WriteLine("      <IconStyle>");
                     writer.WriteLine("        <Icon>");
@@ -219,25 +134,84 @@ namespace BTS_Location_Estimation
                     writer.WriteLine("      </IconStyle>");
                     writer.WriteLine("    </Style>");
 
-                    // Write Placemarks
-                    var allPlacemarks = cellPlacemarks.Values.Concat(towerPlacemarks);
-                    foreach (var p in allPlacemarks)
+                    // Style for standalone points (red balloon)
+                    writer.WriteLine("    <Style id=\"red_balloon_style\">");
+                    writer.WriteLine("      <IconStyle>");
+                    writer.WriteLine("        <Icon>");
+                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>");
+                    writer.WriteLine("        </Icon>");
+                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
+                    writer.WriteLine("      </IconStyle>");
+                    writer.WriteLine("    </Style>");
+
+                    // Style for tower member points (blue balloon)
+                    writer.WriteLine("    <Style id=\"blue_balloon_style\">");
+                    writer.WriteLine("      <IconStyle>");
+                    writer.WriteLine("        <Icon>");
+                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href>");
+                    writer.WriteLine("        </Icon>");
+                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
+                    writer.WriteLine("      </IconStyle>");
+                    writer.WriteLine("    </Style>");
+
+                    // Style for low confidence points (yellow balloon)
+                    writer.WriteLine("    <Style id=\"yellow_balloon_style\">");
+                    writer.WriteLine("      <IconStyle>");
+                    writer.WriteLine("        <Icon>");
+                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href>");
+                    writer.WriteLine("        </Icon>");
+                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
+                    writer.WriteLine("      </IconStyle>");
+                    writer.WriteLine("    </Style>");
+
+                    // Write a placemark for every result
+                    foreach (var result in estimationResults)
                     {
-                        writer.WriteLine("    <Placemark>");
-                        writer.WriteLine($"      <name>{p.CellId}</name>");
-                        writer.WriteLine("      <description>");
-                        if (p.StyleId == "blue_pin_style")
+                        if (!result.ContainsKey("est_Lat2") || !result.ContainsKey("est_Lon2"))
                         {
-                            writer.WriteLine($"        <![CDATA[Tower containing Cell IDs: {p.CellId.Replace("_", ", ")}<br/>Cell Identities: {p.CellIdentity.Replace("_", ", ")}]]>");
+                            continue;
+                        }
+
+                        string lat = result["est_Lat2"];
+                        string lon = result["est_Lon2"];
+                        string cellId = result.GetValueOrDefault("CellId", "");
+                        string cellIdentity = result.GetValueOrDefault("cellIdentity", "");
+                        string confidence = result.GetValueOrDefault("Confidence", "N/A");
+                        string beamInfo = result.ContainsKey("BeamIndex") ? $", Beam: {result["BeamIndex"]}" : "";
+
+                        writer.WriteLine("    <Placemark>");
+                        writer.WriteLine($"      <name>{cellId}</name>");
+                        writer.WriteLine("      <description>");
+
+                        string description;
+                        string styleUrl;
+
+                        if (cellId.Contains("/"))
+                        {
+                            description = $"        <![CDATA[Tower containing Cell IDs: {cellId.Replace("/", ", ")}<br/>Cell Identities: {cellIdentity.Replace("_", ", ")}]]>";
+                            styleUrl = "#blue_pin_style";
+                        }
+                        else if (confidence == "Low")
+                        {
+                            description = $"        <![CDATA[Cell ID: {cellId}{beamInfo}<br/>Cell Identity: {cellIdentity}<br/>Confidence: {confidence}]]>";
+                            styleUrl = "#yellow_balloon_style";
+                        }
+                        else if (towerMemberCellIds.Contains(cellId))
+                        {
+                            description = $"        <![CDATA[Cell ID: {cellId}{beamInfo}<br/>Cell Identity: {cellIdentity}<br/>Confidence: {confidence}]]>";
+                            styleUrl = "#blue_balloon_style";
                         }
                         else
                         {
-                            writer.WriteLine($"        <![CDATA[Cell ID: {p.CellId}{p.BeamInfo}<br/>Cell Identity: {p.CellIdentity}<br/>Confidence: {p.Confidence}]]>");
+                            description = $"        <![CDATA[Cell ID: {cellId}{beamInfo}<br/>Cell Identity: {cellIdentity}<br/>Confidence: {confidence}]]>";
+                            styleUrl = "#red_balloon_style";
                         }
+                        writer.WriteLine(description);
+
                         writer.WriteLine("      </description>");
-                        writer.WriteLine($"      <styleUrl>#{p.StyleId}</styleUrl>");
+                        writer.WriteLine($"      <styleUrl>{styleUrl}</styleUrl>");
                         writer.WriteLine("      <Point>");
-                        writer.WriteLine($"        <coordinates>{p.Lon},{p.Lat},0</coordinates>");
+                        writer.WriteLine($"        <coordinates>{lon},{lat},0</coordinates>");
                         writer.WriteLine("      </Point>");
                         writer.WriteLine("    </Placemark>");
                     }
