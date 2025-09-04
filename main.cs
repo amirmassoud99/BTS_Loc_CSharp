@@ -25,7 +25,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.7.0";
+        public const string SW_VERSION = "1.0.9.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -111,7 +111,7 @@ namespace BTS_Location_Estimation
                 foreach (var group in groupedData)
                 {
                     var pointsForCell = group.ToList();
-                    var (finalPoints, maxCinr) = InputOutputFileProc.ExtractPointsWithDistance(pointsForCell, DISTANCE_THRESH, MAX_POINTS, METERS_PER_DEGREE);
+                    var (finalPoints, maxCinr) = ExtractPointsWithDistance(pointsForCell, DISTANCE_THRESH, MAX_POINTS, METERS_PER_DEGREE);
 
 
 
