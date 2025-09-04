@@ -685,6 +685,88 @@ namespace BTS_Location_Estimation
 
             return data;
         }
+
+        /***************************************************************************************************
+        *
+        *   Function:       Save_Drive_Route
+        *
+        *   Description:    Creates a KML file to visualize the drive route from the collected data points.
+        *                   The data is downsampled to reduce the number of points in the KML file,
+        *                   and each point is represented as a small red dot on the map.
+        *
+        *   Input:          allData (List<...>) - The full list of data points from the input file.
+        *                   inputFilename (string) - The name of the original input file, used to generate the output filename.
+        *                   downsampleSize (int) - The factor by which to downsample the data. Default is 10.
+        *
+        *   Output:         None (void). A .kml file is written to the same directory as the executable.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
+        public static void Save_Drive_Route(List<Dictionary<string, string>> allData, string inputFilename, int downsampleSize = 10)
+        {
+            if (allData == null || !allData.Any())
+            {
+                Console.WriteLine("No data available to generate a route KML.");
+                return;
+            }
+
+            var kmlContent = new System.Text.StringBuilder();
+            kmlContent.AppendLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            kmlContent.AppendLine("<kml xmlns=\"http://www.opengis.net/kml/2.2\">");
+            kmlContent.AppendLine("  <Document>");
+            kmlContent.AppendLine($"    <name>Route for {Path.GetFileNameWithoutExtension(inputFilename)}</name>");
+            
+            // Add a style for the route line
+            kmlContent.AppendLine("    <Style id=\"driveRouteStyle\">");
+            kmlContent.AppendLine("      <LineStyle>");
+            kmlContent.AppendLine("        <color>ff0000ff</color>"); // Red
+            kmlContent.AppendLine("        <width>3</width>");
+            kmlContent.AppendLine("      </LineStyle>");
+            kmlContent.AppendLine("    </Style>");
+
+            // Add route as a single LineString Placemark
+            kmlContent.AppendLine("    <Placemark>");
+            kmlContent.AppendLine("      <name>Drive Route</name>");
+            kmlContent.AppendLine("      <styleUrl>#driveRouteStyle</styleUrl>");
+            kmlContent.AppendLine("      <LineString>");
+            kmlContent.AppendLine("        <tessellate>1</tessellate>");
+            kmlContent.AppendLine("        <coordinates>");
+
+            var coordinates = new System.Text.StringBuilder();
+            for (int i = 0; i < allData.Count; i += downsampleSize)
+            {
+                var row = allData[i];
+                if (row.TryGetValue("latitude", out var latStr) &&
+                    row.TryGetValue("longitude", out var lonStr) &&
+                    double.TryParse(latStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lat) &&
+                    double.TryParse(lonStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lon))
+                {
+                    coordinates.Append($"{lon.ToString(CultureInfo.InvariantCulture)},{lat.ToString(CultureInfo.InvariantCulture)},0 ");
+                }
+            }
+            kmlContent.AppendLine(coordinates.ToString().Trim());
+
+            kmlContent.AppendLine("        </coordinates>");
+            kmlContent.AppendLine("      </LineString>");
+            kmlContent.AppendLine("    </Placemark>");
+
+            kmlContent.AppendLine("  </Document>");
+            kmlContent.AppendLine("</kml>");
+
+            string outputFilename = $"Route_{Path.GetFileNameWithoutExtension(inputFilename)}.kml";
+            try
+            {
+                File.WriteAllText(outputFilename, kmlContent.ToString());
+                Console.WriteLine($"Successfully created route map: {outputFilename}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error writing KML file: {ex.Message}");
+            }
+        }
     }
 }
 
