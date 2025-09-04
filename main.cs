@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
+using static BTS_Location_Estimation.DataBaseProc;
 using static BTS_Location_Estimation.InputOutputFileProc;
 using static BTS_Location_Estimation.SaveHelper;
 
@@ -24,7 +25,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.6.0";
+        public const string SW_VERSION = "1.0.7.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -94,7 +95,7 @@ namespace BTS_Location_Estimation
 
                 bool isWcdma = fileType == WCDMA_FILE_TYPE_CSV || fileType == WCDMA_FILE_TYPE_DTR;
                 double cinrThreshold = isWcdma ? EC_IO_THRESHOLD : CINR_THRESH;
-                var filteredData = InputOutputFileProc.filter_cinr_minimum_PCI(allData, cinrThreshold, MINIMUM_CELL_ID_COUNT);
+                var filteredData = filter_cinr_minimum_PCI(allData, cinrThreshold, MINIMUM_CELL_ID_COUNT);
                 string step2Filename = $"step2_{filenameOnly}.csv";
                 //save_extract_step2(filteredData, step2Filename);
 
