@@ -24,7 +24,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.3.0";
+        public const string SW_VERSION = "1.0.4.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -42,18 +42,24 @@ namespace BTS_Location_Estimation
         public const int MAX_POINTS = 60;
         public const int MINIMUM_CELL_ID_COUNT = 20;
 
-        // ************************************************************************************
-        //
-        //                            BTS Location Estimation
-        //
-        // This program processes cellular drive test data to estimate the location of
-        // Base Transceiver Stations (BTS). It reads CSV files containing signal measurements,
-        // filters the data based on signal quality (CINR) and other parameters, and
-        // prepares the data for location estimation algorithms like TSWLS.
-        // The main workflow consists of identifying channels, cells, and beams,
-        // extracting relevant data points, and saving intermediate results.
-        //
-        // ************************************************************************************
+        /***************************************************************************************************
+        *
+        *   Function:       Main
+        *
+        *   Description:    The main entry point for the BTS Location Estimation program. It orchestrates
+        *                   the entire workflow, from reading input files to processing data for each
+        *                   cellular technology, running the TSWLS estimation, and saving the final results.
+        *
+        *   Input:          args (string[]) - Command-line arguments (currently unused).
+        *
+        *   Output:         None (void). The function writes progress to the console and saves
+        *                   results to CSV files in the same directory as the input files.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static void Main(string[] args)
         {
             Console.WriteLine($"BTS Location Estimation version {SW_VERSION}");
@@ -76,12 +82,12 @@ namespace BTS_Location_Estimation
 
                 string filenameOnly = Path.GetFileNameWithoutExtension(inputFilename);
                 string step1Filename = $"step1_{filenameOnly}.csv";
-                save_extrac_step1(allData, step1Filename);
+                //save_extrac_step1(allData, step1Filename);
 
                 double cinrThreshold = (fileType == WCDMA_FILE_TYPE) ? EC_IO_THRESHOLD : CINR_THRESH;
                 var filteredData = InputOutputFileProc.filter_cinr_minimum_PCI(allData, cinrThreshold, MINIMUM_CELL_ID_COUNT);
                 string step2Filename = $"step2_{filenameOnly}.csv";
-                save_extract_step2(filteredData, step2Filename);
+                //save_extract_step2(filteredData, step2Filename);
 
                 // Group data by channel and cell to process each one individually
                 var groupedData = filteredData.GroupBy(row => new
@@ -97,6 +103,8 @@ namespace BTS_Location_Estimation
                     var pointsForCell = group.ToList();
                     var (finalPoints, maxCinr) = InputOutputFileProc.ExtractPointsWithDistance(pointsForCell, DISTANCE_THRESH, MAX_POINTS, METERS_PER_DEGREE);
 
+
+
                     // Adjust time offset values for the filtered points
                     var timeAdjustedPoints = InputOutputFileProc.ProcessTimeOffset(finalPoints, fileType, TIME_OFFSET_WRAP_VALUE, WCDMA_TIME_OFFSET_WRAP_VALUE, LTE_SAMPLING_RATE_HZ, NR_SAMPLING_RATE_MULTIPLIER, WCDMA_SAMPLING_RATE_DIVISOR);
 
@@ -105,7 +113,7 @@ namespace BTS_Location_Estimation
                     // You can now save or process the 'finalPoints' and 'maxCinr' for each cell
                     // For example, save to a new CSV file for step 3
                     string step3Filename = $"step3_{filenameOnly}_ch{group.Key.Channel}_cell{group.Key.CellId}.csv";
-                    save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
+                    //save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
 
                     // Run the TSWLS algorithm
                     var tswlsResult = TSWLS.run_tswls(timeAdjustedPoints, MINIMUM_POINTS_FOR_TSWLS, SPEED_OF_LIGHT, METERS_PER_DEGREE, SEARCH_DIRECTION, DISTANCE_THRESH);
@@ -130,16 +138,28 @@ namespace BTS_Location_Estimation
             Console.WriteLine("Batch processing complete.");
         }
 
-        // Processes the successful result from the TSWLS algorithm for a single cell.
-        // Inputs:
-        //  - tswlsResult: Vector with estimated x,y coordinates.
-        //  - timeAdjustedPoints: Data points used for the estimation.
-        //  - group: Grouping metadata (Channel, CellId).
-        //  - maxCinr: Maximum CINR for the cell.
-        //  - estimationResults: The list to which the final result is added.
-        // Process: Converts x,y coordinates to latitude/longitude and formats the output.
-        // Output: Adds a new dictionary containing the full estimation result for one
-        //         cell to the 'estimationResults' list.
+        /***************************************************************************************************
+        *
+        *   Function:       ProcessTswlsResult
+        *
+        *   Description:    Processes the successful result from the TSWLS algorithm for a single cell.
+        *                   It converts the estimated x,y coordinates to latitude/longitude,
+        *                   calculates a confidence level, and formats the output for saving.
+        *
+        *   Input:          tswlsResult (Vector<double>) - Vector with estimated x,y coordinates.
+        *                   timeAdjustedPoints (List<...>) - Data points used for the estimation.
+        *                   group (IGrouping<...>) - Grouping metadata (Channel, CellId).
+        *                   maxCinr (double) - Maximum CINR for the cell.
+        *                   estimationResults (List<...>) - The list to which the final result is added.
+        *
+        *   Output:         None (void). Modifies the 'estimationResults' list by adding a new
+        *                   dictionary containing the full estimation result for the cell.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         private static void ProcessTswlsResult(Vector<double> tswlsResult, List<Dictionary<string, string>> timeAdjustedPoints, IGrouping<dynamic, Dictionary<string, string>> group, double maxCinr, List<Dictionary<string, string>> estimationResults)
         {
             double xhat1 = tswlsResult[0];
@@ -191,9 +211,29 @@ namespace BTS_Location_Estimation
             estimationResults.Add(resultDict);
         }
 
+        /***************************************************************************************************
+        *
+        *   Function:       splitCellidBeamforNR
+        *
+        *   Description:    For NR Blind Scan files (fileType = 4), this function takes the composite
+        *                   Cell ID (which includes the Beam Index) and splits it back into separate
+        *                   'CellId' and 'BeamIndex' fields in the final results.
+        *
+        *   Input:          fileType (int) - The integer code for the file type.
+        *                   estimationResults (List<...>) - The list of estimation results.
+        *
+        *   Output:         A new list of dictionaries with 'CellId' and 'BeamIndex' separated.
+        *                   If the fileType is not 4, it returns the original list unmodified.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         private static List<Dictionary<string, string>> splitCellidBeamforNR(int fileType, List<Dictionary<string, string>> estimationResults)
         {
-            if (fileType != 4)
+            bool isNrFile = fileType == 3 || fileType == 4 || fileType == 30 || fileType == 40;
+            if (!isNrFile)
             {
                 return estimationResults;
             }

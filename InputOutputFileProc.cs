@@ -16,6 +16,23 @@ namespace BTS_Location_Estimation
         public const int NR_FILE_TYPE = 4;
         public const int WCDMA_FILE_TYPE = 5;
 
+        /***************************************************************************************************
+        *
+        *   Function:       GetFileConfigurations
+        *
+        *   Description:    Provides a centralized place to define the set of input files for processing.
+        *                   This function is used to easily switch between different batches of drive test
+        *                   data by commenting and uncommenting blocks of code.
+        *
+        *   Input:          None.
+        *
+        *   Output:         A tuple containing the directory path (string) and a list of filenames (List<string>).
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static (string fileDirectory, List<string> inputFilenames) GetFileConfigurations()
         {
             /*****Reference Matlab file*/    
@@ -115,40 +132,99 @@ namespace BTS_Location_Estimation
             {
                 //"Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
                 //"Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
-                //"Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
                 //"Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
-                "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv"
+                "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr"
             };
 
             return (fileDirectory, inputFilenames);
         }
 
+        /***************************************************************************************************
+        *
+        *   Function:       GetFileType
+        *
+        *   Description:    Determines the file type based on keywords in the filename and the file extension.
+        *                   It first identifies the base technology (LTE, NR, WCDMA) and scan type (TopN, Blind).
+        *                   If the file has a '.dtr' extension, it multiplies the base file type by 10.
+        *
+        *   Input:          filename (string) - The name of the file to analyze.
+        *
+        *   Output:         An integer code representing the file type.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static int GetFileType(string filename)
         {
-            if (filename.Contains("LTE") && filename.Contains("Top N")) return 1;
-            if (filename.Contains("LTE") && filename.Contains("Blind")) return 2;
-            if (filename.Contains("NR") && (filename.Contains("Topn") || filename.Contains("Top N"))) return 3;
-            if (filename.Contains("NR") && filename.Contains("Blind")) return 4;
-            if (filename.Contains("WCDMA")) return 5;
-            return 1; // Default to LTE Top N
+            int baseFileType;
+            if (filename.Contains("LTE") && filename.Contains("Top N")) baseFileType = 1;
+            else if (filename.Contains("LTE") && filename.Contains("Blind")) baseFileType = 2;
+            else if (filename.Contains("NR") && (filename.Contains("Topn") || filename.Contains("Top N"))) baseFileType = 3;
+            else if (filename.Contains("NR") && filename.Contains("Blind")) baseFileType = 4;
+            else if (filename.Contains("WCDMA")) baseFileType = 5;
+            else baseFileType = 1; // Default to LTE Top N
+
+            if (Path.GetExtension(filename).Equals(".dtr", StringComparison.OrdinalIgnoreCase))
+            {
+                return baseFileType * 10;
+            }
+
+            return baseFileType;
         }
 
 
 
+        /***************************************************************************************************
+        *
+        *   Function:       Trim
+        *
+        *   Description:    A simple helper function to safely trim whitespace from a string,
+        *                   handling null inputs gracefully.
+        *
+        *   Input:          s (string) - The string to trim.
+        *
+        *   Output:         The trimmed string, or an empty string if the input was null.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static string Trim(string s) => s?.Trim() ?? "";
 
+        /***************************************************************************************************
+        *
+        *   Function:       ExtractChannelCellMap
+        *
+        *   Description:    Extracts relevant data from cellular drive test files (.csv and .dtr).
+        *                   This function reads a file, identifies the correct headers based on the file type
+        *                   (which accounts for technology and file extension), and extracts key columns like
+        *                   Latitude, Longitude, Cell ID, and signal metrics (CINR, RSSI).
+        *                   It returns a list of dictionaries, where each dictionary represents a row of data
+        *                   with standardized, generic keys for easier processing downstream.
+        *
+        *                   A special handling is implemented for NR Blind Scan files (fileType = 4).
+        *                   For these files, the 'Cell ID' and 'Beam Index' are combined into a single,
+        *                   unique identifier using the formula: new_cell_id = (original_cell_id * 100) + beam_index.
+        *                   This composite ID is then stored under the "cellId" key, and the "beamIndex" key is omitted.
+        *
+        *   Input:          filePath (string) - The full path to the input data file.
+        *                   fileType (int) - An integer code representing the technology and file format.
+        *
+        *   Output:         A list of dictionaries, where each dictionary is a row from the file
+        *                   with standardized keys. Returns an empty list if the file is not found or
+        *                   if essential headers are missing.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static List<Dictionary<string, string>> ExtractChannelCellMap(string filePath, int fileType)
         {
-            // Extracts relevant data from cellular drive test CSV files.
-            // This function reads a CSV file, identifies the correct headers based on the file type,
-            // and extracts key columns like Latitude, Longitude, Cell ID, and signal metrics (CINR, RSSI).
-            // It returns a list of dictionaries, where each dictionary represents a row of data
-            // with standardized, generic keys for easier processing downstream.
-            //
-            // A special handling is implemented for NR Blind Scan files (fileType = 4).
-            // For these files, the 'Cell ID' and 'Beam Index' are combined into a single,
-            // unique identifier using the formula: new_cell_id = (original_cell_id * 100) + beam_index.
-            // This composite ID is then stored under the "cellId" key, and the "beamIndex" key is omitted.
             var results = new List<Dictionary<string, string>>();
             if (!File.Exists(filePath))
             {
@@ -160,7 +236,14 @@ namespace BTS_Location_Estimation
             string cellIdKeyword = "", cellIdentityKeyword = "", channelKeyword = "", cinrKeyword = "", beamIndexKeyword = "", latKeyword = "Latitude", lonKeyword = "Longitude", rssiKeyword = "", timeOffsetKeyword = "";
             switch (fileType)
             {
-                case 1: // LTE eTOPN Scan
+                case 1: // LTE eTOPN Scan (.csv)
+                    cellIdKeyword = "Cell ID";
+                    cellIdentityKeyword = "cellIdentity";
+                    cinrKeyword = "Ref Signal - CINR";
+                    rssiKeyword = "Carrier RSSI Antenna Port 0";
+                    timeOffsetKeyword = "Ref Signal - Timeoffset";
+                    break;
+                case 10: // LTE eTOPN Scan (.dtr)
                     cellIdKeyword = "Cell ID";
                     cellIdentityKeyword = "cellIdentity";
                     cinrKeyword = "Ref Signal - CINR";
@@ -168,7 +251,7 @@ namespace BTS_Location_Estimation
                     timeOffsetKeyword = "Ref Signal - Timeoffset";
                     break;
 
-                case 2: // LTE Blind Scan
+                case 2: // LTE Blind Scan (.csv)
                     cellIdKeyword = "Cell Id";
                     cellIdentityKeyword = "cellIdentity";
                     channelKeyword = "Channel Number";
@@ -176,7 +259,17 @@ namespace BTS_Location_Estimation
                     rssiKeyword = "Channel RSSI";
                     timeOffsetKeyword = "Ref Signal - Timeoffset";
                     break;
-                case 4: // NR Blind Scan
+                case 20: // LTE Blind Scan (.dtr)
+                    cellIdKeyword = "Cell Id";
+                    cellIdentityKeyword = "cellIdentity";
+                    channelKeyword = "Channel Number";
+                    cinrKeyword = "RS_CINR";
+                    rssiKeyword = "Channel RSSI";
+                    timeOffsetKeyword = "RS_TimeOffset";
+                    break;
+
+                case 3: // NR TopN Scan (.csv)
+                case 4: // NR Blind Scan (.csv)
                     cellIdKeyword = "Cell ID";
                     cellIdentityKeyword = "Cell Identity";
                     channelKeyword = "Channel Number";
@@ -185,7 +278,18 @@ namespace BTS_Location_Estimation
                     rssiKeyword = "SSB RSSI";
                     timeOffsetKeyword = "Time Offset";
                     break;
-                case 5: // WCDMA
+                case 30: // NR TopN Scan (.dtr)
+                case 40: // NR Blind Scan (.dtr)
+                    cellIdKeyword = "Cell Id";
+                    cellIdentityKeyword = "cellIdentity";
+                    channelKeyword = "Channel Number";
+                    cinrKeyword = "SSS_CINR";
+                    beamIndexKeyword = "Beam Index";
+                    rssiKeyword = "Channel RSSI";
+                    timeOffsetKeyword = "Time Offset";
+                    break;
+
+                case 5: // WCDMA (.csv)
                     cellIdKeyword = "Pilot";
                     cellIdentityKeyword = "cellIdentity";
                     channelKeyword = "Channel Number";
@@ -193,6 +297,15 @@ namespace BTS_Location_Estimation
                     rssiKeyword = "Channel RSSI";
                     timeOffsetKeyword = "TimeOffset";//DTR code
                     break;
+                case 50: // WCDMA (.dtr)
+                    cellIdKeyword = "Pilot";
+                    cellIdentityKeyword = "cellIdentity";
+                    channelKeyword = "Channel Number";
+                    cinrKeyword = "Ec/Io";
+                    rssiKeyword = "Channel RSSI";
+                    timeOffsetKeyword = "TimeOffset";//DTR code
+                    break;
+
                 default: // Fallback for other types if needed
                     Console.WriteLine($"File type {fileType} not fully configured for extraction. Using defaults.");
                     cellIdKeyword = "Cell ID";
@@ -231,7 +344,29 @@ namespace BTS_Location_Estimation
                 int cinrIndex = headers.FindIndex(h => h.Equals(cinrKeyword, StringComparison.OrdinalIgnoreCase));
                 int beamIndexCol = !string.IsNullOrEmpty(beamIndexKeyword) ? headers.FindIndex(h => h.Equals(beamIndexKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
                 int rssiIndex = !string.IsNullOrEmpty(rssiKeyword) ? headers.FindIndex(h => h.Equals(rssiKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
-                int timeOffsetIndex = !string.IsNullOrEmpty(timeOffsetKeyword) ? headers.FindIndex(h => h.Equals(timeOffsetKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
+                
+                int timeOffsetIndex = -1;
+                if (!string.IsNullOrEmpty(timeOffsetKeyword))
+                {
+                    bool isNrDtrFile = fileType == 30 || fileType == 40;
+                    bool isWcdmaDtrFile = fileType == 50;
+
+                    if (isNrDtrFile)
+                    {
+                        // For NR .dtr files, only match the exact "Time Offset" header.
+                        timeOffsetIndex = headers.FindIndex(h => h.Equals("Time Offset", StringComparison.Ordinal));
+                    }
+                    else if (isWcdmaDtrFile)
+                    {
+                        // For WCDMA .dtr files, only match the exact "TimeOffset" header.
+                        timeOffsetIndex = headers.FindIndex(h => h.Equals("TimeOffset", StringComparison.Ordinal));
+                    }
+                    else
+                    {
+                        // For all other file types, use the configured keyword with a case-insensitive search.
+                        timeOffsetIndex = headers.FindIndex(h => h.Equals(timeOffsetKeyword, StringComparison.OrdinalIgnoreCase));
+                    }
+                }
 
 
                 if (cellIdIndex == -1 || cinrIndex == -1 || latIndex == -1 || lonIndex == -1)
@@ -266,8 +401,9 @@ namespace BTS_Location_Estimation
                         genericRow["cellIdentity"] = values[cellIdentityIndex];
                     }
 
-                    // Handle Cell ID and Beam Index combination for fileType 4
-                    if (fileType == 4 && beamIndexCol != -1 &&
+                    // Handle Cell ID and Beam Index combination for all NR file types
+                    bool isNrFile = fileType == 3 || fileType == 4 || fileType == 30 || fileType == 40;
+                    if (isNrFile && beamIndexCol != -1 &&
                         int.TryParse(values[cellIdIndex], out int cellId) &&
                         int.TryParse(values[beamIndexCol], out int beamIndex))
                     {
@@ -276,8 +412,8 @@ namespace BTS_Location_Estimation
                     else
                     {
                         genericRow["cellId"] = values[cellIdIndex];
-                        // Only add beamIndex if it's not fileType 4
-                        if (beamIndexCol != -1)
+                        // Only add beamIndex if it's not an NR file where we are combining them
+                        if (beamIndexCol != -1 && !isNrFile)
                         {
                             genericRow["beamIndex"] = values[beamIndexCol];
                         }
@@ -315,6 +451,26 @@ namespace BTS_Location_Estimation
             return results;
         }
 
+        /***************************************************************************************************
+        *
+        *   Function:       filter_cinr_minimum_PCI
+        *
+        *   Description:    Filters the extracted data based on two criteria:
+        *                   1. Signal Strength: Removes rows where the CINR is below a specified threshold.
+        *                   2. Minimum Count: Removes entire groups of (Channel, CellId) if they do not
+        *                      have at least a minimum number of data points after the CINR filtering.
+        *
+        *   Input:          allData (List<...>) - The full list of extracted data.
+        *                   cinrThresh (double) - The minimum required CINR value.
+        *                   minimumCellIdCount (int) - The minimum number of rows for a cell to be kept.
+        *
+        *   Output:         A new list containing only the data that passed both filtering stages.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static List<Dictionary<string, string>> filter_cinr_minimum_PCI(List<Dictionary<string, string>> allData, double cinrThresh, int minimumCellIdCount)
         {
             // 1. Filter out rows where CINR is below the threshold
@@ -342,6 +498,28 @@ namespace BTS_Location_Estimation
             return finalFilteredData;
         }
 
+        /***************************************************************************************************
+        *
+        *   Function:       ExtractPointsWithDistance
+        *
+        *   Description:    Processes a list of data points for a single cell, filtering them based on
+        *                   geographic distance and signal quality (CINR). It ensures that the selected
+        *                   points are not too close to each other, picking the one with the best CINR
+        *                   if they are. This helps to select geographically distinct points with strong
+        *                   signals, which is crucial for accurate location estimation algorithms.
+        *
+        *   Input:          extractedData (List<...>) - Data points for a single cell.
+        *                   distanceThreshold (double) - The minimum distance between selected points.
+        *                   maxPoints (int) - The maximum number of points to return.
+        *                   metersPerDegree (double) - Conversion factor for distance calculation.
+        *
+        *   Output:         A tuple containing the filtered list of points and the maximum CINR found.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static Tuple<List<Dictionary<string, string>>, double> ExtractPointsWithDistance(
             List<Dictionary<string, string>> extractedData,
             double distanceThreshold,
@@ -414,6 +592,28 @@ namespace BTS_Location_Estimation
             return Tuple.Create(selectedPoints, maxCinr);
         }
 
+        /***************************************************************************************************
+        *
+        *   Function:       ProcessTimeOffset
+        *
+        *   Description:    Adjusts the 'TimeOffset' values for a given set of data points.
+        *                   Cellular timing measurements can "wrap around" a zero point, leading to
+        *                   large jumps in raw data. This logic detects such wrapping and adjusts the
+        *                   values to make them continuous. Finally, it normalizes the adjusted time
+        *                   offset by the technology-specific sampling rate.
+        *
+        *   Input:          data (List<...>) - The list of data points to process.
+        *                   fileType (int) - The file type code to determine the correct wrap value and sampling rate.
+        *                   timeOffsetWrapValue, wcdmaTimeOffsetWrapValue (double) - Wrap-around thresholds.
+        *                   lteSamplingRateHz, nrSamplingRateMultiplier, wcdmaSamplingRateDivisor (double) - Sampling rate parameters.
+        *
+        *   Output:         The input list with 'TimeOffset' values adjusted and normalized.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static List<Dictionary<string, string>> ProcessTimeOffset(
             List<Dictionary<string, string>> data,
             int fileType,
@@ -423,27 +623,32 @@ namespace BTS_Location_Estimation
             double nrSamplingRateMultiplier,
             double wcdmaSamplingRateDivisor)
         {
-            // This function adjusts the 'TimeOffset' values for a given set of data points.
-            // Cellular timing measurements can "wrap around" a zero point, leading to
-            // large jumps in raw data (e.g., from a large positive to a large negative value).
-            // This logic detects such wrapping by checking if values fall on opposite ends
-            // of the possible range. If wrapping is detected, it adjusts the values to make
-            // them continuous. Finally, it normalizes the adjusted time offset by the
-            // technology-specific sampling rate.
             if (data == null || !data.Any())
             {
                 return new List<Dictionary<string, string>>();
             }
 
-            double wrapValue = timeOffsetWrapValue; // Default for LTE
-            if (fileType == 4) // NR
+            bool isNr = fileType == 3 || fileType == 4 || fileType == 30 || fileType == 40;
+            bool isWcdma = fileType == 5 || fileType == 50;
+
+            double wrapValue;
+            double samplingRateHz;
+
+            if (isNr)
             {
                 const double ssbPeriod = 20e-3; // 20 ms
                 wrapValue = lteSamplingRateHz * nrSamplingRateMultiplier * ssbPeriod;
+                samplingRateHz = lteSamplingRateHz * nrSamplingRateMultiplier;
             }
-            else if (fileType == 5) // WCDMA
+            else if (isWcdma)
             {
                 wrapValue = wcdmaTimeOffsetWrapValue;
+                samplingRateHz = lteSamplingRateHz / wcdmaSamplingRateDivisor;
+            }
+            else // LTE cases (1, 2, 10, 20) and any other defaults
+            {
+                wrapValue = timeOffsetWrapValue;
+                samplingRateHz = lteSamplingRateHz;
             }
 
             var timeOffsets = data.Select(row =>
@@ -469,16 +674,6 @@ namespace BTS_Location_Estimation
             }
 
             // Normalize the time offset by the sampling rate
-            double samplingRateHz = lteSamplingRateHz; // Default for LTE
-            if (fileType == 4) // NR
-            {
-                samplingRateHz = lteSamplingRateHz * nrSamplingRateMultiplier;
-            }
-            else if (fileType == 5) // WCDMA
-            {
-                samplingRateHz = lteSamplingRateHz / wcdmaSamplingRateDivisor;
-            }
-
             foreach (var row in data)
             {
                 if (row.TryGetValue("TimeOffset", out var tsStr) &&

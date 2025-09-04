@@ -7,14 +7,24 @@ namespace BTS_Location_Estimation
 {
     public static class TSWLS
     {
-        /// <summary>
-        /// C# implementation of the WLS (Weighted Least Squares) function from MATLAB.
-        /// z = (G' * inv(W) * G)^-1 * G' * inv(W) * h
-        /// </summary>
-        /// <param name="G">Matrix G</param>
-        /// <param name="W">Matrix W</param>
-        /// <param name="h">Vector h</param>
-        /// <returns>The result vector z, or null if a matrix is singular.</returns>
+        /***************************************************************************************************
+        *
+        *   Function:       WLS_Matlab
+        *
+        *   Description:    C# implementation of the WLS (Weighted Least Squares) function from MATLAB.
+        *                   It solves the linear system z = (G' * inv(W) * G)^-1 * G' * inv(W) * h.
+        *
+        *   Input:          G (Matrix<double>) - The design matrix.
+        *                   W (Matrix<double>) - The weighting matrix.
+        *                   h (Vector<double>) - The observation vector.
+        *
+        *   Output:         The result vector z, or null if a matrix is singular and cannot be inverted.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static Vector<double>? WLS_Matlab(Matrix<double> G, Matrix<double> W, Vector<double> h)
         {
             try
@@ -37,10 +47,27 @@ namespace BTS_Location_Estimation
             }
         }
 
-        /// <summary>
-        /// C# implementation of the TSWLS2 algorithm.
-        /// </summary>
-        /// <returns>A vector containing xHat, yHat, and r_0, or null on failure.</returns>
+        /***************************************************************************************************
+        *
+        *   Function:       tswls2
+        *
+        *   Description:    C# implementation of the core TSWLS (Two-Stage Weighted Least Squares) algorithm.
+        *                   This function performs multiple WLS passes to estimate the x, y location.
+        *
+        *   Input:          N (int) - The number of data points.
+        *                   sx (Vector<double>) - Vector of x-coordinates for the measurement points.
+        *                   sy (Vector<double>) - Vector of y-coordinates for the measurement points.
+        *                   ts (Vector<double>) - Vector of time-of-arrival measurements.
+        *                   c (double) - The speed of light.
+        *
+        *   Output:         A vector containing the estimated xHat, yHat, and r_0 (distance),
+        *                   or null if any of the internal WLS passes fail.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static Vector<double>? tswls2(int N, Vector<double> sx, Vector<double> sy, Vector<double> ts, double c)
         {
             // Step 1: First WLS Pass
@@ -151,17 +178,29 @@ namespace BTS_Location_Estimation
             return Vector<double>.Build.Dense(new double[] { xHat, yHat, r_0 });
         }
 
-        /// <summary>
-        /// Main workflow function for the TSWLS process. It converts lat/lon to local x/y,
-        /// runs the core TSWLS algorithm, and returns the estimated location.
-        /// </summary>
-        /// <param name="points">The list of filtered and time-adjusted data points.</param>
-        /// <param name="minimum_points_for_TSWLS">The minimum number of points required.</param>
-        /// <param name="c">The speed of light constant.</param>
-        /// <param name="metersPerDegree">Conversion factor for lat/lon to meters.</param>
-        /// <param name="range">The search range for the grid search.</param>
-        /// <param name="step">The step size for the grid search.</param>
-        /// <returns>A vector containing xHat, yHat, xHat2, yHat2, or null on failure.</returns>
+        /***************************************************************************************************
+        *
+        *   Function:       run_tswls
+        *
+        *   Description:    Main workflow function for the TSWLS process. It converts latitude/longitude
+        *                   to a local x/y coordinate system, runs the core `tswls2` algorithm,
+        *                   and then refines the result using a grid search.
+        *
+        *   Input:          points (List<...>) - The list of filtered and time-adjusted data points.
+        *                   minimum_points_for_TSWLS (int) - The minimum number of points required.
+        *                   c (double) - The speed of light constant.
+        *                   metersPerDegree (double) - Conversion factor for lat/lon to meters.
+        *                   range (double) - The search range for the grid search.
+        *                   step (double) - The step size for the grid search.
+        *
+        *   Output:         A vector containing the initial estimate (xHat, yHat) and the refined
+        *                   grid search estimate (xHat2, yHat2), or null on failure.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static Vector<double>? run_tswls(List<Dictionary<string, string>> points, int minimum_points_for_TSWLS, double c, double metersPerDegree, double range, double step)
         {
             if (points.Count < minimum_points_for_TSWLS)
@@ -225,9 +264,26 @@ namespace BTS_Location_Estimation
             return Vector<double>.Build.Dense(new double[] { xHat, yHat, xHat2, yHat2 });
         }
 
-        /// <summary>
-        /// C# implementation of the CalcAME function from MATLAB.
-        /// </summary>
+        /***************************************************************************************************
+        *
+        *   Function:       CalcAME
+        *
+        *   Description:    C# implementation of the CalcAME (Calculate Absolute Mean Error) function.
+        *                   It computes the error for a candidate location (bx, by).
+        *
+        *   Input:          N (int) - The number of data points.
+        *                   sx, sy (Vector<double>) - Vectors of measurement point coordinates.
+        *                   ts (Vector<double>) - Vector of time-of-arrival measurements.
+        *                   c (double) - The speed of light.
+        *                   bx, by (double) - The candidate x and y coordinates to evaluate.
+        *
+        *   Output:         The calculated absolute mean error (double).
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static double CalcAME(int N, Vector<double> sx, Vector<double> sy, Vector<double> ts, double c, double bx, double by)
         {
             double ame = 0.0;
@@ -249,9 +305,29 @@ namespace BTS_Location_Estimation
             return ame;
         }
 
-        /// <summary>
-        /// C# implementation of the GridSearch2 function from MATLAB.
-        /// </summary>
+        /***************************************************************************************************
+        *
+        *   Function:       GridSearch2
+        *
+        *   Description:    C# implementation of the GridSearch2 function. It performs a grid search
+        *                   around an initial estimate (x, y) to find a location with a lower
+        *                   Absolute Mean Error (AME), refining the TSWLS result.
+        *
+        *   Input:          N (int) - The number of data points.
+        *                   sx, sy (Vector<double>) - Vectors of measurement point coordinates.
+        *                   ts (Vector<double>) - Vector of time-of-arrival measurements.
+        *                   c (double) - The speed of light.
+        *                   x, y (double) - The initial estimated coordinates.
+        *                   range (double) - The search range for the grid.
+        *                   step (double) - The step size for the grid.
+        *
+        *   Output:         A vector containing the refined xHat, yHat, and r_0.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static Vector<double> GridSearch2(int N, Vector<double> sx, Vector<double> sy, Vector<double> ts, double c, double x, double y, double range, double step)
         {
             int M = (int)Math.Ceiling(range / step);
@@ -319,11 +395,24 @@ namespace BTS_Location_Estimation
             return Vector<double>.Build.Dense(new double[] { xHat, yHat, r_0 });
         }
 
-        /// <summary>
-        /// C# implementation of the xy2LatLon function from MATLAB.
-        /// Converts local x, y coordinates back to latitude and longitude.
-        /// </summary>
-        /// <returns>A tuple containing the calculated Latitude and Longitude.</returns>
+        /***************************************************************************************************
+        *
+        *   Function:       xy2LatLon
+        *
+        *   Description:    C# implementation of the xy2LatLon function. It converts local
+        *                   x, y coordinates back to latitude and longitude based on a reference point.
+        *
+        *   Input:          x, y (double) - The local coordinates to convert.
+        *                   latRef, lonRef (double) - The reference latitude and longitude.
+        *                   metersPerDegree (double) - The conversion factor for meters to degrees.
+        *
+        *   Output:         A tuple containing the calculated Latitude and Longitude.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static (double Lat, double Lon) xy2LatLon(double x, double y, double latRef, double lonRef, double metersPerDegree)
         {
             const double PI = Math.PI;
