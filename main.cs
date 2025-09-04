@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.13.0";
+        public const string SW_VERSION = "1.0.14.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -136,10 +136,7 @@ namespace BTS_Location_Estimation
 
                 var resultsWithBeamIndex = DataBaseProc.splitCellidBeamforNR(fileType, estimationResults);
 
-                var sortedResults = resultsWithBeamIndex
-                    .OrderBy(d => int.TryParse(d["Channel"], out int ch) ? ch : int.MaxValue)
-                    .ThenBy(d => int.TryParse(d["CellId"], out int id) ? id : int.MaxValue)
-                    .ToList();
+                var sortedResults = DataBaseProc.AddTowerEstimate(resultsWithBeamIndex, fileType);
                 SaveHelper.save_estimation_results(sortedResults, estimateFilename);
             }
             Console.WriteLine("Batch processing complete.");

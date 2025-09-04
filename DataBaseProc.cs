@@ -308,5 +308,182 @@ namespace BTS_Location_Estimation
             }
             return newEstimationResults;
         }
+
+        /***************************************************************************************************
+        *
+        *   Function:       AddTowerEstimate
+        *
+        *   Description:    Identifies groups of cells (towers) based on their channel and consecutive
+        *                   cell identities. It creates new summary entries for these groups by averaging
+        *                   their locations and combining their IDs.
+        *
+        *   Input:          resultsWithBeamIndex (List<...>) - The list of individual cell estimation results.
+        *                   fileType (int) - The type of the processed file.
+        *
+        *   Output:         A new list containing both the original results and the new summary "tower"
+        *                   entries, sorted by channel and cell identity.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
+        public static List<Dictionary<string, string>> AddTowerEstimate(List<Dictionary<string, string>> resultsWithBeamIndex, int fileType)
+        {
+            var initialSorted = resultsWithBeamIndex
+                .OrderBy(d => int.TryParse(d["Channel"], out int ch) ? ch : int.MaxValue)
+                .ThenBy(d => d.GetValueOrDefault("cellIdentity", string.Empty))
+                .ToList();
+
+            var newTowerEstimates = new List<Dictionary<string, string>>();
+            var processedIndices = new HashSet<int>();
+
+            var groupedByChannel = initialSorted
+                .Select((value, index) => new { value, index })
+                .GroupBy(x => x.value.GetValueOrDefault("Channel"));
+
+            bool isNrFile = fileType == NR_TOPN_FILE_TYPE || fileType == NR_FILE_TYPE || fileType == NR_TOPN_FILE_TYPE * 10 || fileType == NR_FILE_TYPE * 10;
+
+            foreach (var channelGroup in groupedByChannel)
+            {
+                var items = channelGroup.ToList();
+                if (items.Count < 2) continue;
+
+                // --- Pass 1: Find groups of three ---
+                for (int i = 0; i < items.Count - 2; i++)
+                {
+                    if (processedIndices.Contains(items[i].index)) continue;
+
+                    for (int j = i + 1; j < items.Count - 1; j++)
+                    {
+                        if (processedIndices.Contains(items[j].index)) continue;
+
+                        for (int k = j + 1; k < items.Count; k++)
+                        {
+                            if (processedIndices.Contains(items[k].index)) continue;
+
+                            var p1 = items[i].value;
+                            var p2 = items[j].value;
+                            var p3 = items[k].value;
+
+                            if (long.TryParse(p1["cellIdentity"], out long id1) &&
+                                long.TryParse(p2["cellIdentity"], out long id2) &&
+                                long.TryParse(p3["cellIdentity"], out long id3))
+                            {
+                                bool isGroupOfThree = (id2 == id1 + 1 && id3 == id2 + 1) || // (1,2,3)
+                                                      (id2 == id1 + 1 && id3 == id2 + 2) || // (1,2,4)
+                                                      (id2 == id1 + 2 && id3 == id2 + 1);   // (1,3,4)
+
+                                if (isGroupOfThree)
+                                {
+                                    var group = new List<Dictionary<string, string>> { p1, p2, p3 };
+                                    newTowerEstimates.Add(CreateTowerEstimate(group, isNrFile));
+                                    processedIndices.Add(items[i].index);
+                                    processedIndices.Add(items[j].index);
+                                    processedIndices.Add(items[k].index);
+                                    goto next_i_loop_3; // Continue outer loop
+                                }
+                            }
+                        }
+                    }
+                next_i_loop_3:;
+                }
+
+                // --- Pass 2: Find groups of two ---
+                for (int i = 0; i < items.Count - 1; i++)
+                {
+                    if (processedIndices.Contains(items[i].index)) continue;
+
+                    for (int j = i + 1; j < items.Count; j++)
+                    {
+                        if (processedIndices.Contains(items[j].index)) continue;
+
+                        var p1 = items[i].value;
+                        var p2 = items[j].value;
+
+                        if (long.TryParse(p1["cellIdentity"], out long id1) &&
+                            long.TryParse(p2["cellIdentity"], out long id2))
+                        {
+                            bool isGroupOfTwo = (id2 == id1 + 1) || // (1,2)
+                                                  (id2 == id1 + 2);   // (1,3)
+
+                            if (isGroupOfTwo)
+                            {
+                                var group = new List<Dictionary<string, string>> { p1, p2 };
+                                newTowerEstimates.Add(CreateTowerEstimate(group, isNrFile));
+                                processedIndices.Add(items[i].index);
+                                processedIndices.Add(items[j].index);
+                                goto next_i_loop_2; // Continue outer loop
+                            }
+                        }
+                    }
+                next_i_loop_2:;
+                }
+            }
+
+            var combinedResults = initialSorted.Concat(newTowerEstimates).ToList();
+
+            // Final sort
+            var finalSortedResults = combinedResults
+                .OrderBy(d => int.TryParse(d["Channel"], out int ch) ? ch : int.MaxValue)
+                .ThenBy(d => d.GetValueOrDefault("cellIdentity", string.Empty))
+                .ToList();
+
+            return finalSortedResults;
+        }
+
+        private static Dictionary<string, string> CreateTowerEstimate(List<Dictionary<string, string>> group, bool isNrFile)
+        {
+            double avgLat1 = group.Average(d => double.Parse(d["est_Lat1"], CultureInfo.InvariantCulture));
+            double avgLon1 = group.Average(d => double.Parse(d["est_Lon1"], CultureInfo.InvariantCulture));
+            double avgLat2 = group.Average(d => double.Parse(d["est_Lat2"], CultureInfo.InvariantCulture));
+            double avgLon2 = group.Average(d => double.Parse(d["est_Lon2"], CultureInfo.InvariantCulture));
+
+            string combinedCellId = string.Join("/", group.Select(d => d["CellId"]));
+            
+            // Format cellIdentity as "firstId_last3_last3"
+            string combinedCellIdentity = string.Empty;
+            if (group.Any())
+            {
+                var identities = group.Select(d => d["cellIdentity"]).ToList();
+                string firstId = identities.First();
+                var subsequentLastThree = identities.Skip(1).Select(id => id.Length >= 3 ? id.Substring(id.Length - 3) : id);
+                if (subsequentLastThree.Any())
+                {
+                    combinedCellIdentity = $"{firstId}_{string.Join("_", subsequentLastThree)}";
+                }
+                else
+                {
+                    combinedCellIdentity = firstId;
+                }
+            }
+
+            string beamIndexValue = "Tower";
+            if (isNrFile)
+            {
+                beamIndexValue = string.Join("/", group.Select(d => d.GetValueOrDefault("BeamIndex", "")));
+            }
+
+            var newEstimate = new Dictionary<string, string>
+            {
+                { "Channel", group[0]["Channel"] },
+                { "CellId", combinedCellId },
+                { "BeamIndex", beamIndexValue }, // To identify these as tower estimates
+                { "cellIdentity", combinedCellIdentity },
+                { "xhat1", "0" },
+                { "yhat1", "0" },
+                { "xhat2", "0" },
+                { "yhat2", "0" },
+                { "est_Lat1", avgLat1.ToString("F6", CultureInfo.InvariantCulture) },
+                { "est_Lon1", avgLon1.ToString("F6", CultureInfo.InvariantCulture) },
+                { "est_Lat2", avgLat2.ToString("F6", CultureInfo.InvariantCulture) },
+                { "est_Lon2", avgLon2.ToString("F6", CultureInfo.InvariantCulture) },
+                // Add other fields with default/aggregated values if needed
+                { "Max_cinr", group.Max(d => double.Parse(d["Max_cinr"], CultureInfo.InvariantCulture)).ToString("F2", CultureInfo.InvariantCulture) },
+                { "Num_points", group.Sum(d => int.Parse(d["Num_points"])).ToString() },
+                { "Confidence", "High" } // Or determine based on logic
+            };
+            return newEstimate;
+        }
     }
 }

@@ -9,23 +9,43 @@ namespace BTS_Location_Estimation
     {
         public static void save_estimation_results(List<Dictionary<string, string>> estimationResults, string outputFilename)
         {
+            if (!estimationResults.Any())
+            {
+                Console.WriteLine($"No estimation results to save to {outputFilename}");
+                return;
+            }
+
             // Delete the file if it exists to ensure a clean run
             if (File.Exists(outputFilename))
             {
                 File.Delete(outputFilename);
             }
 
+            // Define the core headers in the desired order.
+            var headers = new List<string>
+            {
+                "Channel", "CellId", "cellIdentity", "xhat1", "yhat1", "xhat2", "yhat2",
+                "est_Lat1", "est_Lon1", "est_Lat2", "est_Lon2", "Max_cinr", "Num_points", "Confidence"
+            };
+
+            // Check if any result contains a BeamIndex to determine if the column should be added.
+            bool hasBeamIndex = estimationResults.Any(r => r.ContainsKey("BeamIndex"));
+
+            if (hasBeamIndex)
+            {
+                // Insert "BeamIndex" at the correct position (after "CellId").
+                int cellIdIndex = headers.IndexOf("CellId");
+                headers.Insert(cellIdIndex + 1, "BeamIndex");
+            }
+
             using (var writer = new StreamWriter(outputFilename))
             {
-                if (estimationResults.Any())
-                {
-                    var headers = estimationResults.First().Keys;
-                    writer.WriteLine(string.Join(",", headers));
+                writer.WriteLine(string.Join(",", headers));
 
-                    foreach (var result in estimationResults)
-                    {
-                        writer.WriteLine(string.Join(",", result.Values));
-                    }
+                foreach (var result in estimationResults)
+                {
+                    var values = headers.Select(header => result.GetValueOrDefault(header, ""));
+                    writer.WriteLine(string.Join(",", values));
                 }
             }
             Console.WriteLine($"\nFinal estimation results saved to {outputFilename}");
@@ -47,7 +67,7 @@ namespace BTS_Location_Estimation
                 string mapKmlFilename = Path.Combine(directory, mapBaseFilename + ".kml");
 
                 generate_map_csv(channelResults, mapCsvFilename);
-                generate_map_kml(channelResults, mapKmlFilename);
+                //generate_map_kml(channelResults, mapKmlFilename);
             }
         }
 
