@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.16.0";
+        public const string SW_VERSION = "1.0.17.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -88,13 +88,13 @@ namespace BTS_Location_Estimation
 
                 string filenameOnly = Path.GetFileNameWithoutExtension(inputFilename);
                 string step1Filename = $"step1_{filenameOnly}.csv";
-                //save_extrac_step1(allData, step1Filename);
+                SaveHelper.save_extrac_step1(allData, step1Filename);
 
                 bool isWcdma = fileType == DataBaseProc.WCDMA_FILE_TYPE_CSV || fileType == DataBaseProc.WCDMA_FILE_TYPE_DTR;
                 double cinrThreshold = isWcdma ? EC_IO_THRESHOLD : CINR_THRESH;
                 var filteredData = DataBaseProc.filter_cinr_minimum_PCI(allData, cinrThreshold, MINIMUM_CELL_ID_COUNT);
                 string step2Filename = $"step2_{filenameOnly}.csv";
-                //save_extract_step2(filteredData, step2Filename);
+                SaveHelper.save_extract_step2(filteredData, step2Filename);
 
                 // Group data by channel and cell to process each one individually
                 var groupedData = filteredData.GroupBy(row => new
@@ -120,7 +120,12 @@ namespace BTS_Location_Estimation
                     // You can now save or process the 'finalPoints' and 'maxCinr' for each cell
                     // For example, save to a new CSV file for step 3
                     string step3Filename = $"step3_{filenameOnly}_ch{group.Key.Channel}_cell{group.Key.CellId}.csv";
-                    //save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
+                    SaveHelper.save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
+
+                    if (group.Key.Channel == "2963" && group.Key.CellId == "12")
+                    {
+                        System.Diagnostics.Debugger.Break(); // Trap breakpoint
+                    }
 
                     // Run the TSWLS algorithm
                     var tswlsResult = TSWLS.run_tswls(timeAdjustedPoints, MINIMUM_POINTS_FOR_TSWLS, SPEED_OF_LIGHT, METERS_PER_DEGREE, SEARCH_DIRECTION, DISTANCE_THRESH);

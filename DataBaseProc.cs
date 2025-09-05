@@ -152,6 +152,19 @@ namespace BTS_Location_Estimation
                 .DefaultIfEmpty(-999.0)
                 .Max();
 
+            // Check if all remaining points have the same TimeOffset
+            if (selectedPoints.Count > 1)
+            {
+                var distinctTimeOffsets = selectedPoints.Select(p => p.GetValueOrDefault("TimeOffset")).Distinct().Count();
+                if (distinctTimeOffsets == 1)
+                {
+                    string channel = selectedPoints.First().GetValueOrDefault("channel", "N/A");
+                    string cellId = selectedPoints.First().GetValueOrDefault("cellId", "N/A");
+                    Console.WriteLine($"Removing cell {cellId} on channel {channel} because all points have an identical TimeOffset.");
+                    return Tuple.Create(new List<Dictionary<string, string>>(), -999.0); // Return empty list
+                }
+            }
+
             return Tuple.Create(selectedPoints, maxCinr);
         }
 

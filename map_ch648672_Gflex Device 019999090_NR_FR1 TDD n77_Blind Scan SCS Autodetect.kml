@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>map_ch648672_Gflex Device 019999090_NR_FR1 TDD n77_Blind Scan SCS Autodetect</name>
+    <Style id="blue_pin_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href>
+        </Icon>
+        <hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Style id="red_balloon_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Style id="blue_balloon_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Style id="yellow_balloon_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Placemark>
+      <name>205</name>
+      <description>
+        <![CDATA[Cell ID: 205, Beam: 3<br/>Cell Identity: 17516137978<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.252985,39.196792,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>206</name>
+      <description>
+        <![CDATA[Cell ID: 206, Beam: 3<br/>Cell Identity: 17516137994<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.261874,39.200102,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>165</name>
+      <description>
+        <![CDATA[Cell ID: 165, Beam: 3<br/>Cell Identity: 17516168218<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.239671,39.214009,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>167</name>
+      <description>
+        <![CDATA[Cell ID: 167, Beam: 3<br/>Cell Identity: 17516168250<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.240060,39.211070,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>363</name>
+      <description>
+        <![CDATA[Cell ID: 363, Beam: 3<br/>Cell Identity: 17516184394<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.267268,39.218101,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>364</name>
+      <description>
+        <![CDATA[Cell ID: 364, Beam: 3<br/>Cell Identity: 17516184410<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.272468,39.217520,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>365</name>
+      <description>
+        <![CDATA[Cell ID: 365, Beam: 3<br/>Cell Identity: 17516184426<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.320993,39.156157,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>48</name>
+      <description>
+        <![CDATA[Cell ID: 48, Beam: 3<br/>Cell Identity: 17516185018<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.285112,39.229784,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>49</name>
+      <description>
+        <![CDATA[Cell ID: 49, Beam: 3<br/>Cell Identity: 17516185034<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.287113,39.238634,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

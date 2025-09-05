@@ -2,7 +2,15 @@
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
     <name>map_ch3050_Gflex Device 019999095_UMTS WCDMA_UB VIII  900 DL_Blind Scan</name>
-    <Style id="red_circle_style">
+    <Style id="blue_pin_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href>
+        </Icon>
+        <hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Style id="red_balloon_style">
       <IconStyle>
         <Icon>
           <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>
@@ -10,7 +18,15 @@
         <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
       </IconStyle>
     </Style>
-    <Style id="yellow_circle_style">
+    <Style id="blue_balloon_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Style id="yellow_balloon_style">
       <IconStyle>
         <Icon>
           <href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href>
@@ -18,40 +34,24 @@
         <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
       </IconStyle>
     </Style>
-    <Style id="pink_circle_style">
-      <IconStyle>
-        <Icon>
-          <href>http://maps.google.com/mapfiles/kml/paddle/pink-circle.png</href>
-        </Icon>
-        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
-      </IconStyle>
-    </Style>
-    <Style id="pink_pin_style">
-      <IconStyle>
-        <Icon>
-          <href>http://maps.google.com/mapfiles/kml/pushpin/pink-pushpin.png</href>
-        </Icon>
-        <hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/>
-      </IconStyle>
-    </Style>
-    <Placemark>
-      <name>309</name>
-      <description>
-        <![CDATA[Cell ID: 309<br/>Cell Identity: 47775-13921<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_circle_style</styleUrl>
-      <Point>
-        <coordinates>-1.199174,50.855505,0</coordinates>
-      </Point>
-    </Placemark>
     <Placemark>
       <name>41</name>
       <description>
         <![CDATA[Cell ID: 41<br/>Cell Identity: 20445<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-1.222423,50.846820,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>309</name>
+      <description>
+        <![CDATA[Cell ID: 309<br/>Cell Identity: 47775-13921<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-1.199174,50.855505,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -59,7 +59,7 @@
       <description>
         <![CDATA[Cell ID: 155<br/>Cell Identity: 57775<br/>Confidence: High]]>
       </description>
-      <styleUrl>#red_circle_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-1.209370,50.859502,0</coordinates>
       </Point>
