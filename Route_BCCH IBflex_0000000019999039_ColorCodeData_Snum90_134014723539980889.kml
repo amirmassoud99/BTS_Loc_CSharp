@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Route for BCCH IBflex_0000000019999039_ColorCodeData_Snum90_134014723539980889</name>
+    <Style id="driveRouteStyle">
+      <LineStyle>
+        <color>ff0000ff</color>
+        <width>3</width>
+      </LineStyle>
+    </Style>
+    <Placemark>
+      <name>Drive Route</name>
+      <styleUrl>#driveRouteStyle</styleUrl>
+      <LineString>
+        <tessellate>1</tessellate>
+        <coordinates>
+-77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0 -77.281436,39.231749,0
+        </coordinates>
+      </LineString>
+    </Placemark>
+  </Document>
+</kml>

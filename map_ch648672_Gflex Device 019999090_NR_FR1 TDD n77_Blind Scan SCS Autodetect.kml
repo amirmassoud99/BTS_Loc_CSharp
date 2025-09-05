@@ -35,6 +35,16 @@
       </IconStyle>
     </Style>
     <Placemark>
+      <name>364</name>
+      <description>
+        <![CDATA[Cell ID: 364, Beam: 3<br/>Cell Identity: <br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.272468,39.217520,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
       <name>205</name>
       <description>
         <![CDATA[Cell ID: 205, Beam: 3<br/>Cell Identity: 17516137978<br/>Confidence: High]]>
@@ -82,16 +92,6 @@
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.267268,39.218101,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>364</name>
-      <description>
-        <![CDATA[Cell ID: 364, Beam: 3<br/>Cell Identity: 17516184410<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_balloon_style</styleUrl>
-      <Point>
-        <coordinates>-77.272468,39.217520,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>

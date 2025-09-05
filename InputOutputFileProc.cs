@@ -31,16 +31,23 @@ namespace BTS_Location_Estimation
         ***************************************************************************************************/
         public static (string fileDirectory, List<string> inputFilenames) GetFileConfigurations()
         {
-            /*****Reference Matlab file*/    
+            /*****Reference Matlab file*/
             /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\MatlabRef\";
             List<string> inputFilenames = new List<string>
             {
                 "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz_Enhanced Top N Signal Auto Bandwidth Channel 39750 - 2506.000000 MHz.csv"
 
             };*/
-            
+
+            /*****GSM file*/
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\GSM\";
+            List<string> inputFilenames = new List<string>
+            {
+                "BCCH IBflex_0000000019999039_ColorCodeData_Snum90_134014723539980889.csv"
+
+            };
             /**********WCDMA Batch */
-            
+
             /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\Drive test WCDMA MBS_20230111_144045\";
             List<string> inputFilenames = new List<string>
             {
@@ -49,23 +56,23 @@ namespace BTS_Location_Estimation
                 "Gflex Device 019999095_UMTS WCDMA_UB VII  2600 (IMT Extension) DL_Blind Scan.dtr",
                 "Gflex Device 019999095_UMTS WCDMA_UB VIII  900 DL_Blind Scan.dtr"
             };*/
-            
+
 
             //Batch processing Drive 1 ATT_LTE Tmobile_NR ATT_NR_n77
-            
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\7.0.2.4\20250813_Drive3-SIB1-cont\";
+
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\7.0.2.4\20250813_Drive3-SIB1-cont\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
 
-                /*"Gflex Device 019999090_LTE_EB 14  Upper 700-D Block DL_Blind Scan.dtr",
+                "Gflex Device 019999090_LTE_EB 14  Upper 700-D Block DL_Blind Scan.dtr",
                 "Gflex Device 019999090_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.dtr",
-                "Gflex Device 019999090_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",*/
+                "Gflex Device 019999090_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",
                 "Gflex Device 019999090_NR_FR1 TDD n77_Blind Scan SCS Autodetect.dtr",
                 "Gflex Device 019999090_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr"
                 
-            };
-            
+            };*/
+
 
             //Batch processing LTE NR Drive 2
             /*
@@ -136,7 +143,8 @@ namespace BTS_Location_Estimation
         public static int GetFileType(string filename)
         {
             int baseFileType;
-            if (filename.Contains("LTE") && filename.Contains("Top N")) baseFileType = LTE_TOPN_FILE_TYPE;
+            if (filename.Contains("ColorCode")) baseFileType = GSM_FILE_TYPE;
+            else if (filename.Contains("LTE") && filename.Contains("Top N")) baseFileType = LTE_TOPN_FILE_TYPE;
             else if (filename.Contains("LTE") && filename.Contains("Blind")) baseFileType = LTE_BLIND_FILE_TYPE;
             else if (filename.Contains("NR") && (filename.Contains("Topn") || filename.Contains("Top N"))) baseFileType = NR_TOPN_FILE_TYPE;
             else if (filename.Contains("NR") && filename.Contains("Blind")) baseFileType = NR_FILE_TYPE;
@@ -280,6 +288,15 @@ namespace BTS_Location_Estimation
                     cinrKeyword = "Ec/Io";
                     rssiKeyword = "Channel RSSI";
                     timeOffsetKeyword = "TimeOffset";//DTR code
+                    break;
+
+                case GSM_FILE_TYPE:
+                    cellIdKeyword = "Color Code";
+                    //cellIdentityKeyword = "CID";
+                    channelKeyword = "Channel";
+                    cinrKeyword = "CTOI";
+                    rssiKeyword = "Channel RSSI";
+                    timeOffsetKeyword = "HRTOA";
                     break;
 
                 default: // Fallback for other types if needed

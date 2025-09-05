@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.18.0";
+        public const string SW_VERSION = "1.0.19.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -53,6 +53,7 @@ namespace BTS_Location_Estimation
         *   Description:    The main entry point for the BTS Location Estimation program. It orchestrates
         *                   the entire workflow, from reading input files to processing data for each
         *                   cellular technology, running the TSWLS estimation, and saving the final results.
+        *                   It relies on helper functions from InputOutputFileProc, DataBaseProc, and SaveHelper.
         *
         *   Input:          args (string[]) - Command-line arguments (currently unused).
         *
@@ -61,7 +62,7 @@ namespace BTS_Location_Estimation
         *
         *   Author:         Amir Soltanian
         *
-        *   Date:           September 4, 2025
+        *   Date:           September 5, 2025
         *
         ***************************************************************************************************/
         public static void Main(string[] args)

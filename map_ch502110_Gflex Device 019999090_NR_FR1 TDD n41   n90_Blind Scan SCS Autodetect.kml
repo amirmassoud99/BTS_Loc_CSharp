@@ -35,6 +35,26 @@
       </IconStyle>
     </Style>
     <Placemark>
+      <name>550</name>
+      <description>
+        <![CDATA[Cell ID: 550, Beam: 0<br/>Cell Identity: <br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.280386,39.228752,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>605</name>
+      <description>
+        <![CDATA[Cell ID: 605, Beam: 0<br/>Cell Identity: <br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.239137,39.214381,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
       <name>206</name>
       <description>
         <![CDATA[Cell ID: 206, Beam: 0<br/>Cell Identity: 5467300151<br/>Confidence: High]]>
@@ -115,23 +135,13 @@
       </Point>
     </Placemark>
     <Placemark>
-      <name>132/550/848</name>
+      <name>132/848</name>
       <description>
-        <![CDATA[Tower containing Cell IDs: 132, 550, 848<br/>Cell Identities: 5497364791, 792, 793]]>
+        <![CDATA[Tower containing Cell IDs: 132, 848<br/>Cell Identities: 5497364791, 793]]>
       </description>
       <styleUrl>#blue_pin_style</styleUrl>
       <Point>
-        <coordinates>-77.285542,39.229153,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>550</name>
-      <description>
-        <![CDATA[Cell ID: 550, Beam: 0<br/>Cell Identity: 5497364792<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#blue_balloon_style</styleUrl>
-      <Point>
-        <coordinates>-77.280386,39.228752,0</coordinates>
+        <coordinates>-77.288119,39.229354,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -145,31 +155,11 @@
       </Point>
     </Placemark>
     <Placemark>
-      <name>605</name>
-      <description>
-        <![CDATA[Cell ID: 605, Beam: 0<br/>Cell Identity: 5507842359<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#blue_balloon_style</styleUrl>
-      <Point>
-        <coordinates>-77.239137,39.214381,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>605/655</name>
-      <description>
-        <![CDATA[Tower containing Cell IDs: 605, 655<br/>Cell Identities: 5507842359, 361]]>
-      </description>
-      <styleUrl>#blue_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.236266,39.213118,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
       <name>655</name>
       <description>
         <![CDATA[Cell ID: 655, Beam: 0<br/>Cell Identity: 5507842361<br/>Confidence: High]]>
       </description>
-      <styleUrl>#blue_balloon_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.233396,39.211855,0</coordinates>
       </Point>

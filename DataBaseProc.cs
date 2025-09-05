@@ -12,6 +12,7 @@ namespace BTS_Location_Estimation
         public const int NR_TOPN_FILE_TYPE = 3;
         public const int NR_FILE_TYPE = 4;
         public const int WCDMA_FILE_TYPE_CSV = 5;
+        public const int GSM_FILE_TYPE = 6;
         public const int WCDMA_FILE_TYPE_DTR = 50;
 
         /***************************************************************************************************
