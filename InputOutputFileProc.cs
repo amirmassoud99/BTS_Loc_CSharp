@@ -40,12 +40,12 @@ namespace BTS_Location_Estimation
             };*/
 
             /*****GSM file*/
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\GSM\";
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\GSM\";
             List<string> inputFilenames = new List<string>
             {
                 "BCCH IBflex_0000000019999039_ColorCodeData_Snum90_134014723539980889.csv"
 
-            };
+            };*/
             /**********WCDMA Batch */
 
             /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\Drive test WCDMA MBS_20230111_144045\";
@@ -60,18 +60,18 @@ namespace BTS_Location_Estimation
 
             //Batch processing Drive 1 ATT_LTE Tmobile_NR ATT_NR_n77
 
-            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\7.0.2.4\20250813_Drive3-SIB1-cont\";
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\7.0.2.4\20250813_Drive3-SIB1-cont\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
 
-                "Gflex Device 019999090_LTE_EB 14  Upper 700-D Block DL_Blind Scan.dtr",
+                /*"Gflex Device 019999090_LTE_EB 14  Upper 700-D Block DL_Blind Scan.dtr",
                 "Gflex Device 019999090_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.dtr",
-                "Gflex Device 019999090_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",
+                "Gflex Device 019999090_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",*/
                 "Gflex Device 019999090_NR_FR1 TDD n77_Blind Scan SCS Autodetect.dtr",
                 "Gflex Device 019999090_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr"
                 
-            };*/
+            };
 
 
             //Batch processing LTE NR Drive 2

@@ -380,9 +380,9 @@ namespace BTS_Location_Estimation
                             var p2 = items[j].value;
                             var p3 = items[k].value;
 
-                            if (long.TryParse(p1["cellIdentity"], out long id1) &&
-                                long.TryParse(p2["cellIdentity"], out long id2) &&
-                                long.TryParse(p3["cellIdentity"], out long id3))
+                            if (p1.TryGetValue("cellIdentity", out var idStr1) && long.TryParse(idStr1, out long id1) &&
+                                p2.TryGetValue("cellIdentity", out var idStr2) && long.TryParse(idStr2, out long id2) &&
+                                p3.TryGetValue("cellIdentity", out var idStr3) && long.TryParse(idStr3, out long id3))
                             {
                                 bool isGroupOfThree = (id2 == id1 + 1 && id3 == id2 + 1) || // (1,2,3)
                                                       (id2 == id1 + 1 && id3 == id2 + 2) || // (1,2,4)
@@ -415,8 +415,8 @@ namespace BTS_Location_Estimation
                         var p1 = items[i].value;
                         var p2 = items[j].value;
 
-                        if (long.TryParse(p1["cellIdentity"], out long id1) &&
-                            long.TryParse(p2["cellIdentity"], out long id2))
+                        if (p1.TryGetValue("cellIdentity", out var idStr1) && long.TryParse(idStr1, out long id1) &&
+                            p2.TryGetValue("cellIdentity", out var idStr2) && long.TryParse(idStr2, out long id2))
                         {
                             bool isGroupOfTwo = (id2 == id1 + 1) || // (1,2)
                                                   (id2 == id1 + 2);   // (1,3)
@@ -433,6 +433,34 @@ namespace BTS_Location_Estimation
                     }
                 next_i_loop_2:;
                 }
+
+                // --- Pass 3: Find NR groups with same CellId and CellIdentity ---
+                if (isNrFile)
+                {
+                    var remainingItems = items.Where(item => !processedIndices.Contains(item.index)).ToList();
+                    
+                    var sameIdGroups = remainingItems
+                        .Where(item => !string.IsNullOrWhiteSpace(item.value.GetValueOrDefault("cellIdentity")))
+                        .GroupBy(item => new { 
+                            CellId = item.value.GetValueOrDefault("CellId"), 
+                            CellIdentity = item.value.GetValueOrDefault("cellIdentity") 
+                        })
+                        .Where(g => g.Count() > 1)
+                        .ToList();
+
+                    foreach (var idGroup in sameIdGroups)
+                    {
+                        var groupItems = idGroup.Select(g => g.value).ToList();
+                        
+                        newTowerEstimates.Add(CreateNrBeamTowerEstimate(groupItems));
+
+                        // Mark these items as processed
+                        foreach (var item in idGroup)
+                        {
+                            processedIndices.Add(item.index);
+                        }
+                    }
+                }
             }
 
             var combinedResults = initialSorted.Concat(newTowerEstimates).ToList();
@@ -444,6 +472,41 @@ namespace BTS_Location_Estimation
                 .ToList();
 
             return finalSortedResults;
+        }
+
+        private static Dictionary<string, string> CreateNrBeamTowerEstimate(List<Dictionary<string, string>> group)
+        {
+            double avgLat1 = group.Average(d => double.Parse(d["est_Lat1"], CultureInfo.InvariantCulture));
+            double avgLon1 = group.Average(d => double.Parse(d["est_Lon1"], CultureInfo.InvariantCulture));
+            double avgLat2 = group.Average(d => double.Parse(d["est_Lat2"], CultureInfo.InvariantCulture));
+            double avgLon2 = group.Average(d => double.Parse(d["est_Lon2"], CultureInfo.InvariantCulture));
+
+            // CellId and CellIdentity are the same for all in the group
+            string cellId = group[0]["CellId"];
+            string cellIdentity = group[0]["cellIdentity"];
+
+            // Concatenate beam indices
+            string combinedBeamIndex = string.Join("/", group.Select(d => d.GetValueOrDefault("BeamIndex", "")));
+
+            var newEstimate = new Dictionary<string, string>
+            {
+                { "Channel", group[0]["Channel"] },
+                { "CellId", cellId },
+                { "BeamIndex", combinedBeamIndex }, 
+                { "cellIdentity", cellIdentity },
+                { "xhat1", "0" },
+                { "yhat1", "0" },
+                { "xhat2", "0" },
+                { "yhat2", "0" },
+                { "est_Lat1", avgLat1.ToString("F6", CultureInfo.InvariantCulture) },
+                { "est_Lon1", avgLon1.ToString("F6", CultureInfo.InvariantCulture) },
+                { "est_Lat2", avgLat2.ToString("F6", CultureInfo.InvariantCulture) },
+                { "est_Lon2", avgLon2.ToString("F6", CultureInfo.InvariantCulture) },
+                { "Max_cinr", group.Max(d => double.Parse(d["Max_cinr"], CultureInfo.InvariantCulture)).ToString("F2", CultureInfo.InvariantCulture) },
+                { "Num_points", group.Sum(d => int.Parse(d["Num_points"])).ToString() },
+                { "Confidence", "High" } 
+            };
+            return newEstimate;
         }
 
         private static Dictionary<string, string> CreateTowerEstimate(List<Dictionary<string, string>> group, bool isNrFile)
