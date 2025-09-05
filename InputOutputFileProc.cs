@@ -41,30 +41,30 @@ namespace BTS_Location_Estimation
             
             /**********WCDMA Batch */
             
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\Drive test WCDMA MBS_20230111_144045\";
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\Drive test WCDMA MBS_20230111_144045\";
             List<string> inputFilenames = new List<string>
             {
                 "Gflex Device 019999095_UMTS WCDMA_UB I  2100 (IMT-2000) DL_Blind Scan.dtr",
                 "Gflex Device 019999095_UMTS WCDMA_UB III  1800 (DCS) DL_Blind Scan.dtr",
                 "Gflex Device 019999095_UMTS WCDMA_UB VII  2600 (IMT Extension) DL_Blind Scan.dtr",
                 "Gflex Device 019999095_UMTS WCDMA_UB VIII  900 DL_Blind Scan.dtr"
-            };
+            };*/
             
 
             //Batch processing Drive 1 ATT_LTE Tmobile_NR ATT_NR_n77
             
-            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\7.0.2.4\20250813_Drive3-SIB1-cont\";
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\7.0.2.4\20250813_Drive3-SIB1-cont\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
 
-                "Gflex Device 019999090_LTE_EB 14  Upper 700-D Block DL_Blind Scan.dtr",
+                /*"Gflex Device 019999090_LTE_EB 14  Upper 700-D Block DL_Blind Scan.dtr",
                 "Gflex Device 019999090_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.dtr",
-                "Gflex Device 019999090_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",
+                "Gflex Device 019999090_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",*/
                 "Gflex Device 019999090_NR_FR1 TDD n77_Blind Scan SCS Autodetect.dtr",
                 "Gflex Device 019999090_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr"
                 
-            };*/
+            };
             
 
             //Batch processing LTE NR Drive 2

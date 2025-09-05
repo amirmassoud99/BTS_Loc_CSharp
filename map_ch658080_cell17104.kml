@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>Map for Channel 658080, Cell ID 17104</name>
+    <Style id="blue_balloon_style">
+      <IconStyle>
+        <Icon>
+          <href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href>
+        </Icon>
+        <hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/>
+      </IconStyle>
+    </Style>
+    <Placemark>
+      <name>Point 55</name>
+      <description>
+        <![CDATA[Cell Identity: N/A<br/>RSSI: -80.8<br/>CINR: 17.48]]>
+      </description>
+      <styleUrl>#blue_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.281097,39.231456,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Point 459</name>
+      <description>
+        <![CDATA[Cell Identity: N/A<br/>RSSI: -89.4<br/>CINR: 10.22]]>
+      </description>
+      <styleUrl>#blue_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.280290,39.232585,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Point 2051</name>
+      <description>
+        <![CDATA[Cell Identity: N/A<br/>RSSI: -80.4<br/>CINR: 19.41]]>
+      </description>
+      <styleUrl>#blue_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.282266,39.233986,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Point 2610</name>
+      <description>
+        <![CDATA[Cell Identity: N/A<br/>RSSI: -71.91<br/>CINR: 10.22]]>
+      </description>
+      <styleUrl>#blue_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.283856,39.232905,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Point 2798</name>
+      <description>
+        <![CDATA[Cell Identity: N/A<br/>RSSI: -62.11<br/>CINR: 6.57]]>
+      </description>
+      <styleUrl>#blue_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.285458,39.231468,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Point 3213</name>
+      <description>
+        <![CDATA[Cell Identity: N/A<br/>RSSI: -75.63<br/>CINR: 7.76]]>
+      </description>
+      <styleUrl>#blue_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.286203,39.230775,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Point 3493</name>
+      <description>
+        <![CDATA[Cell Identity: N/A<br/>RSSI: -86.72<br/>CINR: 5.04]]>
+      </description>
+      <styleUrl>#blue_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.288202,39.228984,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Point 3741</name>
+      <description>
+        <![CDATA[Cell Identity: N/A<br/>RSSI: -82.81<br/>CINR: 7.92]]>
+      </description>
+      <styleUrl>#blue_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.289072,39.228303,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Point 4209</name>
+      <description>
+        <![CDATA[Cell Identity: N/A<br/>RSSI: -83<br/>CINR: 7.24]]>
+      </description>
+      <styleUrl>#blue_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.290812,39.226793,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Point 4435</name>
+      <description>
+        <![CDATA[Cell Identity: N/A<br/>RSSI: -78.5<br/>CINR: 9.56]]>
+      </description>
+      <styleUrl>#blue_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.291584,39.225791,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Point 4813</name>
+      <description>
+        <![CDATA[Cell Identity: N/A<br/>RSSI: -85.2<br/>CINR: 4.87]]>
+      </description>
+      <styleUrl>#blue_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.292987,39.224414,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Point 4950</name>
+      <description>
+        <![CDATA[Cell Identity: N/A<br/>RSSI: -77.9<br/>CINR: 4.31]]>
+      </description>
+      <styleUrl>#blue_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.293858,39.223892,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>Point 15454</name>
+      <description>
+        <![CDATA[Cell Identity: N/A<br/>RSSI: -74<br/>CINR: 3.95]]>
+      </description>
+      <styleUrl>#blue_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.239143,39.214981,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

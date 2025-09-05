@@ -357,5 +357,132 @@ namespace BTS_Location_Estimation
             }
             Console.WriteLine($"Debug map for Channel {channelToFind}, CellID {cellIdToFind} saved to {outputFilename}");
         }
+
+        public static void map_cellid(List<Dictionary<string, string>> allData, string channel, string cellId, string color)
+        {
+            string baseOutputFilename = $"map_ch{channel}_cell{cellId}";
+            string csvOutputFilename = baseOutputFilename + ".csv";
+            string kmlOutputFilename = baseOutputFilename + ".kml";
+
+            var filteredData = allData
+                .Where(row => row.GetValueOrDefault("channel", "") == channel && row.GetValueOrDefault("cellId", "") == cellId)
+                .ToList();
+
+            if (!filteredData.Any())
+            {
+                Console.WriteLine($"No data found for Channel {channel} and CellID {cellId}.");
+                return;
+            }
+
+            // --- CSV Generation ---
+            try
+            {
+                // Define headers using the correct keys from ExtractChannelCellMap
+                var headers = new List<string> { "latitude", "longitude", "cellIdentity", "RSSI", "cinr" };
+                
+                // Determine if there's any beam index data to decide on the header
+                bool hasBeamIndex = filteredData.Any(p => p.ContainsKey("beamIndex"));
+                if (hasBeamIndex)
+                {
+                    headers.Add("beamIndex");
+                }
+
+                using (var writer = new StreamWriter(csvOutputFilename))
+                {
+                    // Write the header row
+                    writer.WriteLine(string.Join(",", headers));
+
+                    // Write data rows
+                    foreach (var point in filteredData)
+                    {
+                        var values = headers.Select(header => point.GetValueOrDefault(header, ""));
+                        writer.WriteLine(string.Join(",", values));
+                    }
+                }
+                Console.WriteLine($"Cell map data saved to {csvOutputFilename}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error generating cell map CSV: {ex.Message}");
+            }
+
+            // --- KML Generation ---
+            try
+            {
+                string styleId;
+                string iconHref;
+
+                switch (color.ToLower())
+                {
+                    case "red":
+                        styleId = "red_balloon_style";
+                        iconHref = "http://maps.google.com/mapfiles/kml/paddle/red-circle.png";
+                        break;
+                    case "green":
+                        styleId = "green_balloon_style";
+                        iconHref = "http://maps.google.com/mapfiles/kml/paddle/grn-circle.png";
+                        break;
+                    case "blue":
+                    default:
+                        styleId = "blue_balloon_style";
+                        iconHref = "http://maps.google.com/mapfiles/kml/paddle/blu-circle.png";
+                        break;
+                }
+
+                using (var writer = new StreamWriter(kmlOutputFilename))
+                {
+                    writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                    writer.WriteLine("<kml xmlns=\"http://www.opengis.net/kml/2.2\">");
+                    writer.WriteLine("  <Document>");
+                    writer.WriteLine($"    <name>Map for Channel {channel}, Cell ID {cellId}</name>");
+
+                    // Style for balloon points
+                    writer.WriteLine($"    <Style id=\"{styleId}\">");
+                    writer.WriteLine("      <IconStyle>");
+                    writer.WriteLine("        <Icon>");
+                    writer.WriteLine($"          <href>{iconHref}</href>");
+                    writer.WriteLine("        </Icon>");
+                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
+                    writer.WriteLine("      </IconStyle>");
+                    writer.WriteLine("    </Style>");
+
+                    // Write a placemark for every data point
+                    foreach (var point in filteredData)
+                    {
+                        if (!point.ContainsKey("latitude") || !point.ContainsKey("longitude"))
+                        {
+                            continue;
+                        }
+
+                        string lat = point["latitude"];
+                        string lon = point["longitude"];
+                        string cellIdentity = point.GetValueOrDefault("cellIdentity", "N/A");
+                        string rssi = point.GetValueOrDefault("RSSI", "N/A");
+                        string cinr = point.GetValueOrDefault("cinr", "N/A");
+                        string beamInfo = point.ContainsKey("beamIndex") ? $", Beam: {point["beamIndex"]}" : "";
+                        string rowNum = point.GetValueOrDefault("rowNumber", "N/A");
+
+                        writer.WriteLine("    <Placemark>");
+                        writer.WriteLine($"      <name>Point {rowNum}</name>");
+                        writer.WriteLine("      <description>");
+                        writer.WriteLine($"        <![CDATA[Cell Identity: {cellIdentity}<br/>RSSI: {rssi}<br/>CINR: {cinr}{beamInfo}]]>");
+                        writer.WriteLine("      </description>");
+                        writer.WriteLine($"      <styleUrl>#{styleId}</styleUrl>");
+                        writer.WriteLine("      <Point>");
+                        writer.WriteLine($"        <coordinates>{lon},{lat},0</coordinates>");
+                        writer.WriteLine("      </Point>");
+                        writer.WriteLine("    </Placemark>");
+                    }
+
+                    writer.WriteLine("  </Document>");
+                    writer.WriteLine("</kml>");
+                }
+                Console.WriteLine($"Cell map KML saved to {kmlOutputFilename}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error generating cell map KML: {ex.Message}");
+            }
+        }
     }
 }
