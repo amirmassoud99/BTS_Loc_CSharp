@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>map_ch653952_Gflex Device 019999090_NR_FR1 TDD n77_Blind Scan SCS Autodetect</name>
+    <name>map_ch653952_Gflex Device 032201005_NR_FR1 TDD n77_Blind Scan SCS Autodetect</name>
     <Style id="blue_pin_style">
       <IconStyle>
         <Icon>
@@ -41,7 +41,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.252656,39.194645,0</coordinates>
+        <coordinates>-77.258073,39.201582,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -51,17 +51,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.259172,39.195201,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>165</name>
-      <description>
-        <![CDATA[Cell ID: 165, Beam: 3<br/>Cell Identity: 17516168219<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_balloon_style</styleUrl>
-      <Point>
-        <coordinates>-77.237452,39.213227,0</coordinates>
+        <coordinates>-77.258369,39.199276,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -71,7 +61,17 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.235028,39.212412,0</coordinates>
+        <coordinates>-77.248711,39.211249,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>393</name>
+      <description>
+        <![CDATA[Cell ID: 393, Beam: 3<br/>Cell Identity: 17516169051<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.252844,39.182442,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -81,7 +81,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.341624,39.200823,0</coordinates>
+        <coordinates>-77.276272,39.210366,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -91,7 +91,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.268629,39.216440,0</coordinates>
+        <coordinates>-77.251164,39.194970,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -101,7 +101,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.285310,39.213744,0</coordinates>
+        <coordinates>-77.224292,39.230578,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -111,7 +111,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.282750,39.230801,0</coordinates>
+        <coordinates>-77.284929,39.230281,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -121,7 +121,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.286769,39.230814,0</coordinates>
+        <coordinates>-77.288224,39.227802,0</coordinates>
       </Point>
     </Placemark>
   </Document>

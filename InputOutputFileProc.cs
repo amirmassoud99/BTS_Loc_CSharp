@@ -60,34 +60,33 @@ namespace BTS_Location_Estimation
 
             //Batch processing Drive 1 ATT_LTE Tmobile_NR ATT_NR_n77
 
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\7.0.2.4\20250813_Drive3-SIB1-cont\";
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\7.0.2.4\20250813_Drive3-SIB1-cont\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
 
-                /*"Gflex Device 019999090_LTE_EB 14  Upper 700-D Block DL_Blind Scan.dtr",
+                "Gflex Device 019999090_LTE_EB 14  Upper 700-D Block DL_Blind Scan.dtr",
+                "Gflex Device 019999090_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",
                 "Gflex Device 019999090_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.dtr",
-                "Gflex Device 019999090_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",*/
                 "Gflex Device 019999090_NR_FR1 TDD n77_Blind Scan SCS Autodetect.dtr",
                 "Gflex Device 019999090_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr"
                 
-            };
+            };*/
 
 
-            //Batch processing LTE NR Drive 2
-            /*
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\20250825_Sib1-cont\";
+            //dRIVE bts_5 att n77
+            
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\n77 drive\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
-                "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
-                "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
-                "Gflex Device 032201005_LTE_EB 71 DL_Blind Scan.csv",
-                "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz Lower_Blind Scan.csv",
-                "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
-                "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv"
+                
+                "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.DTR",
+                "Gflex Device 032201005_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.DTR",
+                "Gflex Device 032201005_NR_FR1 TDD n77_Blind Scan SCS Autodetect.DTR"
+                
             };
-            */
+            
 
             //Batch processing Drive 3_Washington DC
             /*

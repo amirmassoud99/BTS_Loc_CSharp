@@ -344,6 +344,12 @@ namespace BTS_Location_Estimation
         ***************************************************************************************************/
         public static List<Dictionary<string, string>> AddTowerEstimate(List<Dictionary<string, string>> resultsWithBeamIndex, int fileType)
         {
+            // Add "Type" column and initialize to "Sector"
+            foreach (var row in resultsWithBeamIndex)
+            {
+                row["Type"] = "Sector";
+            }
+
             var initialSorted = resultsWithBeamIndex
                 .OrderBy(d => int.TryParse(d["Channel"], out int ch) ? ch : int.MaxValue)
                 .ThenBy(d => d.GetValueOrDefault("cellIdentity", string.Empty))
@@ -492,7 +498,8 @@ namespace BTS_Location_Estimation
             {
                 { "Channel", group[0]["Channel"] },
                 { "CellId", cellId },
-                { "BeamIndex", combinedBeamIndex }, 
+                { "BeamIndex", combinedBeamIndex },
+                { "Type", "Tower" },
                 { "cellIdentity", cellIdentity },
                 { "xhat1", "0" },
                 { "yhat1", "0" },
@@ -504,7 +511,7 @@ namespace BTS_Location_Estimation
                 { "est_Lon2", avgLon2.ToString("F6", CultureInfo.InvariantCulture) },
                 { "Max_cinr", group.Max(d => double.Parse(d["Max_cinr"], CultureInfo.InvariantCulture)).ToString("F2", CultureInfo.InvariantCulture) },
                 { "Num_points", group.Sum(d => int.Parse(d["Num_points"])).ToString() },
-                { "Confidence", "High" } 
+                { "Confidence", "High" }
             };
             return newEstimate;
         }
@@ -535,7 +542,7 @@ namespace BTS_Location_Estimation
                 }
             }
 
-            string beamIndexValue = "Tower";
+            string beamIndexValue = ""; // Default to empty
             if (isNrFile)
             {
                 beamIndexValue = string.Join("/", group.Select(d => d.GetValueOrDefault("BeamIndex", "")));
@@ -545,7 +552,8 @@ namespace BTS_Location_Estimation
             {
                 { "Channel", group[0]["Channel"] },
                 { "CellId", combinedCellId },
-                { "BeamIndex", beamIndexValue }, // To identify these as tower estimates
+                { "BeamIndex", beamIndexValue },
+                { "Type", "Tower" },
                 { "cellIdentity", combinedCellIdentity },
                 { "xhat1", "0" },
                 { "yhat1", "0" },

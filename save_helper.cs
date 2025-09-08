@@ -28,14 +28,24 @@ namespace BTS_Location_Estimation
                 "est_Lat1", "est_Lon1", "est_Lat2", "est_Lon2", "Max_cinr", "Num_points", "Confidence"
             };
 
-            // Check if any result contains a BeamIndex to determine if the column should be added.
-            bool hasBeamIndex = estimationResults.Any(r => r.ContainsKey("BeamIndex"));
-
-            if (hasBeamIndex)
+            // Dynamically add optional columns like "BeamIndex" and "Type" if they exist in the data
+            var allKeys = estimationResults.SelectMany(r => r.Keys).Distinct().ToList();
+            
+            if (allKeys.Contains("BeamIndex"))
             {
-                // Insert "BeamIndex" at the correct position (after "CellId").
-                int cellIdIndex = headers.IndexOf("CellId");
-                headers.Insert(cellIdIndex + 1, "BeamIndex");
+                headers.Insert(headers.IndexOf("CellId") + 1, "BeamIndex");
+            }
+            if (allKeys.Contains("Type"))
+            {
+                int beamIndexPos = headers.IndexOf("BeamIndex");
+                if (beamIndexPos != -1)
+                {
+                    headers.Insert(beamIndexPos + 1, "Type");
+                }
+                else
+                {
+                    headers.Insert(headers.IndexOf("CellId") + 1, "Type");
+                }
             }
 
             using (var writer = new StreamWriter(outputFilename))
@@ -77,7 +87,7 @@ namespace BTS_Location_Estimation
             {
                 using (var writer = new StreamWriter(mapCsvFilename))
                 {
-                    writer.WriteLine("Latitude,Longitude,CellID,CellIdentity,BeamIndex");
+                    writer.WriteLine("Latitude,Longitude,CellID,CellIdentity,BeamIndex,Type");
                     foreach (var result in estimationResults)
                     {
                         string lat = result.GetValueOrDefault("est_Lat2", "");
@@ -85,7 +95,8 @@ namespace BTS_Location_Estimation
                         string cellId = result.GetValueOrDefault("CellId", "");
                         string cellIdentity = result.GetValueOrDefault("cellIdentity", "");
                         string beamIndex = result.GetValueOrDefault("BeamIndex", "");
-                        writer.WriteLine($"{lat},{lon},{cellId},{cellIdentity},{beamIndex}");
+                        string type = result.GetValueOrDefault("Type", "");
+                        writer.WriteLine($"{lat},{lon},{cellId},{cellIdentity},{beamIndex},{type}");
                     }
                 }
                 Console.WriteLine($"Map CSV saved to {mapCsvFilename}");
@@ -104,9 +115,10 @@ namespace BTS_Location_Estimation
 
                 // First pass: identify all cell IDs that are part of a tower
                 var towerMemberCellIds = new HashSet<string>();
-                foreach (var result in estimationResults)
+                var towers = estimationResults.Where(r => r.GetValueOrDefault("Type") == "Tower").ToList();
+                foreach (var tower in towers)
                 {
-                    string cellId = result.GetValueOrDefault("CellId", "");
+                    string cellId = tower.GetValueOrDefault("CellId", "");
                     if (cellId.Contains("/"))
                     {
                         var individualCellIds = cellId.Split('/');
@@ -177,6 +189,7 @@ namespace BTS_Location_Estimation
                         string cellId = result.GetValueOrDefault("CellId", "");
                         string cellIdentity = result.GetValueOrDefault("cellIdentity", "");
                         string confidence = result.GetValueOrDefault("Confidence", "N/A");
+                        string type = result.GetValueOrDefault("Type", "Sector"); // Default to Sector
                         string beamInfo = result.ContainsKey("BeamIndex") ? $", Beam: {result["BeamIndex"]}" : "";
 
                         writer.WriteLine("    <Placemark>");
@@ -186,7 +199,7 @@ namespace BTS_Location_Estimation
                         string description;
                         string styleUrl;
 
-                        if (cellId.Contains("/"))
+                        if (type == "Tower")
                         {
                             description = $"        <![CDATA[Tower containing Cell IDs: {cellId.Replace("/", ", ")}<br/>Cell Identities: {cellIdentity.Replace("_", ", ")}]]>";
                             styleUrl = "#blue_pin_style";
