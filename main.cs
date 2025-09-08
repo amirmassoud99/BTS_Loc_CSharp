@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.24.0";
+        public const string SW_VERSION = "1.0.25.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -68,6 +68,9 @@ namespace BTS_Location_Estimation
         public static void Main(string[] args)
         {
             Console.WriteLine($"BTS Location Estimation version {SW_VERSION}");
+
+            SaveHelper.DeleteOutputFiles(Directory.GetCurrentDirectory());
+
             // --- Get Target and File Configuration ---
             var (fileDirectory, inputFilenames) = InputOutputFileProc.GetFileConfigurations();
 

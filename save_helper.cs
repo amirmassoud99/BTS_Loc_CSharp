@@ -5,8 +5,33 @@ using System.Linq;
 
 namespace BTS_Location_Estimation
 {
+    
     public static class SaveHelper
     {
+
+        public static void DeleteOutputFiles(string directoryPath)
+        {
+            try
+            {
+                // Find all files with .csv or .kml extensions
+                var filesToDelete = Directory.EnumerateFiles(directoryPath, "*.*", SearchOption.TopDirectoryOnly)
+                    .Where(f => f.EndsWith(".csv", StringComparison.OrdinalIgnoreCase) || 
+                                f.EndsWith(".kml", StringComparison.OrdinalIgnoreCase));
+
+                // Loop through and delete each file
+                foreach (string file in filesToDelete)
+                {
+                    File.Delete(file);
+                    Console.WriteLine($"Deleted: {file}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred during file cleanup: {ex.Message}");
+            }
+        }
+
+
         public static void save_estimation_results(List<Dictionary<string, string>> estimationResults, string outputFilename)
         {
             if (!estimationResults.Any())
@@ -30,7 +55,7 @@ namespace BTS_Location_Estimation
 
             // Dynamically add optional columns like "BeamIndex" and "Type" if they exist in the data
             var allKeys = estimationResults.SelectMany(r => r.Keys).Distinct().ToList();
-            
+
             if (allKeys.Contains("BeamIndex"))
             {
                 headers.Insert(headers.IndexOf("CellId") + 1, "BeamIndex");
@@ -71,7 +96,7 @@ namespace BTS_Location_Estimation
 
                 string baseOutputFilename = Path.GetFileNameWithoutExtension(outputFilename).Replace("Estimate_", "");
                 string mapBaseFilename = $"map_ch{channel}_{baseOutputFilename}";
-                
+
                 string directory = Path.GetDirectoryName(outputFilename) ?? string.Empty;
                 string mapCsvFilename = Path.Combine(directory, mapBaseFilename + ".csv");
                 string mapKmlFilename = Path.Combine(directory, mapBaseFilename + ".kml");
@@ -154,7 +179,7 @@ namespace BTS_Location_Estimation
                         // All sectors with the same CellId (PCI) belong to this tower
                         var memberSectors = estimationResults
                             .Where(r => r.GetValueOrDefault("Type") == "Sector" && r.GetValueOrDefault("CellId") == towerCellId);
-                        foreach(var sector in memberSectors)
+                        foreach (var sector in memberSectors)
                         {
                             // For NR, sectors share a CellId but have unique BeamIndex.
                             // We create a unique key for the style map to avoid overwriting.
@@ -184,7 +209,7 @@ namespace BTS_Location_Estimation
                     // Light Blue Styles
                     writer.WriteLine("    <Style id=\"ltblu_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/ltblu-pushpin.png</href></Icon><hotSpot x=\"20\" y=\"2\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
                     writer.WriteLine("    <Style id=\"ltblu_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/ltblu-circle.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
-                    
+
                     // Purple Styles
                     writer.WriteLine("    <Style id=\"purple_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/purple-pushpin.png</href></Icon><hotSpot x=\"20\" y=\"2\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
                     writer.WriteLine("    <Style id=\"purple_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/purple-circle.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
@@ -231,7 +256,7 @@ namespace BTS_Location_Estimation
                         {
                             // Create the same unique key as in Pass 1 for NR sectors
                             string sectorKey = $"{cellId}_{beamInfo}";
-                            
+
                             if (confidence == "Low")
                             {
                                 styleUrl = "#yellow_balloon_style";
@@ -420,7 +445,7 @@ namespace BTS_Location_Estimation
             {
                 // Define headers using the correct keys from ExtractChannelCellMap
                 var headers = new List<string> { "latitude", "longitude", "cellIdentity", "RSSI", "cinr" };
-                
+
                 // Determine if there's any beam index data to decide on the header
                 bool hasBeamIndex = filteredData.Any(p => p.ContainsKey("beamIndex"));
                 if (hasBeamIndex)
