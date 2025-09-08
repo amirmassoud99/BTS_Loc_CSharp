@@ -19,26 +19,39 @@ namespace BTS_Location_Estimation
         *
         *   Function:       filter_cinr_minimum_PCI
         *
-        *   Description:    Filters the extracted data based on two criteria:
-        *                   1. Signal Strength: Removes rows where the CINR is below a specified threshold.
-        *                   2. Minimum Count: Removes entire groups of (Channel, CellId) if they do not
-        *                      have at least a minimum number of data points after the CINR filtering.
+        *   Description:    Filters the extracted data based on three criteria:
+        *                   1. Invalid Coordinates: Removes rows where latitude or longitude is zero.
+        *                   2. Signal Strength: Removes rows where the CINR is below a specified threshold.
+        *                   3. Minimum Count: Removes entire groups of (Channel, CellId) if they do not
+        *                      have at least a minimum number of data points after the other filters.
         *
         *   Input:          allData (List<...>) - The full list of extracted data.
         *                   cinrThresh (double) - The minimum required CINR value.
         *                   minimumCellIdCount (int) - The minimum number of rows for a cell to be kept.
         *
-        *   Output:         A new list containing only the data that passed both filtering stages.
+        *   Output:         A new list containing only the data that passed all filtering stages.
         *
         *   Author:         Amir Soltanian
         *
-        *   Date:           September 4, 2025
+        *   Date:           September 8, 2025
         *
         ***************************************************************************************************/
         public static List<Dictionary<string, string>> filter_cinr_minimum_PCI(List<Dictionary<string, string>> allData, double cinrThresh, int minimumCellIdCount)
         {
-            // 1. Filter out rows where CINR is below the threshold
-            var cinrFiltered = allData.Where(row =>
+            // 1. Filter out rows with invalid coordinates (lat/lon = 0)
+            var coordinateFiltered = allData.Where(row =>
+            {
+                bool latValid = row.TryGetValue("latitude", out var latStr) &&
+                                double.TryParse(latStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lat) &&
+                                lat != 0;
+                bool lonValid = row.TryGetValue("longitude", out var lonStr) &&
+                                double.TryParse(lonStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lon) &&
+                                lon != 0;
+                return latValid && lonValid;
+            }).ToList();
+
+            // 2. Filter out rows where CINR is below the threshold
+            var cinrFiltered = coordinateFiltered.Where(row =>
             {
                 if (row.TryGetValue("cinr", out var cinrString) && double.TryParse(cinrString, NumberStyles.Any, CultureInfo.InvariantCulture, out var cinrValue))
                 {
@@ -47,7 +60,7 @@ namespace BTS_Location_Estimation
                 return false; // Discard rows without a valid CINR
             }).ToList();
 
-            // 2. Group by channel and cell ID, then filter by count
+            // 3. Group by channel and cell ID, then filter by count
             var finalFilteredData = cinrFiltered
                 .GroupBy(row => new
                 {
@@ -58,7 +71,7 @@ namespace BTS_Location_Estimation
                 .SelectMany(group => group) // Flatten the groups back into a list of rows
                 .ToList();
 
-            Console.WriteLine($"Filtered data down to {finalFilteredData.Count} rows after CINR and minimum count check.");
+            Console.WriteLine($"Filtered data down to {finalFilteredData.Count} rows after coordinate, CINR, and minimum count checks.");
             return finalFilteredData;
         }
 
