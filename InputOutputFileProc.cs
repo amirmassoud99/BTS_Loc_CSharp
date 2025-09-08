@@ -80,10 +80,11 @@ namespace BTS_Location_Estimation
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
-                
+
                 "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.DTR",
                 "Gflex Device 032201005_NR_FR1 TDD n77_Blind Scan SCS Autodetect.DTR",
-                "Gflex Device 032201005_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.DTR"
+                "Gflex Device 032201005_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.DTR",
+                "Gflex Device 032201005_NR_FR1 TDD n77_nr Top N Signal ARFCN  658080 - 3871.20 MHz SCS 30 kHz.dtr"
             };
             
 
@@ -250,18 +251,16 @@ namespace BTS_Location_Estimation
                     timeOffsetKeyword = "RS_TimeOffset";
                     break;
 
-                case NR_TOPN_FILE_TYPE: // NR TopN Scan (.csv)
-                case NR_FILE_TYPE: // NR Blind Scan (.csv)
+                case NR_TOPN_FILE_TYPE*10: // NR TopN Scan (.dtr)
                     cellIdKeyword = "Cell ID";
                     cellIdentityKeyword = "Cell Identity";
                     channelKeyword = "Channel Number";
-                    cinrKeyword = "Secondary Sync Signal - CINR";
+                    cinrKeyword = "SSS_CINR";
                     beamIndexKeyword = "Beam Index";
                     rssiKeyword = "SSB RSSI";
                     timeOffsetKeyword = "Time Offset";
                     break;
-                case NR_TOPN_FILE_TYPE*10: // NR TopN Scan (.dtr)
-                case NR_FILE_TYPE*10: // NR Blind Scan (.dtr)
+                case NR_FILE_TYPE * 10: // NR Blind Scan (.dtr)
                     cellIdKeyword = "Cell Id";
                     cellIdentityKeyword = "cellIdentity";
                     channelKeyword = "Channel Number";
