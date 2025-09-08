@@ -113,29 +113,54 @@ namespace BTS_Location_Estimation
             {
                 string mapName = Path.GetFileNameWithoutExtension(mapKmlFilename);
 
-                // First pass: identify all cell IDs that are part of a tower
-                var towerMemberCellIds = new HashSet<string>();
+                // Define a list of styles to cycle through for different towers
+                var towerStyles = new List<(string pin, string balloon)>
+                {
+                    ("#blue_pin_style", "#blue_balloon_style"),
+                    ("#green_pin_style", "#green_balloon_style"),
+                    ("#ltblu_pin_style", "#ltblu_balloon_style"),
+                    ("#purple_pin_style", "#purple_balloon_style")
+                };
+
+                // --- Pass 1: Identify towers and assign a color style to each tower and its members ---
+                var sectorToStyleMap = new Dictionary<string, string>();
+                var towerToStyleMap = new Dictionary<string, string>();
+                int styleIndex = 0;
+
                 var towers = estimationResults.Where(r => r.GetValueOrDefault("Type") == "Tower").ToList();
                 foreach (var tower in towers)
                 {
-                    string cellId = tower.GetValueOrDefault("CellId", "");
+                    // Get the next style from the list, cycling through
+                    var currentStyle = towerStyles[styleIndex % towerStyles.Count];
+                    styleIndex++;
+
+                    string towerCellId = tower.GetValueOrDefault("CellId", "");
+                    towerToStyleMap[towerCellId] = currentStyle.pin;
+
                     string beamIndex = tower.GetValueOrDefault("BeamIndex", "");
 
                     // For LTE towers, the CellId is composite (e.g., "101/102/103").
-                    // We add each individual ID to the set.
-                    if (cellId.Contains("/"))
+                    if (towerCellId.Contains("/"))
                     {
-                        var individualCellIds = cellId.Split('/');
+                        var individualCellIds = towerCellId.Split('/');
                         foreach (var id in individualCellIds)
                         {
-                            towerMemberCellIds.Add(id);
+                            sectorToStyleMap[id] = currentStyle.balloon;
                         }
                     }
-                    // For NR towers, the CellId is the common PCI, and the BeamIndex is composite.
-                    // We add the common CellId to the set, so all sectors with that ID are matched.
-                    else if (beamIndex.Contains("/") && !string.IsNullOrEmpty(cellId))
+                    // For NR towers, the CellId is the common PCI.
+                    else if (beamIndex.Contains("/") && !string.IsNullOrEmpty(towerCellId))
                     {
-                        towerMemberCellIds.Add(cellId);
+                        // All sectors with the same CellId (PCI) belong to this tower
+                        var memberSectors = estimationResults
+                            .Where(r => r.GetValueOrDefault("Type") == "Sector" && r.GetValueOrDefault("CellId") == towerCellId);
+                        foreach(var sector in memberSectors)
+                        {
+                            // For NR, sectors share a CellId but have unique BeamIndex.
+                            // We create a unique key for the style map to avoid overwriting.
+                            string sectorKey = $"{sector.GetValueOrDefault("CellId", "")}_{sector.GetValueOrDefault("BeamIndex", "")}";
+                            sectorToStyleMap[sectorKey] = currentStyle.balloon;
+                        }
                     }
                 }
 
@@ -146,47 +171,30 @@ namespace BTS_Location_Estimation
                     writer.WriteLine("  <Document>");
                     writer.WriteLine($"    <name>{mapName}</name>");
 
-                    // Style for towers (blue pushpin)
-                    writer.WriteLine("    <Style id=\"blue_pin_style\">");
-                    writer.WriteLine("      <IconStyle>");
-                    writer.WriteLine("        <Icon>");
-                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href>");
-                    writer.WriteLine("        </Icon>");
-                    writer.WriteLine("        <hotSpot x=\"20\" y=\"2\" xunits=\"pixels\" yunits=\"pixels\"/>");
-                    writer.WriteLine("      </IconStyle>");
-                    writer.WriteLine("    </Style>");
+                    // --- Define All Styles ---
 
-                    // Style for standalone points (red balloon)
-                    writer.WriteLine("    <Style id=\"red_balloon_style\">");
-                    writer.WriteLine("      <IconStyle>");
-                    writer.WriteLine("        <Icon>");
-                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href>");
-                    writer.WriteLine("        </Icon>");
-                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
-                    writer.WriteLine("      </IconStyle>");
-                    writer.WriteLine("    </Style>");
+                    // Blue Styles
+                    writer.WriteLine("    <Style id=\"blue_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href></Icon><hotSpot x=\"20\" y=\"2\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
+                    writer.WriteLine("    <Style id=\"blue_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
 
-                    // Style for tower member points (blue balloon)
-                    writer.WriteLine("    <Style id=\"blue_balloon_style\">");
-                    writer.WriteLine("      <IconStyle>");
-                    writer.WriteLine("        <Icon>");
-                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href>");
-                    writer.WriteLine("        </Icon>");
-                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
-                    writer.WriteLine("      </IconStyle>");
-                    writer.WriteLine("    </Style>");
+                    // Green Styles
+                    writer.WriteLine("    <Style id=\"green_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/grn-pushpin.png</href></Icon><hotSpot x=\"20\" y=\"2\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
+                    writer.WriteLine("    <Style id=\"green_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-circle.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
 
-                    // Style for low confidence points (yellow balloon)
-                    writer.WriteLine("    <Style id=\"yellow_balloon_style\">");
-                    writer.WriteLine("      <IconStyle>");
-                    writer.WriteLine("        <Icon>");
-                    writer.WriteLine("          <href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href>");
-                    writer.WriteLine("        </Icon>");
-                    writer.WriteLine("        <hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/>");
-                    writer.WriteLine("      </IconStyle>");
-                    writer.WriteLine("    </Style>");
+                    // Light Blue Styles
+                    writer.WriteLine("    <Style id=\"ltblu_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/ltblu-pushpin.png</href></Icon><hotSpot x=\"20\" y=\"2\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
+                    writer.WriteLine("    <Style id=\"ltblu_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/ltblu-circle.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
+                    
+                    // Purple Styles
+                    writer.WriteLine("    <Style id=\"purple_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/purple-pushpin.png</href></Icon><hotSpot x=\"20\" y=\"2\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
+                    writer.WriteLine("    <Style id=\"purple_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/purple-circle.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
 
-                    // Write a placemark for every result
+                    // Standalone/Default Styles
+                    writer.WriteLine("    <Style id=\"red_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
+                    writer.WriteLine("    <Style id=\"yellow_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
+
+
+                    // --- Pass 2: Write a placemark for every result ---
                     foreach (var result in estimationResults)
                     {
                         if (!result.ContainsKey("est_Lat2") || !result.ContainsKey("est_Lon2"))
@@ -199,7 +207,7 @@ namespace BTS_Location_Estimation
                         string cellId = result.GetValueOrDefault("CellId", "");
                         string cellIdentity = result.GetValueOrDefault("cellIdentity", "");
                         string confidence = result.GetValueOrDefault("Confidence", "N/A");
-                        string type = result.GetValueOrDefault("Type", "Sector"); // Default to Sector
+                        string type = result.GetValueOrDefault("Type", "Sector");
                         string beamInfo = result.GetValueOrDefault("BeamIndex", "");
 
                         writer.WriteLine("    <Placemark>");
@@ -211,28 +219,33 @@ namespace BTS_Location_Estimation
 
                         if (type == "Tower")
                         {
+                            styleUrl = towerToStyleMap.GetValueOrDefault(cellId, "#blue_pin_style"); // Default to blue if not found
                             string towerDesc = $"        <![CDATA[Tower containing Cell IDs: {cellId.Replace("/", ", ")}<br/>Cell Identities: {cellIdentity.Replace("_", ", ")}";
                             if (beamInfo.Contains("/"))
                             {
                                 towerDesc += $"<br/>Beams: {beamInfo.Replace("/", ", ")}";
                             }
                             description = towerDesc + "]]>";
-                            styleUrl = "#blue_pin_style";
                         }
-                        else if (confidence == "Low")
+                        else // It's a Sector
                         {
+                            // Create the same unique key as in Pass 1 for NR sectors
+                            string sectorKey = $"{cellId}_{beamInfo}";
+                            
+                            if (confidence == "Low")
+                            {
+                                styleUrl = "#yellow_balloon_style";
+                            }
+                            // Check for LTE style (key is just cellId) or NR style (key is cellId_beamInfo)
+                            else if (sectorToStyleMap.TryGetValue(cellId, out var assignedStyle) || sectorToStyleMap.TryGetValue(sectorKey, out assignedStyle))
+                            {
+                                styleUrl = assignedStyle; // Use the color assigned from its tower
+                            }
+                            else
+                            {
+                                styleUrl = "#red_balloon_style"; // Standalone sector
+                            }
                             description = $"        <![CDATA[Cell ID: {cellId}, Beam: {beamInfo}<br/>Cell Identity: {cellIdentity}<br/>Confidence: {confidence}]]>";
-                            styleUrl = "#yellow_balloon_style";
-                        }
-                        else if (towerMemberCellIds.Contains(cellId))
-                        {
-                            description = $"        <![CDATA[Cell ID: {cellId}, Beam: {beamInfo}<br/>Cell Identity: {cellIdentity}<br/>Confidence: {confidence}]]>";
-                            styleUrl = "#blue_balloon_style";
-                        }
-                        else
-                        {
-                            description = $"        <![CDATA[Cell ID: {cellId}, Beam: {beamInfo}<br/>Cell Identity: {cellIdentity}<br/>Confidence: {confidence}]]>";
-                            styleUrl = "#red_balloon_style";
                         }
                         writer.WriteLine(description);
 

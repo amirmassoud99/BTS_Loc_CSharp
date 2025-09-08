@@ -82,9 +82,8 @@ namespace BTS_Location_Estimation
             {
                 
                 "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.DTR",
-                "Gflex Device 032201005_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.DTR",
-                "Gflex Device 032201005_NR_FR1 TDD n77_Blind Scan SCS Autodetect.DTR"
-                
+                "Gflex Device 032201005_NR_FR1 TDD n77_Blind Scan SCS Autodetect.DTR",
+                "Gflex Device 032201005_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.DTR"
             };
             
 
