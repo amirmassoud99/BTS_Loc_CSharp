@@ -37,7 +37,7 @@
     <Placemark>
       <name>167</name>
       <description>
-        <![CDATA[Cell ID: 167<br/>Cell Identity: 27143456<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 167, Beam: <br/>Cell Identity: 27143456<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
@@ -47,7 +47,7 @@
     <Placemark>
       <name>204</name>
       <description>
-        <![CDATA[Cell ID: 204<br/>Cell Identity: 27189772<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 204, Beam: <br/>Cell Identity: 27189772<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
@@ -57,7 +57,7 @@
     <Placemark>
       <name>205</name>
       <description>
-        <![CDATA[Cell ID: 205<br/>Cell Identity: 27189782<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 205, Beam: <br/>Cell Identity: 27189782<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
@@ -67,7 +67,7 @@
     <Placemark>
       <name>206</name>
       <description>
-        <![CDATA[Cell ID: 206<br/>Cell Identity: 27189792<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 206, Beam: <br/>Cell Identity: 27189792<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
@@ -77,7 +77,7 @@
     <Placemark>
       <name>363</name>
       <description>
-        <![CDATA[Cell ID: 363<br/>Cell Identity: 27193612<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 363, Beam: <br/>Cell Identity: 27193612<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
@@ -87,7 +87,7 @@
     <Placemark>
       <name>364</name>
       <description>
-        <![CDATA[Cell ID: 364<br/>Cell Identity: 27193622<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 364, Beam: <br/>Cell Identity: 27193622<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
@@ -97,7 +97,7 @@
     <Placemark>
       <name>365</name>
       <description>
-        <![CDATA[Cell ID: 365<br/>Cell Identity: 27193632<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 365, Beam: <br/>Cell Identity: 27193632<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
@@ -107,7 +107,7 @@
     <Placemark>
       <name>393</name>
       <description>
-        <![CDATA[Cell ID: 393<br/>Cell Identity: 27196940<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 393, Beam: <br/>Cell Identity: 27196940<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
@@ -117,7 +117,7 @@
     <Placemark>
       <name>48</name>
       <description>
-        <![CDATA[Cell ID: 48<br/>Cell Identity: 27215116<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 48, Beam: <br/>Cell Identity: 27215116<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
@@ -127,7 +127,7 @@
     <Placemark>
       <name>49</name>
       <description>
-        <![CDATA[Cell ID: 49<br/>Cell Identity: 27215126<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 49, Beam: <br/>Cell Identity: 27215126<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>

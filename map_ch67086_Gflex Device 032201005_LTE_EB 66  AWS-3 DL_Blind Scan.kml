@@ -37,7 +37,7 @@
     <Placemark>
       <name>319</name>
       <description>
-        <![CDATA[Cell ID: 319<br/>Cell Identity: 27172636<br/>Confidence: Low]]>
+        <![CDATA[Cell ID: 319, Beam: <br/>Cell Identity: 27172636<br/>Confidence: Low]]>
       </description>
       <styleUrl>#yellow_balloon_style</styleUrl>
       <Point>

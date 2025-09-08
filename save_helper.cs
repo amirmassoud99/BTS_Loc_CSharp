@@ -119,6 +119,10 @@ namespace BTS_Location_Estimation
                 foreach (var tower in towers)
                 {
                     string cellId = tower.GetValueOrDefault("CellId", "");
+                    string beamIndex = tower.GetValueOrDefault("BeamIndex", "");
+
+                    // For LTE towers, the CellId is composite (e.g., "101/102/103").
+                    // We add each individual ID to the set.
                     if (cellId.Contains("/"))
                     {
                         var individualCellIds = cellId.Split('/');
@@ -126,6 +130,12 @@ namespace BTS_Location_Estimation
                         {
                             towerMemberCellIds.Add(id);
                         }
+                    }
+                    // For NR towers, the CellId is the common PCI, and the BeamIndex is composite.
+                    // We add the common CellId to the set, so all sectors with that ID are matched.
+                    else if (beamIndex.Contains("/") && !string.IsNullOrEmpty(cellId))
+                    {
+                        towerMemberCellIds.Add(cellId);
                     }
                 }
 
@@ -190,7 +200,7 @@ namespace BTS_Location_Estimation
                         string cellIdentity = result.GetValueOrDefault("cellIdentity", "");
                         string confidence = result.GetValueOrDefault("Confidence", "N/A");
                         string type = result.GetValueOrDefault("Type", "Sector"); // Default to Sector
-                        string beamInfo = result.ContainsKey("BeamIndex") ? $", Beam: {result["BeamIndex"]}" : "";
+                        string beamInfo = result.GetValueOrDefault("BeamIndex", "");
 
                         writer.WriteLine("    <Placemark>");
                         writer.WriteLine($"      <name>{cellId}</name>");
@@ -201,22 +211,27 @@ namespace BTS_Location_Estimation
 
                         if (type == "Tower")
                         {
-                            description = $"        <![CDATA[Tower containing Cell IDs: {cellId.Replace("/", ", ")}<br/>Cell Identities: {cellIdentity.Replace("_", ", ")}]]>";
+                            string towerDesc = $"        <![CDATA[Tower containing Cell IDs: {cellId.Replace("/", ", ")}<br/>Cell Identities: {cellIdentity.Replace("_", ", ")}";
+                            if (beamInfo.Contains("/"))
+                            {
+                                towerDesc += $"<br/>Beams: {beamInfo.Replace("/", ", ")}";
+                            }
+                            description = towerDesc + "]]>";
                             styleUrl = "#blue_pin_style";
                         }
                         else if (confidence == "Low")
                         {
-                            description = $"        <![CDATA[Cell ID: {cellId}{beamInfo}<br/>Cell Identity: {cellIdentity}<br/>Confidence: {confidence}]]>";
+                            description = $"        <![CDATA[Cell ID: {cellId}, Beam: {beamInfo}<br/>Cell Identity: {cellIdentity}<br/>Confidence: {confidence}]]>";
                             styleUrl = "#yellow_balloon_style";
                         }
                         else if (towerMemberCellIds.Contains(cellId))
                         {
-                            description = $"        <![CDATA[Cell ID: {cellId}{beamInfo}<br/>Cell Identity: {cellIdentity}<br/>Confidence: {confidence}]]>";
+                            description = $"        <![CDATA[Cell ID: {cellId}, Beam: {beamInfo}<br/>Cell Identity: {cellIdentity}<br/>Confidence: {confidence}]]>";
                             styleUrl = "#blue_balloon_style";
                         }
                         else
                         {
-                            description = $"        <![CDATA[Cell ID: {cellId}{beamInfo}<br/>Cell Identity: {cellIdentity}<br/>Confidence: {confidence}]]>";
+                            description = $"        <![CDATA[Cell ID: {cellId}, Beam: {beamInfo}<br/>Cell Identity: {cellIdentity}<br/>Confidence: {confidence}]]>";
                             styleUrl = "#red_balloon_style";
                         }
                         writer.WriteLine(description);

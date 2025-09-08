@@ -120,7 +120,7 @@ namespace BTS_Location_Estimation
 
                     // You can now save or process the 'finalPoints' and 'maxCinr' for each cell
                     // For example, save to a new CSV file for step 3
-                    string step3Filename = $"step3_{filenameOnly}_ch{group.Key.Channel}_cell{group.Key.CellId}.csv";
+                    //string step3Filename = $"step3_{filenameOnly}_ch{group.Key.Channel}_cell{group.Key.CellId}.csv";
                     //SaveHelper.save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
 
 
