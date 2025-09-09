@@ -141,7 +141,7 @@ namespace BTS_Location_Estimation
 
                 var resultsWithBeamIndex = DataBaseProc.splitCellidBeamforNR(fileType, estimationResults);
 
-                var sortedResults = DataBaseProc.AddTowerEstimate(resultsWithBeamIndex, fileType);
+                var sortedResults = DataBaseProc.AddTowerEstimate(resultsWithBeamIndex, fileType, "Sector");
                 SaveHelper.save_estimation_results(sortedResults, estimateFilename);
 
                 // Call map_cellid for debugging

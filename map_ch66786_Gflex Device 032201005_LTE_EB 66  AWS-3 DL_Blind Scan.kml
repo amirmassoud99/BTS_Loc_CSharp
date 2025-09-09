@@ -17,19 +17,9 @@
       <description>
         <![CDATA[Cell ID: 468, Beam: <br/>Cell Identity: 11544321<br/>Confidence: High]]>
       </description>
-      <styleUrl>#blue_balloon_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.259542,39.200196,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>468/469/470</name>
-      <description>
-        <![CDATA[Tower containing Cell IDs: 468, 469, 470<br/>Cell Identities: 11544321, 322, 323]]>
-      </description>
-      <styleUrl>#blue_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.259261,39.200527,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -37,7 +27,7 @@
       <description>
         <![CDATA[Cell ID: 469, Beam: <br/>Cell Identity: 11544322<br/>Confidence: High]]>
       </description>
-      <styleUrl>#blue_balloon_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.259382,39.200839,0</coordinates>
       </Point>
@@ -47,7 +37,7 @@
       <description>
         <![CDATA[Cell ID: 470, Beam: <br/>Cell Identity: 11544323<br/>Confidence: High]]>
       </description>
-      <styleUrl>#blue_balloon_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.258858,39.200545,0</coordinates>
       </Point>
@@ -57,19 +47,9 @@
       <description>
         <![CDATA[Cell ID: 349, Beam: <br/>Cell Identity: 12410882<br/>Confidence: High]]>
       </description>
-      <styleUrl>#green_balloon_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.248461,39.184594,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>349/350</name>
-      <description>
-        <![CDATA[Tower containing Cell IDs: 349, 350<br/>Cell Identities: 12410882, 883]]>
-      </description>
-      <styleUrl>#green_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.249103,39.184112,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -77,7 +57,7 @@
       <description>
         <![CDATA[Cell ID: 350, Beam: <br/>Cell Identity: 12410883<br/>Confidence: High]]>
       </description>
-      <styleUrl>#green_balloon_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.249745,39.183631,0</coordinates>
       </Point>
@@ -87,19 +67,9 @@
       <description>
         <![CDATA[Cell ID: 329, Beam: <br/>Cell Identity: 223996929<br/>Confidence: High]]>
       </description>
-      <styleUrl>#ltblu_balloon_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.275490,39.212589,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>329/435</name>
-      <description>
-        <![CDATA[Tower containing Cell IDs: 329, 435<br/>Cell Identities: 223996929, 930]]>
-      </description>
-      <styleUrl>#ltblu_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.275656,39.212595,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -107,7 +77,7 @@
       <description>
         <![CDATA[Cell ID: 435, Beam: <br/>Cell Identity: 223996930<br/>Confidence: High]]>
       </description>
-      <styleUrl>#ltblu_balloon_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.275822,39.212602,0</coordinates>
       </Point>
@@ -117,19 +87,9 @@
       <description>
         <![CDATA[Cell ID: 311, Beam: <br/>Cell Identity: 224497409<br/>Confidence: High]]>
       </description>
-      <styleUrl>#purple_balloon_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.285903,39.230243,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>311/39/307</name>
-      <description>
-        <![CDATA[Tower containing Cell IDs: 311, 39, 307<br/>Cell Identities: 224497409, 410, 411]]>
-      </description>
-      <styleUrl>#purple_pin_style</styleUrl>
-      <Point>
-        <coordinates>-77.285891,39.229664,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -137,7 +97,7 @@
       <description>
         <![CDATA[Cell ID: 39, Beam: <br/>Cell Identity: 224497410<br/>Confidence: High]]>
       </description>
-      <styleUrl>#purple_balloon_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.284943,39.229076,0</coordinates>
       </Point>
@@ -147,7 +107,7 @@
       <description>
         <![CDATA[Cell ID: 307, Beam: <br/>Cell Identity: 224497411<br/>Confidence: High]]>
       </description>
-      <styleUrl>#purple_balloon_style</styleUrl>
+      <styleUrl>#red_balloon_style</styleUrl>
       <Point>
         <coordinates>-77.286826,39.229673,0</coordinates>
       </Point>
