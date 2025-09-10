@@ -600,5 +600,101 @@ namespace BTS_Location_Estimation
             };
             return newEstimate;
         }
+
+        public static List<Dictionary<string, string>> DBSCAN_Cluster(List<Dictionary<string, string>> data, double eps_miles = .50, int minPts = 2)
+        {
+            // Convert miles to degrees (approximate)
+            double eps_degrees = eps_miles / 69.0; // 1 degree ~ 69 miles
+            var clusters = new List<List<Dictionary<string, string>>>();
+            var visited = new HashSet<int>();
+            var noise = new HashSet<int>();
+            var clusterLabels = new int[data.Count];
+            Array.Fill(clusterLabels, -1);
+            int clusterId = 0;
+
+            double Distance(Dictionary<string, string> a, Dictionary<string, string> b)
+            {
+                double lat1 = double.Parse(a["est_Lat2"]);
+                double lon1 = double.Parse(a["est_Lon2"]);
+                double lat2 = double.Parse(b["est_Lat2"]);
+                double lon2 = double.Parse(b["est_Lon2"]);
+                double dLat = lat2 - lat1;
+                double dLon = lon2 - lon1;
+                return Math.Sqrt(dLat * dLat + dLon * dLon);
+            }
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                if (visited.Contains(i)) continue;
+                visited.Add(i);
+                var neighbors = new List<int>();
+                for (int j = 0; j < data.Count; j++)
+                {
+                    if (Distance(data[i], data[j]) <= eps_degrees)
+                        neighbors.Add(j);
+                }
+                if (neighbors.Count < minPts)
+                {
+                    noise.Add(i);
+                    continue;
+                }
+                clusters.Add(new List<Dictionary<string, string>>());
+                clusterLabels[i] = clusterId;
+                clusters[clusterId].Add(data[i]);
+                var seeds = new Queue<int>(neighbors);
+                while (seeds.Count > 0)
+                {
+                    int curr = seeds.Dequeue();
+                    if (!visited.Contains(curr))
+                    {
+                        visited.Add(curr);
+                        var currNeighbors = new List<int>();
+                        for (int k = 0; k < data.Count; k++)
+                        {
+                            if (Distance(data[curr], data[k]) <= eps_degrees)
+                                currNeighbors.Add(k);
+                        }
+                        if (currNeighbors.Count >= minPts)
+                        {
+                            foreach (var n in currNeighbors)
+                                if (clusterLabels[n] == -1) seeds.Enqueue(n);
+                        }
+                    }
+                    if (clusterLabels[curr] == -1)
+                    {
+                        clusterLabels[curr] = clusterId;
+                        clusters[clusterId].Add(data[curr]);
+                    }
+                }
+                clusterId++;
+            }
+
+            // Create cluster entries
+            var clusterEntries = new List<Dictionary<string, string>>();
+            foreach (var cluster in clusters)
+            {
+                if (cluster.Count == 0) continue;
+                var entry = new Dictionary<string, string>();
+                entry["Technology"] = string.Join("/", cluster.Select(p => p.GetValueOrDefault("Technology", "")));
+                entry["Channel"] = string.Join("/", cluster.Select(p => p.GetValueOrDefault("Channel", "")));
+                entry["CellId"] = string.Join("/", cluster.Select(p => p.GetValueOrDefault("CellId", "")));
+                entry["BeamIndex"] = string.Join("/", cluster.Select(p => p.GetValueOrDefault("BeamIndex", "")));
+                entry["Type"] = "cluster entry";
+                entry["cellIdentity"] = string.Join("/", cluster.Select(p => p.GetValueOrDefault("cellIdentity", "")));
+                entry["xhat1"] = "0";
+                entry["yhat1"] = "0";
+                entry["xhat2"] = "0";
+                entry["yhat2"] = "0";
+                entry["est_Lat1"] = "0";
+                entry["est_Lon1"] = "0";
+                entry["est_Lat2"] = cluster.Average(p => double.Parse(p["est_Lat2"])).ToString("F6", CultureInfo.InvariantCulture);
+                entry["est_Lon2"] = cluster.Average(p => double.Parse(p["est_Lon2"])).ToString("F6", CultureInfo.InvariantCulture);
+                entry["Max_cinr"] = "0";
+                entry["Num_points"] = cluster.Count.ToString();
+                entry["Confidence"] = "0";
+                clusterEntries.Add(entry);
+            }
+            return clusterEntries;
+        }
     }
 }

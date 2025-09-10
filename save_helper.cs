@@ -556,6 +556,7 @@ namespace BTS_Location_Estimation
             string[] estimateFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "Estimate*.csv");
             string outputFile = "ALL_Estimate.csv";
             string header = "Technology,Channel,CellId,BeamIndex,Type,cellIdentity,xhat1,yhat1,xhat2,yhat2,est_Lat1,est_Lon1,est_Lat2,est_Lon2,Max_cinr,Num_points,Confidence";
+            var allRows = new List<Dictionary<string, string>>();
             using (var writer = new StreamWriter(outputFile))
             {
                 writer.WriteLine(header);
@@ -566,23 +567,73 @@ namespace BTS_Location_Estimation
                     else if (file.Contains("WCDMA")) tech = "WCDMA";
                     else if (file.Contains("ColorCode")) tech = "GSM";
                     var lines = File.ReadAllLines(file);
+                    var fileHeader = lines[0].Split(',');
                     for (int i = 1; i < lines.Length; i++) // skip header
                     {
                         var columns = lines[i].Split(',');
+                        string[] rowArr;
                         if (tech == "NR")
                         {
-                            writer.WriteLine(tech + "," + lines[i]);
+                            rowArr = new string[] { tech }.Concat(columns).ToArray();
                         }
                         else
                         {
-                            // Insert blank for BeamIndex
-                            string newLine = tech + "," + string.Join(",", columns.Take(2)) + ",," + string.Join(",", columns.Skip(2));
-                            writer.WriteLine(newLine);
+                            rowArr = new string[] { tech }
+                                .Concat(columns.Take(2))
+                                .Concat(new string[] { "" })
+                                .Concat(columns.Skip(2)).ToArray();
                         }
+                        writer.WriteLine(string.Join(",", rowArr));
+                        // Build dictionary for clustering
+                        var rowDict = new Dictionary<string, string>();
+                        for (int c = 0; c < header.Split(',').Length && c < rowArr.Length; c++)
+                        {
+                            rowDict[header.Split(',')[c]] = rowArr[c];
+                        }
+                        allRows.Add(rowDict);
                     }
                 }
+                // Cluster and append cluster entries
+                var clusterEntries = DataBaseProc.DBSCAN_Cluster(allRows, 1.0, 2);
+                foreach (var entry in clusterEntries)
+                {
+                    writer.WriteLine(string.Join(",", header.Split(',').Select(h => entry.GetValueOrDefault(h, ""))));
+                }
             }
-            Console.WriteLine("ALL_Estimate.csv created with Technology column.");
+            Console.WriteLine("ALL_Estimate.csv created with Technology column and cluster entries.");
+        }
+
+        public static void save_cluster(string inputFile = "ALL_Estimate.csv", string outputFile = "ALL_map.csv")
+        {
+            var headers = new List<string> { "Latitude", "Longitude", "CellID", "CellIdentity", "BeamIndex", "Type" };
+            using (var reader = new StreamReader(inputFile))
+            using (var writer = new StreamWriter(outputFile))
+            {
+                writer.WriteLine(string.Join(",", headers));
+                var allHeaders = reader.ReadLine()?.Split(',') ?? new string[0]; // Read header from ALL_Estimate.csv
+                int latIdx = Array.IndexOf(allHeaders, "est_Lat2");
+                int lonIdx = Array.IndexOf(allHeaders, "est_Lon2");
+                int cellIdIdx = Array.IndexOf(allHeaders, "CellId");
+                int cellIdentityIdx = Array.IndexOf(allHeaders, "cellIdentity");
+                int beamIdxIdx = Array.IndexOf(allHeaders, "BeamIndex");
+                int typeIdx = Array.IndexOf(allHeaders, "Type");
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    var cols = (line ?? string.Empty).Split(',');
+                    var row = new List<string>
+                    {
+                        latIdx >= 0 ? cols[latIdx] : "",
+                        lonIdx >= 0 ? cols[lonIdx] : "",
+                        cellIdIdx >= 0 ? cols[cellIdIdx] : "",
+                        cellIdentityIdx >= 0 ? cols[cellIdentityIdx] : "",
+                        beamIdxIdx >= 0 ? cols[beamIdxIdx] : "",
+                        typeIdx >= 0 ? cols[typeIdx] : ""
+                    };
+                    writer.WriteLine(string.Join(",", row));
+                }
+            }
+            Console.WriteLine("ALL_map.csv created from ALL_Estimate.csv.");
         }
     }
 }
