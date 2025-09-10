@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>map_ch648672_Gflex Device 032201005_NR_FR1 TDD n77_Blind Scan SCS Autodetect</name>
+    <Style id="blue_pin_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+    <Style id="blue_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href></Icon><hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+    <Style id="green_pin_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/grn-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+    <Style id="green_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-circle.png</href></Icon><hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+    <Style id="ltblu_pin_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/ltblu-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+    <Style id="ltblu_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/ltblu-circle.png</href></Icon><hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+    <Style id="purple_pin_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/purple-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+    <Style id="purple_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/purple-circle.png</href></Icon><hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+    <Style id="red_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon><hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+    <Style id="yellow_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href></Icon><hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/></IconStyle></Style>
+    <Placemark>
+      <name>205</name>
+      <description>
+        <![CDATA[Cell ID: 205, Beam: 3<br/>Cell Identity: 17516137978<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.257812,39.199990,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>206</name>
+      <description>
+        <![CDATA[Cell ID: 206, Beam: 3<br/>Cell Identity: 17516137994<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.265291,39.191523,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>167</name>
+      <description>
+        <![CDATA[Cell ID: 167, Beam: 3<br/>Cell Identity: 17516168250<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.251456,39.213695,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>393</name>
+      <description>
+        <![CDATA[Cell ID: 393, Beam: 3<br/>Cell Identity: 17516169050<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.253263,39.181392,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>363</name>
+      <description>
+        <![CDATA[Cell ID: 363, Beam: 3<br/>Cell Identity: 17516184394<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.276368,39.212830,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>364</name>
+      <description>
+        <![CDATA[Cell ID: 364, Beam: 3<br/>Cell Identity: 17516184410<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.272624,39.206929,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>365</name>
+      <description>
+        <![CDATA[Cell ID: 365, Beam: 3<br/>Cell Identity: 17516184426<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.309296,39.206960,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>48</name>
+      <description>
+        <![CDATA[Cell ID: 48, Beam: 3<br/>Cell Identity: 17516185018<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.286582,39.228181,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>49</name>
+      <description>
+        <![CDATA[Cell ID: 49, Beam: 3<br/>Cell Identity: 17516185034<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.287025,39.229054,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>50</name>
+      <description>
+        <![CDATA[Cell ID: 50, Beam: 3<br/>Cell Identity: 17516185050<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.289051,39.229829,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

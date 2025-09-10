@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>map_ch0_Gflex Device 032201005_NR_FR1 TDD n77_nr Top N Signal ARFCN  658080 - 3871.20 MHz SCS 30 kHz</name>
+    <name>map_ch658080_Gflex Device 032201005_NR_FR1 TDD n77_Blind Scan SCS Autodetect</name>
     <Style id="blue_pin_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/></IconStyle></Style>
     <Style id="blue_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href></Icon><hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/></IconStyle></Style>
     <Style id="green_pin_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/grn-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/></IconStyle></Style>
@@ -19,7 +19,17 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.231967,39.176154,0</coordinates>
+        <coordinates>-77.234756,39.179765,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>210</name>
+      <description>
+        <![CDATA[Cell ID: 210, Beam: 1<br/>Cell Identity: <br/>Confidence: Low]]>
+      </description>
+      <styleUrl>#yellow_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.288610,39.226370,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -29,17 +39,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.258235,39.203316,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>171</name>
-      <description>
-        <![CDATA[Cell ID: 171, Beam: 1<br/>Cell Identity: 25602821146<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_balloon_style</styleUrl>
-      <Point>
-        <coordinates>-77.257943,39.201934,0</coordinates>
+        <coordinates>-77.258582,39.203145,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -49,7 +49,17 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.257799,39.202613,0</coordinates>
+        <coordinates>-77.260897,39.201246,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>171</name>
+      <description>
+        <![CDATA[Cell ID: 171, Beam: 1<br/>Cell Identity: 25602821146<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.255275,39.202445,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -59,7 +69,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.257222,39.202601,0</coordinates>
+        <coordinates>-77.258098,39.201699,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -69,27 +79,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.257098,39.202806,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>849</name>
-      <description>
-        <![CDATA[Cell ID: 849, Beam: 0<br/>Cell Identity: 25602821170<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_balloon_style</styleUrl>
-      <Point>
-        <coordinates>-77.256257,39.200760,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>849</name>
-      <description>
-        <![CDATA[Cell ID: 849, Beam: 4<br/>Cell Identity: 25602821170<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_balloon_style</styleUrl>
-      <Point>
-        <coordinates>-77.258836,39.200802,0</coordinates>
+        <coordinates>-77.256189,39.203123,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -99,7 +89,27 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.258468,39.200318,0</coordinates>
+        <coordinates>-77.258914,39.197865,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>849</name>
+      <description>
+        <![CDATA[Cell ID: 849, Beam: 4<br/>Cell Identity: 25602821170<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.267753,39.200872,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>849</name>
+      <description>
+        <![CDATA[Cell ID: 849, Beam: 0<br/>Cell Identity: 25602821170<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.256714,39.202008,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -109,7 +119,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.247098,39.206297,0</coordinates>
+        <coordinates>-77.248063,39.206690,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -119,7 +129,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.260844,39.200782,0</coordinates>
+        <coordinates>-77.259184,39.201232,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -129,7 +139,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.257664,39.200883,0</coordinates>
+        <coordinates>-77.258965,39.203047,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -139,17 +149,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.255231,39.187172,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>322</name>
-      <description>
-        <![CDATA[Cell ID: 322, Beam: 5<br/>Cell Identity: 25602821198<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_balloon_style</styleUrl>
-      <Point>
-        <coordinates>-77.258614,39.201327,0</coordinates>
+        <coordinates>-77.256412,39.186796,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -159,27 +159,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.261112,39.196031,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>322</name>
-      <description>
-        <![CDATA[Cell ID: 322, Beam: 2<br/>Cell Identity: 25602821198<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_balloon_style</styleUrl>
-      <Point>
-        <coordinates>-77.264823,39.191715,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>322</name>
-      <description>
-        <![CDATA[Cell ID: 322, Beam: 0<br/>Cell Identity: 25602821198<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_balloon_style</styleUrl>
-      <Point>
-        <coordinates>-77.252134,39.198287,0</coordinates>
+        <coordinates>-77.260198,39.198748,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -189,7 +169,37 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.260459,39.195655,0</coordinates>
+        <coordinates>-77.259609,39.199821,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>322</name>
+      <description>
+        <![CDATA[Cell ID: 322, Beam: 0<br/>Cell Identity: 25602821198<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.249706,39.199402,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>322</name>
+      <description>
+        <![CDATA[Cell ID: 322, Beam: 2<br/>Cell Identity: 25602821198<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.262325,39.197567,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>322</name>
+      <description>
+        <![CDATA[Cell ID: 322, Beam: 5<br/>Cell Identity: 25602821198<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.259821,39.199704,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -199,7 +209,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.275147,39.224005,0</coordinates>
+        <coordinates>-77.275656,39.224866,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -209,7 +219,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.257764,39.200319,0</coordinates>
+        <coordinates>-77.256372,39.200419,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -219,17 +229,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.260116,39.199727,0</coordinates>
-      </Point>
-    </Placemark>
-    <Placemark>
-      <name>558</name>
-      <description>
-        <![CDATA[Cell ID: 558, Beam: 5<br/>Cell Identity: 25602821222<br/>Confidence: High]]>
-      </description>
-      <styleUrl>#red_balloon_style</styleUrl>
-      <Point>
-        <coordinates>-77.266249,39.198119,0</coordinates>
+        <coordinates>-77.258632,39.200279,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -239,7 +239,17 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.260701,39.199460,0</coordinates>
+        <coordinates>-77.259135,39.199246,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>558</name>
+      <description>
+        <![CDATA[Cell ID: 558, Beam: 5<br/>Cell Identity: 25602821222<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.266778,39.197443,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -249,7 +259,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.265031,39.198499,0</coordinates>
+        <coordinates>-77.263503,39.199365,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -259,7 +269,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.262598,39.216607,0</coordinates>
+        <coordinates>-77.270670,39.214167,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -269,7 +279,7 @@
       </description>
       <styleUrl>#yellow_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.240767,39.193272,0</coordinates>
+        <coordinates>-77.228979,39.168217,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -279,7 +289,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.274215,39.214311,0</coordinates>
+        <coordinates>-77.280096,39.203524,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -289,7 +299,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.276181,39.210842,0</coordinates>
+        <coordinates>-77.275366,39.211223,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
@@ -299,7 +309,7 @@
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.278952,39.215905,0</coordinates>
+        <coordinates>-77.278122,39.214152,0</coordinates>
       </Point>
     </Placemark>
   </Document>
