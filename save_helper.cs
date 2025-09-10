@@ -594,7 +594,7 @@ namespace BTS_Location_Estimation
                     }
                 }
                 // Cluster and append cluster entries
-                var clusterEntries = DataBaseProc.DBSCAN_Cluster(allRows, 1.0, 2);
+                var clusterEntries = DataBaseProc.DBSCAN_Cluster(allRows, 0.5, 4);
                 foreach (var entry in clusterEntries)
                 {
                     writer.WriteLine(string.Join(",", header.Split(',').Select(h => entry.GetValueOrDefault(h, ""))));

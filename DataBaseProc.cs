@@ -601,7 +601,7 @@ namespace BTS_Location_Estimation
             return newEstimate;
         }
 
-        public static List<Dictionary<string, string>> DBSCAN_Cluster(List<Dictionary<string, string>> data, double eps_miles = .50, int minPts = 2)
+        public static List<Dictionary<string, string>> DBSCAN_Cluster(List<Dictionary<string, string>> data, double eps_miles = .50, int minPts = 4)
         {
             // Convert miles to degrees (approximate)
             double eps_degrees = eps_miles / 69.0; // 1 degree ~ 69 miles
