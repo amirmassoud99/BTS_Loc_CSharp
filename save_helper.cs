@@ -550,5 +550,39 @@ namespace BTS_Location_Estimation
                 Console.WriteLine($"Error generating cell map KML: {ex.Message}");
             }
         }
+
+        public static void ClusterProcessing()
+        {
+            string[] estimateFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "Estimate*.csv");
+            string outputFile = "ALL_Estimate.csv";
+            string header = "Technology,Channel,CellId,BeamIndex,Type,cellIdentity,xhat1,yhat1,xhat2,yhat2,est_Lat1,est_Lon1,est_Lat2,est_Lon2,Max_cinr,Num_points,Confidence";
+            using (var writer = new StreamWriter(outputFile))
+            {
+                writer.WriteLine(header);
+                foreach (string file in estimateFiles)
+                {
+                    string tech = "LTE";
+                    if (file.Contains("_NR_")) tech = "NR";
+                    else if (file.Contains("WCDMA")) tech = "WCDMA";
+                    else if (file.Contains("ColorCode")) tech = "GSM";
+                    var lines = File.ReadAllLines(file);
+                    for (int i = 1; i < lines.Length; i++) // skip header
+                    {
+                        var columns = lines[i].Split(',');
+                        if (tech == "NR")
+                        {
+                            writer.WriteLine(tech + "," + lines[i]);
+                        }
+                        else
+                        {
+                            // Insert blank for BeamIndex
+                            string newLine = tech + "," + string.Join(",", columns.Take(2)) + ",," + string.Join(",", columns.Skip(2));
+                            writer.WriteLine(newLine);
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("ALL_Estimate.csv created with Technology column.");
+        }
     }
 }
