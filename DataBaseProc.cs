@@ -510,6 +510,26 @@ namespace BTS_Location_Estimation
             }
         }
 
+    /***************************************************************************************************
+    *
+    *   Function:       CreateNrBeamTowerEstimate
+    *
+    *   Description:    Aggregates a group of NR sectors (with the same CellId and CellIdentity) into a single
+    *                   "Tower" entry by averaging their estimated locations and combining their beam indices.
+    *                   This is used for NR (5G) blind scan results, where multiple beams (sectors) share the same
+    *                   physical cell but have different beam indices. The function calculates the centroid of all
+    *                   sectors in the group and creates a summary dictionary entry for the tower.
+    *
+    *   Input:          group (List<Dictionary<string, string>>) - List of sector entries with the same CellId and CellIdentity.
+    *
+    *   Output:         Dictionary<string, string> representing the aggregated tower entry, with averaged location fields
+    *                   and combined beam indices.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 10, 2025
+    *
+    ***************************************************************************************************/
         private static Dictionary<string, string> CreateNrBeamTowerEstimate(List<Dictionary<string, string>> group)
         {
             double avgLat1 = group.Average(d => double.Parse(d["est_Lat1"], CultureInfo.InvariantCulture));
@@ -601,6 +621,47 @@ namespace BTS_Location_Estimation
             return newEstimate;
         }
 
+    /***************************************************************************************************
+    *
+    *   Function:       DBSCAN_Cluster
+    *
+    *   Description:    Performs clustering on location estimation results using the DBSCAN algorithm.
+    *                   DBSCAN (Density-Based Spatial Clustering of Applications with Noise) groups points
+    *                   that are closely packed together (points with many nearby neighbors) and marks points
+    *                   that lie alone in low-density regions as outliers (noise). This implementation uses
+    *                   latitude/longitude (est_Lat2/est_Lon2) and clusters points within a specified distance
+    *                   threshold (eps_miles). Each cluster's centroid is calculated and returned as a new entry.
+    *
+    *   Algorithm Details:
+    *                   - Each point is classified as a core point, border point, or noise.
+    *                   - Core points have at least minPts neighbors within eps_miles.
+    *                   - Clusters are formed by connecting core points and their neighbors.
+    *                   - Outliers (noise) are points not belonging to any cluster.
+    *                   - The function returns a list of cluster entries, each representing the centroid of a cluster.
+    *
+    *   Pros:
+    *                   - Can find arbitrarily shaped clusters.
+    *                   - Does not require specifying the number of clusters in advance.
+    *                   - Robust to noise and outliers.
+    *                   - Suitable for spatial/geographic data.
+    *
+    *   Cons:
+    *                   - Sensitive to the choice of eps_miles and minPts parameters.
+    *                   - Struggles with clusters of varying density.
+    *                   - Distance calculation assumes Euclidean geometry (approximate for lat/lon).
+    *                   - Performance may degrade for very large datasets.
+    *
+    *   Input:          data (List<Dictionary<string, string>>) - List of location estimation results.
+    *                   eps_miles (double) - Maximum distance (in miles) for points to be considered neighbors.
+    *                   minPts (int) - Minimum number of points required to form a cluster.
+    *
+    *   Output:         List of cluster entries (each as Dictionary<string, string>) representing cluster centroids.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 10, 2025
+    *
+    ***************************************************************************************************/
         public static List<Dictionary<string, string>> DBSCAN_Cluster(List<Dictionary<string, string>> data, double eps_miles = .50, int minPts = 4)
         {
             // Convert miles to degrees (approximate)

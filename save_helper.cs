@@ -606,6 +606,7 @@ namespace BTS_Location_Estimation
         public static void save_cluster(string inputFile = "ALL_Estimate.csv", string outputFile = "ALL_map.csv")
         {
             var headers = new List<string> { "Latitude", "Longitude", "CellID", "CellIdentity", "BeamIndex", "Type" };
+            var rows = new List<Dictionary<string, string>>();
             using (var reader = new StreamReader(inputFile))
             using (var writer = new StreamWriter(outputFile))
             {
@@ -631,9 +632,126 @@ namespace BTS_Location_Estimation
                         typeIdx >= 0 ? cols[typeIdx] : ""
                     };
                     writer.WriteLine(string.Join(",", row));
+                    // Build dictionary for KML
+                    var dict = new Dictionary<string, string>
+                    {
+                        {"Latitude", latIdx >= 0 ? cols[latIdx] : ""},
+                        {"Longitude", lonIdx >= 0 ? cols[lonIdx] : ""},
+                        {"CellID", cellIdIdx >= 0 ? cols[cellIdIdx] : ""},
+                        {"CellIdentity", cellIdentityIdx >= 0 ? cols[cellIdentityIdx] : ""},
+                        {"BeamIndex", beamIdxIdx >= 0 ? cols[beamIdxIdx] : ""},
+                        {"Type", typeIdx >= 0 ? cols[typeIdx] : ""}
+                    };
+                    rows.Add(dict);
                 }
             }
             Console.WriteLine("ALL_map.csv created from ALL_Estimate.csv.");
+            // Also generate KML
+            generate_all_map_kml(rows, Path.ChangeExtension(outputFile, ".kml"));
+        }
+
+        // Helper to generate ALL_map.kml from the parsed rows
+        private static void generate_all_map_kml(List<Dictionary<string, string>> rows, string kmlFilename)
+        {
+            // Color styles: blue, green, light blue, purple (no red)
+            var colorStyles = new List<(string pin, string balloon)>
+            {
+                ("#blue_pin_style", "#blue_balloon_style"),
+                ("#green_pin_style", "#green_balloon_style"),
+                ("#ltblu_pin_style", "#ltblu_balloon_style"),
+                ("#purple_pin_style", "#purple_balloon_style")
+            };
+            // Assign colors to clusters and sectors
+            var clusterColors = new Dictionary<string, (string pin, string balloon)>();
+            int colorIdx = 0;
+            // Find all cluster entries
+            var clusters = rows.Where(r => r.GetValueOrDefault("Type") == "cluster entry").ToList();
+            foreach (var cluster in clusters)
+            {
+                var clusterId = cluster.GetValueOrDefault("CellID", "") + "_" + cluster.GetValueOrDefault("BeamIndex", "");
+                clusterColors[clusterId] = colorStyles[colorIdx % colorStyles.Count];
+                colorIdx++;
+            }
+            // Map sectors to clusters
+            var sectorToCluster = new Dictionary<string, string>();
+            foreach (var cluster in clusters)
+            {
+                var cellIds = cluster.GetValueOrDefault("CellID", "").Split('/');
+                var beamIndices = cluster.GetValueOrDefault("BeamIndex", "").Split('/');
+                foreach (var cellId in cellIds)
+                {
+                    sectorToCluster[cellId] = cluster.GetValueOrDefault("CellID", "") + "_" + cluster.GetValueOrDefault("BeamIndex", "");
+                }
+            }
+            using (var writer = new StreamWriter(kmlFilename))
+            {
+                writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                writer.WriteLine("<kml xmlns=\"http://www.opengis.net/kml/2.2\">");
+                writer.WriteLine("  <Document>");
+                writer.WriteLine("    <name>ALL_map</name>");
+                // Styles
+                writer.WriteLine("    <Style id=\"blue_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href></Icon></IconStyle></Style>");
+                writer.WriteLine("    <Style id=\"blue_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href></Icon></IconStyle></Style>");
+                writer.WriteLine("    <Style id=\"green_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/grn-pushpin.png</href></Icon></IconStyle></Style>");
+                writer.WriteLine("    <Style id=\"green_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-circle.png</href></Icon></IconStyle></Style>");
+                writer.WriteLine("    <Style id=\"ltblu_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/ltblu-pushpin.png</href></Icon></IconStyle></Style>");
+                writer.WriteLine("    <Style id=\"ltblu_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/ltblu-circle.png</href></Icon></IconStyle></Style>");
+                writer.WriteLine("    <Style id=\"purple_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/purple-pushpin.png</href></Icon></IconStyle></Style>");
+                writer.WriteLine("    <Style id=\"purple_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/purple-circle.png</href></Icon></IconStyle></Style>");
+                writer.WriteLine("    <Style id=\"red_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon></IconStyle></Style>");
+                // Placemarks
+                foreach (var row in rows)
+                {
+                    string lat = row.GetValueOrDefault("Latitude", "");
+                    string lon = row.GetValueOrDefault("Longitude", "");
+                    string cellId = row.GetValueOrDefault("CellID", "");
+                    string cellIdentity = row.GetValueOrDefault("CellIdentity", "");
+                    string beamIndex = row.GetValueOrDefault("BeamIndex", "");
+                    string type = row.GetValueOrDefault("Type", "");
+                    string styleUrl = "";
+                    string name = cellId;
+                    string desc = "";
+                    if (type == "cluster entry")
+                    {
+                        // Pushpin, color by cluster
+                        var clusterId = cellId + "_" + beamIndex;
+                        styleUrl = clusterColors.ContainsKey(clusterId) ? clusterColors[clusterId].pin : "#blue_pin_style";
+                        desc = $"<![CDATA[Cluster: {cellId}<br/>Beam: {beamIndex}<br/>CellIdentity: {cellIdentity}]]>";
+                    }
+                    else if (type == "Sector")
+                    {
+                        // Balloon, color by cluster if associated, else red
+                        string sectorKey = cellId;
+                        if (sectorToCluster.ContainsKey(sectorKey) && clusterColors.ContainsKey(sectorToCluster[sectorKey]))
+                        {
+                            styleUrl = clusterColors[sectorToCluster[sectorKey]].balloon;
+                        }
+                        else
+                        {
+                            styleUrl = "#red_balloon_style";
+                        }
+                        desc = $"<![CDATA[Sector: {cellId}<br/>Beam: {beamIndex}<br/>CellIdentity: {cellIdentity}]]>";
+                    }
+                    else
+                    {
+                        styleUrl = "#red_balloon_style";
+                        desc = $"<![CDATA[{type}: {cellId}<br/>Beam: {beamIndex}<br/>CellIdentity: {cellIdentity}]]>";
+                    }
+                    writer.WriteLine("    <Placemark>");
+                    writer.WriteLine($"      <name>{name}</name>");
+                    writer.WriteLine("      <description>");
+                    writer.WriteLine($"        {desc}");
+                    writer.WriteLine("      </description>");
+                    writer.WriteLine($"      <styleUrl>{styleUrl}</styleUrl>");
+                    writer.WriteLine("      <Point>");
+                    writer.WriteLine($"        <coordinates>{lon},{lat},0</coordinates>");
+                    writer.WriteLine("      </Point>");
+                    writer.WriteLine("    </Placemark>");
+                }
+                writer.WriteLine("  </Document>");
+                writer.WriteLine("</kml>");
+            }
+            Console.WriteLine($"ALL_map.kml created at {kmlFilename}");
         }
     }
 }
