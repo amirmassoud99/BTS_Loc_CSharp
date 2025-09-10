@@ -618,10 +618,9 @@ namespace BTS_Location_Estimation
                 int cellIdentityIdx = Array.IndexOf(allHeaders, "cellIdentity");
                 int beamIdxIdx = Array.IndexOf(allHeaders, "BeamIndex");
                 int typeIdx = Array.IndexOf(allHeaders, "Type");
-                string line;
-                while ((line = reader.ReadLine()) != null)
+                while (reader.ReadLine() is string lineNotNull)
                 {
-                    var cols = (line ?? string.Empty).Split(',');
+                    var cols = lineNotNull.Split(',');
                     var row = new List<string>
                     {
                         latIdx >= 0 ? cols[latIdx] : "",
