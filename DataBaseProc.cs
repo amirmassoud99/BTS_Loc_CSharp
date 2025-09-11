@@ -28,31 +28,42 @@ using System.Linq;
 namespace BTS_Location_Estimation
 {
     public static class DataBaseProc
-    {
+{
+    public const int LTE_TOPN_FILE_TYPE = 1;
+    public const int LTE_BLIND_FILE_TYPE = 2;
+    public const int NR_TOPN_FILE_TYPE = 3;
+    public const int NR_FILE_TYPE = 4;
+    public const int WCDMA_FILE_TYPE_CSV = 5;
+    public const int GSM_FILE_TYPE = 6;
+    public const int WCDMA_FILE_TYPE_DTR = 50;
         /***************************************************************************************************
-        *
-        *   Function:       generate_unique_cellID
-        *
-        *   Description:    For NR file types, updates the cellId value for each row by combining cellId and beamIndex:
-        *                   cellId = cellId * 100 + beamIndex. For other file types, cellId remains unchanged.
-        *
-        *   Input:          allData (List<Dictionary<string, string>>) - The full list of extracted data.
-        *                   fileType (int) - The file type code.
-        *
-        *   Output:         The updated list with unique cellId values for NR files.
-        *
-        *   Author:         Amir Soltanian
-        *
-        *   Date:           September 11, 2025
-        *
-        ***************************************************************************************************/
+    *
+    *   Function:       generate_unique_cellID
+    *
+    *   Description:    For NR file types, updates the cellId value for each row by combining cellId and beamIndex:
+    *                   cellId = cellId * 100 + beamIndex.
+    *                   For non-NR file types, cellId is recalculated as:
+    *                   cellId = cellIdentity * 1000 + cellId, where cellIdentity can be a large integer.
+    *                   If cellIdentity is blank or cannot be parsed, the row is left unchanged.
+    *                   All parsing uses double integer logic for safety.
+    *
+    *   Input:          allData (List<Dictionary<string, string>>) - The full list of extracted data.
+    *                   fileType (int) - The file type code.
+    *
+    *   Output:         The updated list with unique cellId values for NR and non-NR files.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 11, 2025
+    *
+    ***************************************************************************************************/
         public static List<Dictionary<string, string>> generate_unique_cellID(List<Dictionary<string, string>> allData, int fileType)
         {
             if (allData == null || allData.Count == 0) return allData!;
-            // Only update for NR file types
-            if (fileType == NR_TOPN_FILE_TYPE || fileType == NR_FILE_TYPE || fileType == NR_TOPN_FILE_TYPE * 10 || fileType == NR_FILE_TYPE * 10)
+            bool isNrFile = fileType == NR_TOPN_FILE_TYPE || fileType == NR_FILE_TYPE || fileType == NR_TOPN_FILE_TYPE * 10 || fileType == NR_FILE_TYPE * 10;
+            foreach (var row in allData)
             {
-                foreach (var row in allData)
+                if (isNrFile)
                 {
                     if (row.TryGetValue("cellId", out var cellIdStr) &&
                         row.TryGetValue("beamIndex", out var beamIndexStr) &&
@@ -62,17 +73,21 @@ namespace BTS_Location_Estimation
                         row["cellId"] = (cellId * 100 + beamIndex).ToString();
                     }
                 }
+                else
+                {
+                    if (row.TryGetValue("cellId", out var cellIdStr) &&
+                        row.TryGetValue("cellIdentity", out var cellIdentityStr) &&
+                        long.TryParse(cellIdentityStr, out long cellIdentity) &&
+                        int.TryParse(cellIdStr, out int cellId))
+                    {
+                        // cellIdentity can be a large 10 digit decimal integer
+                        row["cellId"] = (cellIdentity * 1000 + cellId).ToString();
+                    }
+                }
             }
             return allData!;
         }
     
-        public const int LTE_TOPN_FILE_TYPE = 1;
-        public const int LTE_BLIND_FILE_TYPE = 2;
-        public const int NR_TOPN_FILE_TYPE = 3;
-        public const int NR_FILE_TYPE = 4;
-        public const int WCDMA_FILE_TYPE_CSV = 5;
-        public const int GSM_FILE_TYPE = 6;
-        public const int WCDMA_FILE_TYPE_DTR = 50;
 
         /***************************************************************************************************
         *
@@ -412,11 +427,15 @@ namespace BTS_Location_Estimation
 
         /***************************************************************************************************
         *
-        *   Function:       splitCellidBeamforNR
+        *   Function:       splitCellid
         *
         *   Description:    For NR Blind Scan files (fileType = 4), this function takes the composite
         *                   Cell ID (which includes the Beam Index) and splits it back into separate
         *                   'CellId' and 'BeamIndex' fields in the final results.
+        *                   For non-NR files, it attempts to restore the original CellId by applying a modulo
+        *                   operation to handle any encoding or scaling applied previously.
+        *                   This ensures consistent CellId formatting across different technologies.
+        *                   The function returns a new list with updated dictionaries accordingly.
         *
         *   Input:          fileType (int) - The integer code for the file type.
         *                   estimationResults (List<...>) - The list of estimation results.
@@ -429,41 +448,53 @@ namespace BTS_Location_Estimation
         *   Date:           September 4, 2025
         *
         ***************************************************************************************************/
-        public static List<Dictionary<string, string>> splitCellidBeamforNR(int fileType, List<Dictionary<string, string>> estimationResults)
+        public static List<Dictionary<string, string>> splitCellid(int fileType, List<Dictionary<string, string>> estimationResults)
         {
             bool isNrFile = fileType == NR_TOPN_FILE_TYPE || fileType == NR_FILE_TYPE || fileType == NR_TOPN_FILE_TYPE * 10 || fileType == NR_FILE_TYPE * 10;
-            if (!isNrFile)
-            {
-                return estimationResults;
-            }
-
             var newEstimationResults = new List<Dictionary<string, string>>();
             foreach (var result in estimationResults)
             {
-                if (int.TryParse(result["CellId"], out int compositeCellId))
+                if (isNrFile)
                 {
-                    int newCellId = compositeCellId / 100;
-                    int beamIndex = compositeCellId % 100;
-
-                    var newResult = new Dictionary<string, string>();
-                    foreach (var kvp in result)
+                    if (int.TryParse(result["CellId"], out int compositeCellId))
                     {
-                        if (kvp.Key == "CellId")
+                        int newCellId = compositeCellId / 100;
+                        int beamIndex = compositeCellId % 100;
+                        var newResult = new Dictionary<string, string>();
+                        foreach (var kvp in result)
                         {
-                            newResult.Add("CellId", newCellId.ToString());
-                            newResult.Add("BeamIndex", beamIndex.ToString());
+                            if (kvp.Key == "CellId")
+                            {
+                                newResult.Add("CellId", newCellId.ToString());
+                                newResult.Add("BeamIndex", beamIndex.ToString());
+                            }
+                            else
+                            {
+                                newResult.Add(kvp.Key, kvp.Value);
+                            }
                         }
-                        else
-                        {
-                            newResult.Add(kvp.Key, kvp.Value);
-                        }
+                        newEstimationResults.Add(newResult);
                     }
-                    newEstimationResults.Add(newResult);
+                    else
+                    {
+                        // If parsing fails, add the original result back
+                        newEstimationResults.Add(result);
+                    }
                 }
                 else
                 {
-                    // If parsing fails, add the original result back
-                    newEstimationResults.Add(result);
+                    // For non-NR files, restore cellId by cellId % 100 (use double integer if needed)
+                    if (long.TryParse(result["CellId"], out long cellIdLong))
+                    {
+                        long restoredCellId = cellIdLong % 1000;
+                        var newResult = new Dictionary<string, string>(result);
+                        newResult["CellId"] = restoredCellId.ToString();
+                        newEstimationResults.Add(newResult);
+                    }
+                    else
+                    {
+                        newEstimationResults.Add(result);
+                    }
                 }
             }
             return newEstimationResults;

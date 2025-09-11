@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.45.0";
+        public const string SW_VERSION = "1.0.46.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -140,7 +140,7 @@ namespace BTS_Location_Estimation
                 // Save the final estimation results
                 string estimateFilename = $"Estimate_{filenameOnly}.csv";
 
-                var resultsWithBeamIndex = DataBaseProc.splitCellidBeamforNR(fileType, estimationResults);
+                var resultsWithBeamIndex = DataBaseProc.splitCellid(fileType, estimationResults);
 
                 var sortedResults = DataBaseProc.AddTowerEstimate(resultsWithBeamIndex, fileType, "Sector");
                 SaveHelper.save_estimation_results(sortedResults, estimateFilename);
