@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+  <Document>
+    <name>ALL_map</name>
+    <Style id="blue_pin_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href></Icon></IconStyle></Style>
+    <Style id="blue_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href></Icon></IconStyle></Style>
+    <Style id="green_pin_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/grn-pushpin.png</href></Icon></IconStyle></Style>
+    <Style id="green_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-circle.png</href></Icon></IconStyle></Style>
+    <Style id="ltblu_pin_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/ltblu-pushpin.png</href></Icon></IconStyle></Style>
+    <Style id="ltblu_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/ltblu-circle.png</href></Icon></IconStyle></Style>
+    <Style id="purple_pin_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/purple-pushpin.png</href></Icon></IconStyle></Style>
+    <Style id="purple_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/purple-circle.png</href></Icon></IconStyle></Style>
+    <Style id="red_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon></IconStyle></Style>
+    <Placemark>
+      <name>411</name>
+      <description>
+        <![CDATA[Sector: 411<br/>Beam: 3<br/>CellIdentity: <br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#red_balloon_style
+      <Point>
+        <coordinates>-77.234756,39.179765,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>171</name>
+      <description>
+        <![CDATA[Sector: 171<br/>Beam: 4<br/>CellIdentity: 25602821146<br/>MNC: 310;313<br/>MCC: 410;100]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.258582,39.203145,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>171</name>
+      <description>
+        <![CDATA[Sector: 171<br/>Beam: 3<br/>CellIdentity: 25602821146<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.260897,39.201246,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>171</name>
+      <description>
+        <![CDATA[Sector: 171<br/>Beam: 1<br/>CellIdentity: 25602821146<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.255275,39.202445,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>171</name>
+      <description>
+        <![CDATA[Sector: 171<br/>Beam: 0<br/>CellIdentity: 25602821146<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.258098,39.201699,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>171</name>
+      <description>
+        <![CDATA[Sector: 171<br/>Beam: 2<br/>CellIdentity: 25602821146<br/>MNC: 310;313<br/>MCC: 410;100]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.256189,39.203123,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>849</name>
+      <description>
+        <![CDATA[Sector: 849<br/>Beam: 1<br/>CellIdentity: 25602821170<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.258914,39.197865,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>849</name>
+      <description>
+        <![CDATA[Sector: 849<br/>Beam: 4<br/>CellIdentity: 25602821170<br/>MNC: 310;313<br/>MCC: 410;100]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.267753,39.200872,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>849</name>
+      <description>
+        <![CDATA[Sector: 849<br/>Beam: 0<br/>CellIdentity: 25602821170<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.256714,39.202008,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>849</name>
+      <description>
+        <![CDATA[Sector: 849<br/>Beam: 2<br/>CellIdentity: 25602821170<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.248063,39.206690,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>849</name>
+      <description>
+        <![CDATA[Sector: 849<br/>Beam: 3<br/>CellIdentity: 25602821170<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.259184,39.201232,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>849</name>
+      <description>
+        <![CDATA[Sector: 849<br/>Beam: 5<br/>CellIdentity: 25602821170<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.258965,39.203047,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>322</name>
+      <description>
+        <![CDATA[Sector: 322<br/>Beam: 3<br/>CellIdentity: 25602821198<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.256412,39.186796,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>322</name>
+      <description>
+        <![CDATA[Sector: 322<br/>Beam: 1<br/>CellIdentity: 25602821198<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.260198,39.198748,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>322</name>
+      <description>
+        <![CDATA[Sector: 322<br/>Beam: 4<br/>CellIdentity: 25602821198<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.259609,39.199821,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>322</name>
+      <description>
+        <![CDATA[Sector: 322<br/>Beam: 0<br/>CellIdentity: 25602821198<br/>MNC: 310;313<br/>MCC: 410;100]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.249706,39.199402,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>322</name>
+      <description>
+        <![CDATA[Sector: 322<br/>Beam: 2<br/>CellIdentity: 25602821198<br/>MNC: 310;313<br/>MCC: 410;100]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.262325,39.197567,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>322</name>
+      <description>
+        <![CDATA[Sector: 322<br/>Beam: 5<br/>CellIdentity: 25602821198<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.259821,39.199704,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>558</name>
+      <description>
+        <![CDATA[Sector: 558<br/>Beam: 0<br/>CellIdentity: 25602821222<br/>MNC: 310;313<br/>MCC: 410;100]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.275656,39.224866,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>558</name>
+      <description>
+        <![CDATA[Sector: 558<br/>Beam: 3<br/>CellIdentity: 25602821222<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.256372,39.200419,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>558</name>
+      <description>
+        <![CDATA[Sector: 558<br/>Beam: 1<br/>CellIdentity: 25602821222<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.258632,39.200279,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>558</name>
+      <description>
+        <![CDATA[Sector: 558<br/>Beam: 4<br/>CellIdentity: 25602821222<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.259135,39.199246,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>558</name>
+      <description>
+        <![CDATA[Sector: 558<br/>Beam: 5<br/>CellIdentity: 25602821222<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.266778,39.197443,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>558</name>
+      <description>
+        <![CDATA[Sector: 558<br/>Beam: 2<br/>CellIdentity: 25602821222<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#blue_balloon_style
+      <Point>
+        <coordinates>-77.263503,39.199365,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>77</name>
+      <description>
+        <![CDATA[Sector: 77<br/>Beam: 0<br/>CellIdentity: 25693970463<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#red_balloon_style
+      <Point>
+        <coordinates>-77.270670,39.214167,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>856</name>
+      <description>
+        <![CDATA[Sector: 856<br/>Beam: 0<br/>CellIdentity: 25694473248<br/>MNC: 310;313<br/>MCC: 410;100]]>
+      </description>
+      <styleUrl>#red_balloon_style
+      <Point>
+        <coordinates>-77.280096,39.203524,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>178</name>
+      <description>
+        <![CDATA[Sector: 178<br/>Beam: 0<br/>CellIdentity: 25694473272<br/>MNC: 310;313<br/>MCC: 410;100]]>
+      </description>
+      <styleUrl>#red_balloon_style
+      <Point>
+        <coordinates>-77.275366,39.211223,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>395</name>
+      <description>
+        <![CDATA[Sector: 395<br/>Beam: 0<br/>CellIdentity: 25694473297<br/>MNC: <br/>MCC: ]]>
+      </description>
+      <styleUrl>#red_balloon_style
+      <Point>
+        <coordinates>-77.278122,39.214152,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>171/171/171/171/171/849/849/849/849/322/322/322/322/558/558/558/558/849/558/322</name>
+      <description>
+        <![CDATA[Cluster: 171/171/171/171/171/849/849/849/849/322/322/322/322/558/558/558/558/849/558/322<br/>Beam: 4/3/1/0/2/1/0/3/5/1/4/2/5/3/1/4/2/4/5/0<br/>CellIdentity: 25602821146/25602821146/25602821146/25602821146/25602821146/25602821170/25602821170/25602821170/25602821170/25602821198/25602821198/25602821198/25602821198/25602821222/25602821222/25602821222/25602821222/25602821170/25602821222/25602821198<br/>MNC: 310;313////310;313///////310;313//////310;313//310;313<br/>MCC: 410;100////410;100///////410;100//////410;100//410;100]]>
+      </description>
+      <styleUrl>#blue_pin_style
+      <Point>
+        <coordinates>-77.259332,39.200434,0</coordinates>
+      </Point>
+    </Placemark>
+  </Document>
+</kml>

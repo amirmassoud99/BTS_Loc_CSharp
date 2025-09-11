@@ -593,14 +593,14 @@ namespace BTS_Location_Estimation
            var filteredData = DataBaseProc.Confidence_and_Filtering(allRows, "channel", "658080");
 
             // --- Step 3: Cluster the filtered data ---
-            var clusterEntries = DataBaseProc.DBSCAN_Cluster(allRows, 0.5, 4);
+            var clusterEntries = DataBaseProc.DBSCAN_Cluster(filteredData, 0.5, 4);
 
             // --- Step 4: Write the filtered data and cluster entries to ALL_Estimate.csv ---
             using (var writer = new StreamWriter(outputFile))
             {
                 writer.WriteLine(header);
                 // Write filtered rows
-                foreach (var rowDict in allRows)
+                foreach (var rowDict in filteredData)
                 {
                     var values = headerColumns.Select(h => rowDict.GetValueOrDefault(h, ""));
                     writer.WriteLine(string.Join(",", values));
