@@ -413,7 +413,16 @@ namespace BTS_Location_Estimation
                     genericRow["longitude"] = values[lonIndex];
                     genericRow["cinr"] = values[cinrIndex];
 
-                    if (cellIdentityIndex != -1 && !string.IsNullOrWhiteSpace(values[cellIdentityIndex]))
+                    // Always read beamIndex for NR file types
+                    bool isNrFile = fileType == NR_TOPN_FILE_TYPE || fileType == NR_FILE_TYPE || fileType == NR_TOPN_FILE_TYPE * 10 || fileType == NR_FILE_TYPE * 10;
+                    genericRow["cellId"] = values[cellIdIndex];
+                    if (isNrFile && beamIndexCol != -1 && beamIndexCol < values.Count)
+                    {
+                        genericRow["beamIndex"] = values[beamIndexCol];
+                    }
+
+                    // Extract cellIdentity if present          
+                    if (cellIdentityIndex != -1 && cellIdentityIndex < values.Count && !string.IsNullOrWhiteSpace(values[cellIdentityIndex]))
                     {
                         genericRow["cellIdentity"] = values[cellIdentityIndex];
                     }
@@ -429,6 +438,7 @@ namespace BTS_Location_Estimation
                     }
 
                     // Handle Cell ID and Beam Index combination for all NR file types
+                    /*
                     bool isNrFile = fileType == NR_TOPN_FILE_TYPE || fileType == NR_FILE_TYPE || fileType == NR_TOPN_FILE_TYPE * 10 || fileType == NR_FILE_TYPE * 10;
                     if (isNrFile && beamIndexCol != -1 &&
                         int.TryParse(values[cellIdIndex], out int cellId) &&
@@ -444,7 +454,7 @@ namespace BTS_Location_Estimation
                         {
                             genericRow["beamIndex"] = values[beamIndexCol];
                         }
-                    }
+                    }*/
 
                     if (channelNumIndex != -1)
                     {

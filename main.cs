@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.44.0";
+        public const string SW_VERSION = "1.0.45.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -83,6 +83,7 @@ namespace BTS_Location_Estimation
                 // 1. Call ExtractChannelCellMap to get all standardized data rows
                 var allData = InputOutputFileProc.ExtractChannelCellMap(filename, fileType);
                 allData = DataBaseProc.Expand_mcc_mnc_cellIdentity(allData);
+                allData = DataBaseProc.generate_unique_cellID(allData, fileType);
 
                 // The 'allData' variable now holds a list of all the relevant rows
 

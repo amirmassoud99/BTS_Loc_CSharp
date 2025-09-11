@@ -29,6 +29,43 @@ namespace BTS_Location_Estimation
 {
     public static class DataBaseProc
     {
+        /***************************************************************************************************
+        *
+        *   Function:       generate_unique_cellID
+        *
+        *   Description:    For NR file types, updates the cellId value for each row by combining cellId and beamIndex:
+        *                   cellId = cellId * 100 + beamIndex. For other file types, cellId remains unchanged.
+        *
+        *   Input:          allData (List<Dictionary<string, string>>) - The full list of extracted data.
+        *                   fileType (int) - The file type code.
+        *
+        *   Output:         The updated list with unique cellId values for NR files.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 11, 2025
+        *
+        ***************************************************************************************************/
+        public static List<Dictionary<string, string>> generate_unique_cellID(List<Dictionary<string, string>> allData, int fileType)
+        {
+            if (allData == null || allData.Count == 0) return allData!;
+            // Only update for NR file types
+            if (fileType == NR_TOPN_FILE_TYPE || fileType == NR_FILE_TYPE || fileType == NR_TOPN_FILE_TYPE * 10 || fileType == NR_FILE_TYPE * 10)
+            {
+                foreach (var row in allData)
+                {
+                    if (row.TryGetValue("cellId", out var cellIdStr) &&
+                        row.TryGetValue("beamIndex", out var beamIndexStr) &&
+                        int.TryParse(cellIdStr, out int cellId) &&
+                        int.TryParse(beamIndexStr, out int beamIndex))
+                    {
+                        row["cellId"] = (cellId * 100 + beamIndex).ToString();
+                    }
+                }
+            }
+            return allData!;
+        }
+    
         public const int LTE_TOPN_FILE_TYPE = 1;
         public const int LTE_BLIND_FILE_TYPE = 2;
         public const int NR_TOPN_FILE_TYPE = 3;
