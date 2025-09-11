@@ -30,10 +30,63 @@ namespace BTS_Location_Estimation
         *   Date:           September 10, 2025
         *
         ***************************************************************************************************/
-        public static List<Dictionary<string, string>> Confidence_and_Filtering(List<Dictionary<string, string>> data)
+        public static List<Dictionary<string, string>> Confidence_and_Filtering(List<Dictionary<string, string>> data, string? filterType = null, string? filterValue = null)
         {
             if (data == null) return new List<Dictionary<string, string>>();
-            return data.Where(row => !row.GetValueOrDefault("Confidence", "Low").Equals("Low", StringComparison.OrdinalIgnoreCase)).ToList();
+
+            // Step 1: Filter out entries where Confidence is "Low"
+            var confidenceFilteredData = data
+                .Where(row => !row.GetValueOrDefault("Confidence", "Low")!.Equals("Low", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (string.IsNullOrEmpty(filterType) || !confidenceFilteredData.Any())
+            {
+                return confidenceFilteredData;
+            }
+
+            // Step 2: Determine the key to filter on
+            string filterKey;
+            if (filterType.Equals("channel", StringComparison.OrdinalIgnoreCase))
+            {
+                filterKey = "Channel";
+            }
+            else if (filterType.Equals("mcc", StringComparison.OrdinalIgnoreCase))
+            {
+                filterKey = "mcc";
+            }
+            else
+            {
+                return confidenceFilteredData; // Unrecognized filterType
+            }
+
+            // Step 3: Apply filtering
+            if (!string.IsNullOrEmpty(filterValue))
+            {
+                // Filter by the specific value provided
+                return confidenceFilteredData
+                    .Where(row => row.GetValueOrDefault(filterKey) == filterValue)
+                    .ToList();
+            }
+            else
+            {
+                // Original logic: filter by the most common value
+                var mostCommonValue = confidenceFilteredData
+                    .Select(row => row.GetValueOrDefault(filterKey))
+                    .Where(val => !string.IsNullOrWhiteSpace(val))
+                    .GroupBy(val => val)
+                    .OrderByDescending(g => g.Count())
+                    .Select(g => g.Key)
+                    .FirstOrDefault();
+
+                if (mostCommonValue == null)
+                {
+                    return confidenceFilteredData;
+                }
+
+                return confidenceFilteredData
+                    .Where(row => row.GetValueOrDefault(filterKey) == mostCommonValue)
+                    .ToList();
+            }
         }
 
         /***************************************************************************************************

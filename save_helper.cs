@@ -590,7 +590,7 @@ namespace BTS_Location_Estimation
             }
 
             // --- Step 2: Filter out entries with Confidence == "Low" ---
-            allRows = DataBaseProc.Confidence_and_Filtering(allRows);
+           var filteredData = DataBaseProc.Confidence_and_Filtering(allRows, "channel", "658080");
 
             // --- Step 3: Cluster the filtered data ---
             var clusterEntries = DataBaseProc.DBSCAN_Cluster(allRows, 0.5, 4);
