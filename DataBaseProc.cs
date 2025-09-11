@@ -1,3 +1,25 @@
+    /***************************************************************************************************
+    *
+    *   Function:       Expand_mcc_mnc_cellIdentity
+    *
+    *   Description:    For each channel/cellId pair, expands mcc/mnc and cellIdentity fields.
+    *                   - mcc/mnc expansion: For each group, finds the first non-blank/non-zero mcc/mnc
+    *                     and copies those values to all rows in the group (static propagation).
+    *                   - cellIdentity expansion: Sequentially propagates the latest non-blank cellIdentity
+    *                     value forward through the group. If a new non-blank cellIdentity is encountered,
+    *                     it is used for all subsequent rows until another new value is found (dynamic, sequential propagation).
+    *                   This ensures that mcc/mnc are unified for each group, while cellIdentity tracks changes
+    *                   and propagates them as they appear in the data.
+    *
+    *   Input:          allData (List<Dictionary<string, string>>) - The full list of extracted data.
+    *
+    *   Output:         The updated list with expanded mcc, mnc, and cellIdentity fields.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 11, 2025
+    *
+    ***************************************************************************************************/
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -842,7 +864,7 @@ namespace BTS_Location_Estimation
             }
             return clusterEntries;
         }
-        public static List<Dictionary<string, string>> Expand_mcc_mnc(List<Dictionary<string, string>> allData)
+        public static List<Dictionary<string, string>> Expand_mcc_mnc_cellIdentity(List<Dictionary<string, string>> allData)
         {
             if (allData == null || allData.Count == 0) return allData!;
             // Group by channel and cellId
@@ -852,7 +874,7 @@ namespace BTS_Location_Estimation
             });
             foreach (var group in groups)
             {
-                // Find first non-blank/non-zero mcc/mnc
+                // Expand mcc/mnc as before
                 var refRow = group.FirstOrDefault(r =>
                     r.TryGetValue("mcc", out var mcc) && !string.IsNullOrWhiteSpace(mcc) && mcc != "0" &&
                     r.TryGetValue("mnc", out var mnc) && !string.IsNullOrWhiteSpace(mnc) && mnc != "0"
@@ -865,6 +887,21 @@ namespace BTS_Location_Estimation
                     {
                         row["mcc"] = mcc;
                         row["mnc"] = mnc;
+                    }
+                }
+
+                // Sequentially expand cellIdentity
+                string lastCellIdentity = "";
+                foreach (var row in group)
+                {
+                    var cellIdentity = row.GetValueOrDefault("cellIdentity", "");
+                    if (!string.IsNullOrWhiteSpace(cellIdentity))
+                    {
+                        lastCellIdentity = cellIdentity;
+                    }
+                    if (!string.IsNullOrWhiteSpace(lastCellIdentity))
+                    {
+                        row["cellIdentity"] = lastCellIdentity;
                     }
                 }
             }

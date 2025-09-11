@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>map_ch630720_Gflex Device 032201005_NR_FR1 TDD n77_Blind Scan SCS Autodetect</name>
+    <name>map_ch5330_Gflex Device 019999090_LTE_EB 14  Upper 700-D Block DL_Blind Scan</name>
     <Style id="blue_pin_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/></IconStyle></Style>
     <Style id="blue_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href></Icon><hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/></IconStyle></Style>
     <Style id="green_pin_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/grn-pushpin.png</href></Icon><hotSpot x="20" y="2" xunits="pixels" yunits="pixels"/></IconStyle></Style>
@@ -13,23 +13,83 @@
     <Style id="red_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon><hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/></IconStyle></Style>
     <Style id="yellow_balloon_style"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/ylw-circle.png</href></Icon><hotSpot x="32" y="1" xunits="pixels" yunits="pixels"/></IconStyle></Style>
     <Placemark>
-      <name>539</name>
+      <name>84</name>
       <description>
-        <![CDATA[Cell ID: 539, Beam: 0<br/>Cell Identity: <br/>Confidence: High]]>
+        <![CDATA[Cell ID: 84, Beam: <br/>Cell Identity: 17992663<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.292772,39.207521,0</coordinates>
+        <coordinates>-77.238141,39.212074,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
-      <name>275</name>
+      <name>485</name>
       <description>
-        <![CDATA[Cell ID: 275, Beam: 4<br/>Cell Identity: 25907866678<br/>Confidence: High]]>
+        <![CDATA[Cell ID: 485, Beam: <br/>Cell Identity: 17992665<br/>Confidence: High]]>
       </description>
       <styleUrl>#red_balloon_style</styleUrl>
       <Point>
-        <coordinates>-77.269654,39.186170,0</coordinates>
+        <coordinates>-77.241476,39.212372,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>147</name>
+      <description>
+        <![CDATA[Cell ID: 147, Beam: <br/>Cell Identity: 18514135<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.285101,39.229266,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>260</name>
+      <description>
+        <![CDATA[Cell ID: 260, Beam: <br/>Cell Identity: 18514136-1850000<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.280616,39.221342,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>464</name>
+      <description>
+        <![CDATA[Cell ID: 464, Beam: <br/>Cell Identity: 18514137<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.290930,39.222997,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>461</name>
+      <description>
+        <![CDATA[Cell ID: 461, Beam: <br/>Cell Identity: 18625496<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.255068,39.198921,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>76</name>
+      <description>
+        <![CDATA[Cell ID: 76, Beam: <br/>Cell Identity: 18625498<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.271936,39.197982,0</coordinates>
+      </Point>
+    </Placemark>
+    <Placemark>
+      <name>292</name>
+      <description>
+        <![CDATA[Cell ID: 292, Beam: <br/>Cell Identity: 19252696<br/>Confidence: High]]>
+      </description>
+      <styleUrl>#red_balloon_style</styleUrl>
+      <Point>
+        <coordinates>-77.287079,39.230494,0</coordinates>
       </Point>
     </Placemark>
   </Document>
