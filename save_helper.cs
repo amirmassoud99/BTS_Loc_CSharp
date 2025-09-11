@@ -551,7 +551,7 @@ namespace BTS_Location_Estimation
             }
         }
 
-        public static void ClusterProcessing()
+        public static void ClusterProcessing(string? filterType = null, string? filterValue = null)
         {
             string[] estimateFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "Estimate*.csv");
             string outputFile = "ALL_Estimate.csv";
@@ -590,7 +590,7 @@ namespace BTS_Location_Estimation
             }
 
             // --- Step 2: Filter out entries with Confidence == "Low" ---
-           var filteredData = DataBaseProc.Confidence_and_Filtering(allRows, "channel", "658080");
+           var filteredData = DataBaseProc.Confidence_and_Filtering(allRows, filterType, filterValue);
 
             // --- Step 3: Cluster the filtered data ---
             var clusterEntries = DataBaseProc.DBSCAN_Cluster(filteredData, 0.5, 4);
