@@ -541,14 +541,18 @@ namespace BTS_Location_Estimation
             string cellId = group[0]["CellId"];
             string cellIdentity = group[0]["cellIdentity"];
 
-            // Concatenate beam indices
+            // Concatenate beam indices, mnc, and mcc
             string combinedBeamIndex = string.Join("/", group.Select(d => d.GetValueOrDefault("BeamIndex", "")));
+            string combinedMnc = string.Join("/", group.Select(d => d.GetValueOrDefault("mnc", "")));
+            string combinedMcc = string.Join("/", group.Select(d => d.GetValueOrDefault("mcc", "")));
 
             var newEstimate = new Dictionary<string, string>
             {
                 { "Channel", group[0]["Channel"] },
                 { "CellId", cellId },
                 { "BeamIndex", combinedBeamIndex },
+                { "mnc", combinedMnc },
+                { "mcc", combinedMcc },
                 { "Type", "Tower" },
                 { "cellIdentity", cellIdentity },
                 { "xhat1", "0" },
@@ -593,6 +597,8 @@ namespace BTS_Location_Estimation
             }
 
             string beamIndexValue = ""; // Default to empty
+            string combinedMnc = string.Join("/", group.Select(d => d.GetValueOrDefault("mnc", "")));
+            string combinedMcc = string.Join("/", group.Select(d => d.GetValueOrDefault("mcc", "")));
             if (isNrFile)
             {
                 beamIndexValue = string.Join("/", group.Select(d => d.GetValueOrDefault("BeamIndex", "")));
@@ -603,6 +609,8 @@ namespace BTS_Location_Estimation
                 { "Channel", group[0]["Channel"] },
                 { "CellId", combinedCellId },
                 { "BeamIndex", beamIndexValue },
+                { "mnc", combinedMnc },
+                { "mcc", combinedMcc },
                 { "Type", "Tower" },
                 { "cellIdentity", combinedCellIdentity },
                 { "xhat1", "0" },
@@ -742,6 +750,8 @@ namespace BTS_Location_Estimation
                 entry["BeamIndex"] = string.Join("/", cluster.Select(p => p.GetValueOrDefault("BeamIndex", "")));
                 entry["Type"] = "cluster entry";
                 entry["cellIdentity"] = string.Join("/", cluster.Select(p => p.GetValueOrDefault("cellIdentity", "")));
+                entry["mnc"] = string.Join("/", cluster.Select(p => p.GetValueOrDefault("mnc", "")));
+                entry["mcc"] = string.Join("/", cluster.Select(p => p.GetValueOrDefault("mcc", "")));
                 entry["xhat1"] = "0";
                 entry["yhat1"] = "0";
                 entry["xhat2"] = "0";

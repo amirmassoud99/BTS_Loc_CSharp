@@ -49,7 +49,7 @@ namespace BTS_Location_Estimation
             // Define the core headers in the desired order.
             var headers = new List<string>
             {
-                "Channel", "CellId", "cellIdentity", "xhat1", "yhat1", "xhat2", "yhat2",
+                "Channel", "CellId", "cellIdentity", "mnc", "mcc", "xhat1", "yhat1", "xhat2", "yhat2",
                 "est_Lat1", "est_Lon1", "est_Lat2", "est_Lon2", "Max_cinr", "Num_points", "Confidence"
             };
 
@@ -555,7 +555,7 @@ namespace BTS_Location_Estimation
         {
             string[] estimateFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "Estimate*.csv");
             string outputFile = "ALL_Estimate.csv";
-            string header = "Technology,Channel,CellId,BeamIndex,Type,cellIdentity,xhat1,yhat1,xhat2,yhat2,est_Lat1,est_Lon1,est_Lat2,est_Lon2,Max_cinr,Num_points,Confidence";
+            string header = "Technology,Channel,CellId,BeamIndex,Type,cellIdentity,mnc,mcc,xhat1,yhat1,xhat2,yhat2,est_Lat1,est_Lon1,est_Lat2,est_Lon2,Max_cinr,Num_points,Confidence";
             var allRows = new List<Dictionary<string, string>>();
             using (var writer = new StreamWriter(outputFile))
             {
@@ -605,7 +605,7 @@ namespace BTS_Location_Estimation
 
         public static void save_cluster(string inputFile = "ALL_Estimate.csv", string outputFile = "ALL_map.csv")
         {
-            var headers = new List<string> { "Latitude", "Longitude", "CellID", "CellIdentity", "BeamIndex", "Type" };
+            var headers = new List<string> { "Latitude", "Longitude", "CellID", "CellIdentity", "mnc", "mcc", "BeamIndex", "Type" };
             var rows = new List<Dictionary<string, string>>();
             using (var reader = new StreamReader(inputFile))
             using (var writer = new StreamWriter(outputFile))
@@ -616,6 +616,8 @@ namespace BTS_Location_Estimation
                 int lonIdx = Array.IndexOf(allHeaders, "est_Lon2");
                 int cellIdIdx = Array.IndexOf(allHeaders, "CellId");
                 int cellIdentityIdx = Array.IndexOf(allHeaders, "cellIdentity");
+                int mncIdx = Array.IndexOf(allHeaders, "mnc");
+                int mccIdx = Array.IndexOf(allHeaders, "mcc");
                 int beamIdxIdx = Array.IndexOf(allHeaders, "BeamIndex");
                 int typeIdx = Array.IndexOf(allHeaders, "Type");
                 while (reader.ReadLine() is string lineNotNull)
@@ -627,6 +629,8 @@ namespace BTS_Location_Estimation
                         lonIdx >= 0 ? cols[lonIdx] : "",
                         cellIdIdx >= 0 ? cols[cellIdIdx] : "",
                         cellIdentityIdx >= 0 ? cols[cellIdentityIdx] : "",
+                        mncIdx >= 0 ? cols[mncIdx] : "",
+                        mccIdx >= 0 ? cols[mccIdx] : "",
                         beamIdxIdx >= 0 ? cols[beamIdxIdx] : "",
                         typeIdx >= 0 ? cols[typeIdx] : ""
                     };
@@ -638,6 +642,8 @@ namespace BTS_Location_Estimation
                         {"Longitude", lonIdx >= 0 ? cols[lonIdx] : ""},
                         {"CellID", cellIdIdx >= 0 ? cols[cellIdIdx] : ""},
                         {"CellIdentity", cellIdentityIdx >= 0 ? cols[cellIdentityIdx] : ""},
+                        {"mnc", mncIdx >= 0 ? cols[mncIdx] : ""},
+                        {"mcc", mccIdx >= 0 ? cols[mccIdx] : ""},
                         {"BeamIndex", beamIdxIdx >= 0 ? cols[beamIdxIdx] : ""},
                         {"Type", typeIdx >= 0 ? cols[typeIdx] : ""}
                     };
@@ -705,6 +711,8 @@ namespace BTS_Location_Estimation
                     string lon = row.GetValueOrDefault("Longitude", "");
                     string cellId = row.GetValueOrDefault("CellID", "");
                     string cellIdentity = row.GetValueOrDefault("CellIdentity", "");
+                    string mnc = row.GetValueOrDefault("mnc", "");
+                    string mcc = row.GetValueOrDefault("mcc", "");
                     string beamIndex = row.GetValueOrDefault("BeamIndex", "");
                     string type = row.GetValueOrDefault("Type", "");
                     string styleUrl = "";
@@ -715,7 +723,7 @@ namespace BTS_Location_Estimation
                         // Pushpin, color by cluster
                         var clusterId = cellId + "_" + beamIndex;
                         styleUrl = clusterColors.ContainsKey(clusterId) ? clusterColors[clusterId].pin : "#blue_pin_style";
-                        desc = $"<![CDATA[Cluster: {cellId}<br/>Beam: {beamIndex}<br/>CellIdentity: {cellIdentity}]]>";
+                        desc = $"<![CDATA[Cluster: {cellId}<br/>Beam: {beamIndex}<br/>CellIdentity: {cellIdentity}<br/>MNC: {mnc}<br/>MCC: {mcc}]]>";
                     }
                     else if (type == "Sector")
                     {
@@ -729,19 +737,19 @@ namespace BTS_Location_Estimation
                         {
                             styleUrl = "#red_balloon_style";
                         }
-                        desc = $"<![CDATA[Sector: {cellId}<br/>Beam: {beamIndex}<br/>CellIdentity: {cellIdentity}]]>";
+                        desc = $"<![CDATA[Sector: {cellId}<br/>Beam: {beamIndex}<br/>CellIdentity: {cellIdentity}<br/>MNC: {mnc}<br/>MCC: {mcc}]]>";
                     }
                     else
                     {
                         styleUrl = "#red_balloon_style";
-                        desc = $"<![CDATA[{type}: {cellId}<br/>Beam: {beamIndex}<br/>CellIdentity: {cellIdentity}]]>";
+                        desc = $"<![CDATA[{type}: {cellId}<br/>Beam: {beamIndex}<br/>CellIdentity: {cellIdentity}<br/>MNC: {mnc}<br/>MCC: {mcc}]]>";
                     }
                     writer.WriteLine("    <Placemark>");
                     writer.WriteLine($"      <name>{name}</name>");
                     writer.WriteLine("      <description>");
                     writer.WriteLine($"        {desc}");
                     writer.WriteLine("      </description>");
-                    writer.WriteLine($"      <styleUrl>{styleUrl}</styleUrl>");
+                    writer.WriteLine($"      <styleUrl>{styleUrl}");
                     writer.WriteLine("      <Point>");
                     writer.WriteLine($"        <coordinates>{lon},{lat},0</coordinates>");
                     writer.WriteLine("      </Point>");

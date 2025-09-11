@@ -511,18 +511,24 @@ namespace BTS_Location_Estimation
                 { "Channel", group.Key.Channel },
                 { "CellId", group.Key.CellId },
                 { "cellIdentity", combinedCellIdentity },
-                { "xhat1", xhat1.ToString("F4", CultureInfo.InvariantCulture) },
-                { "yhat1", yhat1.ToString("F4", CultureInfo.InvariantCulture) },
-                { "xhat2", xhat2.ToString("F4", CultureInfo.InvariantCulture) },
-                { "yhat2", yhat2.ToString("F4", CultureInfo.InvariantCulture) },
-                { "est_Lat1", est_Lat1.ToString("F6", CultureInfo.InvariantCulture) },
-                { "est_Lon1", est_Lon1.ToString("F6", CultureInfo.InvariantCulture) },
-                { "est_Lat2", est_Lat2.ToString("F6", CultureInfo.InvariantCulture) },
-                { "est_Lon2", est_Lon2.ToString("F6", CultureInfo.InvariantCulture) },
-                { "Max_cinr", maxCinr.ToString("F2", CultureInfo.InvariantCulture) },
-                { "Num_points", timeAdjustedPoints.Count.ToString() },
-                { "Confidence", confidence }
             };
+            // Add mnc and mcc after cellIdentity
+            var mnc = group.Select(p => p.ContainsKey("mnc") ? p["mnc"] : "").Distinct().ToList();
+            var mcc = group.Select(p => p.ContainsKey("mcc") ? p["mcc"] : "").Distinct().ToList();
+            resultDict["mnc"] = string.Join("/", mnc);
+            resultDict["mcc"] = string.Join("/", mcc);
+            // Add remaining fields
+            resultDict["xhat1"] = xhat1.ToString("F4", CultureInfo.InvariantCulture);
+            resultDict["yhat1"] = yhat1.ToString("F4", CultureInfo.InvariantCulture);
+            resultDict["xhat2"] = xhat2.ToString("F4", CultureInfo.InvariantCulture);
+            resultDict["yhat2"] = yhat2.ToString("F4", CultureInfo.InvariantCulture);
+            resultDict["est_Lat1"] = est_Lat1.ToString("F6", CultureInfo.InvariantCulture);
+            resultDict["est_Lon1"] = est_Lon1.ToString("F6", CultureInfo.InvariantCulture);
+            resultDict["est_Lat2"] = est_Lat2.ToString("F6", CultureInfo.InvariantCulture);
+            resultDict["est_Lon2"] = est_Lon2.ToString("F6", CultureInfo.InvariantCulture);
+            resultDict["Max_cinr"] = maxCinr.ToString("F2", CultureInfo.InvariantCulture);
+            resultDict["Num_points"] = timeAdjustedPoints.Count.ToString();
+            resultDict["Confidence"] = confidence;
             estimationResults.Add(resultDict);
         }
     }

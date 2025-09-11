@@ -217,6 +217,7 @@ namespace BTS_Location_Estimation
 
             // Define keywords based on file type
             string cellIdKeyword = "", cellIdentityKeyword = "", channelKeyword = "", cinrKeyword = "", beamIndexKeyword = "", latKeyword = "Latitude", lonKeyword = "Longitude", rssiKeyword = "", timeOffsetKeyword = "";
+            string mncKeyword = "", mccKeyword = "";
             switch (fileType)
             {
                 case LTE_TOPN_FILE_TYPE: // LTE eTOPN Scan (.csv)
@@ -225,6 +226,8 @@ namespace BTS_Location_Estimation
                     cinrKeyword = "Ref Signal - CINR";
                     rssiKeyword = "Carrier RSSI Antenna Port 0";
                     timeOffsetKeyword = "Ref Signal - Timeoffset";
+                    mncKeyword = "mnc";
+                    mccKeyword = "mcc";
                     break;
                 case LTE_TOPN_FILE_TYPE*10: // LTE eTOPN Scan (.dtr)
                     cellIdKeyword = "Cell ID";
@@ -232,6 +235,8 @@ namespace BTS_Location_Estimation
                     cinrKeyword = "Ref Signal - CINR";
                     rssiKeyword = "Carrier RSSI Antenna Port 0";
                     timeOffsetKeyword = "Ref Signal - Timeoffset";
+                    mncKeyword = "mnc";
+                    mccKeyword = "mcc";
                     break;
 
                 case LTE_BLIND_FILE_TYPE: // LTE Blind Scan (.csv)
@@ -241,6 +246,8 @@ namespace BTS_Location_Estimation
                     cinrKeyword = "Ref Signal - CINR";
                     rssiKeyword = "Channel RSSI";
                     timeOffsetKeyword = "Ref Signal - Timeoffset";
+                    mncKeyword = "mnc";
+                    mccKeyword = "mcc";
                     break;
                 case LTE_BLIND_FILE_TYPE*10: // LTE Blind Scan (.dtr)
                     cellIdKeyword = "Cell Id";
@@ -249,6 +256,8 @@ namespace BTS_Location_Estimation
                     cinrKeyword = "RS_CINR";
                     rssiKeyword = "Channel RSSI";
                     timeOffsetKeyword = "RS_TimeOffset";
+                    mncKeyword = "mnc";
+                    mccKeyword = "mcc";
                     break;
 
                 case NR_TOPN_FILE_TYPE*10: // NR TopN Scan (.dtr)
@@ -259,6 +268,8 @@ namespace BTS_Location_Estimation
                     beamIndexKeyword = "Beam Index";
                     rssiKeyword = "SSB RSSI";
                     timeOffsetKeyword = "Time Offset";
+                    mncKeyword = "mnc";
+                    mccKeyword = "mcc";
                     break;
                 case NR_FILE_TYPE * 10: // NR Blind Scan (.dtr)
                     cellIdKeyword = "Cell Id";
@@ -268,6 +279,8 @@ namespace BTS_Location_Estimation
                     beamIndexKeyword = "Beam Index";
                     rssiKeyword = "Channel RSSI";
                     timeOffsetKeyword = "Time Offset";
+                    mncKeyword = "mnc";
+                    mccKeyword = "mcc";
                     break;
 
                 case WCDMA_FILE_TYPE_CSV: // WCDMA (.csv)
@@ -277,6 +290,8 @@ namespace BTS_Location_Estimation
                     cinrKeyword = "Ec/Io";
                     rssiKeyword = "Channel RSSI";
                     timeOffsetKeyword = "TimeOffset";//DTR code
+                    mncKeyword = "mnc";
+                    mccKeyword = "mcc";
                     break;
                 case WCDMA_FILE_TYPE_DTR: // WCDMA (.dtr)
                     cellIdKeyword = "Pilot";
@@ -285,6 +300,8 @@ namespace BTS_Location_Estimation
                     cinrKeyword = "Ec/Io";
                     rssiKeyword = "Channel RSSI";
                     timeOffsetKeyword = "TimeOffset";//DTR code
+                    mncKeyword = "mnc";
+                    mccKeyword = "mcc";
                     break;
 
                 case GSM_FILE_TYPE:
@@ -294,12 +311,16 @@ namespace BTS_Location_Estimation
                     cinrKeyword = "CTOI";
                     rssiKeyword = "Channel RSSI";
                     timeOffsetKeyword = "HRTOA";
+                    mncKeyword = "mnc";
+                    mccKeyword = "mcc";
                     break;
 
                 default: // Fallback for other types if needed
                     Console.WriteLine($"File type {fileType} not fully configured for extraction. Using defaults.");
                     cellIdKeyword = "Cell ID";
                     cinrKeyword = "Ref Signal - CINR";
+                    mncKeyword = "mnc";
+                    mccKeyword = "mcc";
                     break;
             }
 
@@ -334,7 +355,9 @@ namespace BTS_Location_Estimation
                 int cinrIndex = headers.FindIndex(h => h.Equals(cinrKeyword, StringComparison.OrdinalIgnoreCase));
                 int beamIndexCol = !string.IsNullOrEmpty(beamIndexKeyword) ? headers.FindIndex(h => h.Equals(beamIndexKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
                 int rssiIndex = !string.IsNullOrEmpty(rssiKeyword) ? headers.FindIndex(h => h.Equals(rssiKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
-                
+                int mncIndex = !string.IsNullOrEmpty(mncKeyword) ? headers.FindIndex(h => h.Equals(mncKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
+                int mccIndex = !string.IsNullOrEmpty(mccKeyword) ? headers.FindIndex(h => h.Equals(mccKeyword, StringComparison.OrdinalIgnoreCase)) : -1;
+
                 int timeOffsetIndex = -1;
                 if (!string.IsNullOrEmpty(timeOffsetKeyword))
                 {
@@ -389,6 +412,16 @@ namespace BTS_Location_Estimation
                     if (cellIdentityIndex != -1 && !string.IsNullOrWhiteSpace(values[cellIdentityIndex]))
                     {
                         genericRow["cellIdentity"] = values[cellIdentityIndex];
+                    }
+
+                    // Extract mnc and mcc if present
+                    if (mncIndex != -1 && mncIndex < values.Count && !string.IsNullOrWhiteSpace(values[mncIndex]))
+                    {
+                        genericRow["mnc"] = values[mncIndex];
+                    }
+                    if (mccIndex != -1 && mccIndex < values.Count && !string.IsNullOrWhiteSpace(values[mccIndex]))
+                    {
+                        genericRow["mcc"] = values[mccIndex];
                     }
 
                     // Handle Cell ID and Beam Index combination for all NR file types
