@@ -593,6 +593,8 @@ namespace BTS_Location_Estimation
                         allRows.Add(rowDict);
                     }
                 }
+                // Filter out entries with Confidence == "Low"
+                allRows = DataBaseProc.Confidence_and_Filtering(allRows);
                 // Cluster and append cluster entries
                 var clusterEntries = DataBaseProc.DBSCAN_Cluster(allRows, 0.5, 4);
                 foreach (var entry in clusterEntries)

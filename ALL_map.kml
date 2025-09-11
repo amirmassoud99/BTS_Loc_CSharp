@@ -14,7 +14,7 @@
     <Placemark>
       <name>485</name>
       <description>
-        <![CDATA[Sector: 485<br/>Beam: <br/>CellIdentity: 17992599<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 485<br/>Beam: <br/>CellIdentity: 17992599<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -24,7 +24,7 @@
     <Placemark>
       <name>308</name>
       <description>
-        <![CDATA[Sector: 308<br/>Beam: <br/>CellIdentity: 18071445<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 308<br/>Beam: <br/>CellIdentity: 18071445<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#green_balloon_style
       <Point>
@@ -34,7 +34,7 @@
     <Placemark>
       <name>6</name>
       <description>
-        <![CDATA[Sector: 6<br/>Beam: <br/>CellIdentity: 18498453<br/>MNC: /410;100<br/>MCC: /310;313]]>
+        <![CDATA[Sector: 6<br/>Beam: <br/>CellIdentity: 18498453<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -44,7 +44,7 @@
     <Placemark>
       <name>484</name>
       <description>
-        <![CDATA[Sector: 484<br/>Beam: <br/>CellIdentity: 18498454<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 484<br/>Beam: <br/>CellIdentity: 18498454<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -54,7 +54,7 @@
     <Placemark>
       <name>395</name>
       <description>
-        <![CDATA[Sector: 395<br/>Beam: <br/>CellIdentity: 18498455<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 395<br/>Beam: <br/>CellIdentity: 18498455<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -74,7 +74,7 @@
     <Placemark>
       <name>260</name>
       <description>
-        <![CDATA[Sector: 260<br/>Beam: <br/>CellIdentity: 18514070<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 260<br/>Beam: <br/>CellIdentity: 18514070<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#purple_balloon_style
       <Point>
@@ -84,7 +84,7 @@
     <Placemark>
       <name>461</name>
       <description>
-        <![CDATA[Sector: 461<br/>Beam: <br/>CellIdentity: 18625430<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 461<br/>Beam: <br/>CellIdentity: 18625430<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -94,7 +94,7 @@
     <Placemark>
       <name>426</name>
       <description>
-        <![CDATA[Sector: 426<br/>Beam: <br/>CellIdentity: 18625431<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 426<br/>Beam: <br/>CellIdentity: 18625431<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -114,7 +114,7 @@
     <Placemark>
       <name>485</name>
       <description>
-        <![CDATA[Sector: 485<br/>Beam: <br/>CellIdentity: 17992472<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 485<br/>Beam: <br/>CellIdentity: 17992472<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -124,7 +124,7 @@
     <Placemark>
       <name>308</name>
       <description>
-        <![CDATA[Sector: 308<br/>Beam: <br/>CellIdentity: 18071318<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 308<br/>Beam: <br/>CellIdentity: 18071318<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#green_balloon_style
       <Point>
@@ -134,7 +134,7 @@
     <Placemark>
       <name>6</name>
       <description>
-        <![CDATA[Sector: 6<br/>Beam: <br/>CellIdentity: 18498326<br/>MNC: /410;100<br/>MCC: /310;313]]>
+        <![CDATA[Sector: 6<br/>Beam: <br/>CellIdentity: 18498326<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -144,7 +144,7 @@
     <Placemark>
       <name>395</name>
       <description>
-        <![CDATA[Sector: 395<br/>Beam: <br/>CellIdentity: 18498328<br/>MNC: /410;100<br/>MCC: /310;313]]>
+        <![CDATA[Sector: 395<br/>Beam: <br/>CellIdentity: 18498328<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -164,7 +164,7 @@
     <Placemark>
       <name>260</name>
       <description>
-        <![CDATA[Sector: 260<br/>Beam: <br/>CellIdentity: 18513943<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 260<br/>Beam: <br/>CellIdentity: 18513943<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#purple_balloon_style
       <Point>
@@ -174,7 +174,7 @@
     <Placemark>
       <name>461</name>
       <description>
-        <![CDATA[Sector: 461<br/>Beam: <br/>CellIdentity: 18625303<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 461<br/>Beam: <br/>CellIdentity: 18625303<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -184,7 +184,7 @@
     <Placemark>
       <name>426</name>
       <description>
-        <![CDATA[Sector: 426<br/>Beam: <br/>CellIdentity: 18625304<br/>MNC: /410;100<br/>MCC: /310;313]]>
+        <![CDATA[Sector: 426<br/>Beam: <br/>CellIdentity: 18625304<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -194,7 +194,7 @@
     <Placemark>
       <name>76</name>
       <description>
-        <![CDATA[Sector: 76<br/>Beam: <br/>CellIdentity: 18625305<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 76<br/>Beam: <br/>CellIdentity: 18625305<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#red_balloon_style
       <Point>
@@ -214,7 +214,7 @@
     <Placemark>
       <name>167</name>
       <description>
-        <![CDATA[Sector: 167<br/>Beam: <br/>CellIdentity: 27143456<br/>MNC: 480/<br/>MCC: 311/]]>
+        <![CDATA[Sector: 167<br/>Beam: <br/>CellIdentity: 27143456<br/>MNC: 480<br/>MCC: 311]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -224,7 +224,7 @@
     <Placemark>
       <name>204</name>
       <description>
-        <![CDATA[Sector: 204<br/>Beam: <br/>CellIdentity: 27189772<br/>MNC: 480/<br/>MCC: 311/]]>
+        <![CDATA[Sector: 204<br/>Beam: <br/>CellIdentity: 27189772<br/>MNC: 480<br/>MCC: 311]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -234,7 +234,7 @@
     <Placemark>
       <name>205</name>
       <description>
-        <![CDATA[Sector: 205<br/>Beam: <br/>CellIdentity: 27189782<br/>MNC: 480/<br/>MCC: 311/]]>
+        <![CDATA[Sector: 205<br/>Beam: <br/>CellIdentity: 27189782<br/>MNC: 480<br/>MCC: 311]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -244,7 +244,7 @@
     <Placemark>
       <name>206</name>
       <description>
-        <![CDATA[Sector: 206<br/>Beam: <br/>CellIdentity: 27189792<br/>MNC: 480/<br/>MCC: 311/]]>
+        <![CDATA[Sector: 206<br/>Beam: <br/>CellIdentity: 27189792<br/>MNC: 480<br/>MCC: 311]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -254,7 +254,7 @@
     <Placemark>
       <name>363</name>
       <description>
-        <![CDATA[Sector: 363<br/>Beam: <br/>CellIdentity: 27193612<br/>MNC: 480/<br/>MCC: 311/]]>
+        <![CDATA[Sector: 363<br/>Beam: <br/>CellIdentity: 27193612<br/>MNC: 480<br/>MCC: 311]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -264,7 +264,7 @@
     <Placemark>
       <name>364</name>
       <description>
-        <![CDATA[Sector: 364<br/>Beam: <br/>CellIdentity: 27193622<br/>MNC: 480/<br/>MCC: 311/]]>
+        <![CDATA[Sector: 364<br/>Beam: <br/>CellIdentity: 27193622<br/>MNC: 480<br/>MCC: 311]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -274,7 +274,7 @@
     <Placemark>
       <name>365</name>
       <description>
-        <![CDATA[Sector: 365<br/>Beam: <br/>CellIdentity: 27193632<br/>MNC: 480/<br/>MCC: 311/]]>
+        <![CDATA[Sector: 365<br/>Beam: <br/>CellIdentity: 27193632<br/>MNC: 480<br/>MCC: 311]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -284,7 +284,7 @@
     <Placemark>
       <name>393</name>
       <description>
-        <![CDATA[Sector: 393<br/>Beam: <br/>CellIdentity: 27196940<br/>MNC: /480<br/>MCC: /311]]>
+        <![CDATA[Sector: 393<br/>Beam: <br/>CellIdentity: 27196940<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#green_balloon_style
       <Point>
@@ -294,7 +294,7 @@
     <Placemark>
       <name>48</name>
       <description>
-        <![CDATA[Sector: 48<br/>Beam: <br/>CellIdentity: 27215116<br/>MNC: 480/<br/>MCC: 311/]]>
+        <![CDATA[Sector: 48<br/>Beam: <br/>CellIdentity: 27215116<br/>MNC: 480<br/>MCC: 311]]>
       </description>
       <styleUrl>#purple_balloon_style
       <Point>
@@ -304,7 +304,7 @@
     <Placemark>
       <name>49</name>
       <description>
-        <![CDATA[Sector: 49<br/>Beam: <br/>CellIdentity: 27215126<br/>MNC: 480/<br/>MCC: 311/]]>
+        <![CDATA[Sector: 49<br/>Beam: <br/>CellIdentity: 27215126<br/>MNC: 480<br/>MCC: 311]]>
       </description>
       <styleUrl>#purple_balloon_style
       <Point>
@@ -314,7 +314,7 @@
     <Placemark>
       <name>468</name>
       <description>
-        <![CDATA[Sector: 468<br/>Beam: <br/>CellIdentity: 11544321<br/>MNC: 260/<br/>MCC: 310/]]>
+        <![CDATA[Sector: 468<br/>Beam: <br/>CellIdentity: 11544321<br/>MNC: 260<br/>MCC: 310]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -324,7 +324,7 @@
     <Placemark>
       <name>469</name>
       <description>
-        <![CDATA[Sector: 469<br/>Beam: <br/>CellIdentity: 11544322<br/>MNC: 260/<br/>MCC: 310/]]>
+        <![CDATA[Sector: 469<br/>Beam: <br/>CellIdentity: 11544322<br/>MNC: 260<br/>MCC: 310]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -334,7 +334,7 @@
     <Placemark>
       <name>470</name>
       <description>
-        <![CDATA[Sector: 470<br/>Beam: <br/>CellIdentity: 11544323<br/>MNC: 260/<br/>MCC: 310/]]>
+        <![CDATA[Sector: 470<br/>Beam: <br/>CellIdentity: 11544323<br/>MNC: 260<br/>MCC: 310]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -344,7 +344,7 @@
     <Placemark>
       <name>349</name>
       <description>
-        <![CDATA[Sector: 349<br/>Beam: <br/>CellIdentity: 12410882<br/>MNC: /260<br/>MCC: /310]]>
+        <![CDATA[Sector: 349<br/>Beam: <br/>CellIdentity: 12410882<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#green_balloon_style
       <Point>
@@ -354,7 +354,7 @@
     <Placemark>
       <name>350</name>
       <description>
-        <![CDATA[Sector: 350<br/>Beam: <br/>CellIdentity: 12410883<br/>MNC: 260/<br/>MCC: 310/]]>
+        <![CDATA[Sector: 350<br/>Beam: <br/>CellIdentity: 12410883<br/>MNC: 260<br/>MCC: 310]]>
       </description>
       <styleUrl>#green_balloon_style
       <Point>
@@ -364,7 +364,7 @@
     <Placemark>
       <name>329</name>
       <description>
-        <![CDATA[Sector: 329<br/>Beam: <br/>CellIdentity: 223996929<br/>MNC: 260/<br/>MCC: 310/]]>
+        <![CDATA[Sector: 329<br/>Beam: <br/>CellIdentity: 223996929<br/>MNC: 260<br/>MCC: 310]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -374,7 +374,7 @@
     <Placemark>
       <name>435</name>
       <description>
-        <![CDATA[Sector: 435<br/>Beam: <br/>CellIdentity: 223996930<br/>MNC: 260/<br/>MCC: 310/]]>
+        <![CDATA[Sector: 435<br/>Beam: <br/>CellIdentity: 223996930<br/>MNC: 260<br/>MCC: 310]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -384,7 +384,7 @@
     <Placemark>
       <name>311</name>
       <description>
-        <![CDATA[Sector: 311<br/>Beam: <br/>CellIdentity: 224497409<br/>MNC: 260/<br/>MCC: 310/]]>
+        <![CDATA[Sector: 311<br/>Beam: <br/>CellIdentity: 224497409<br/>MNC: 260<br/>MCC: 310]]>
       </description>
       <styleUrl>#purple_balloon_style
       <Point>
@@ -394,7 +394,7 @@
     <Placemark>
       <name>39</name>
       <description>
-        <![CDATA[Sector: 39<br/>Beam: <br/>CellIdentity: 224497410<br/>MNC: 260/<br/>MCC: 310/]]>
+        <![CDATA[Sector: 39<br/>Beam: <br/>CellIdentity: 224497410<br/>MNC: 260<br/>MCC: 310]]>
       </description>
       <styleUrl>#purple_balloon_style
       <Point>
@@ -404,7 +404,7 @@
     <Placemark>
       <name>307</name>
       <description>
-        <![CDATA[Sector: 307<br/>Beam: <br/>CellIdentity: 224497411<br/>MNC: 260/<br/>MCC: 310/]]>
+        <![CDATA[Sector: 307<br/>Beam: <br/>CellIdentity: 224497411<br/>MNC: 260<br/>MCC: 310]]>
       </description>
       <styleUrl>#purple_balloon_style
       <Point>
@@ -414,7 +414,7 @@
     <Placemark>
       <name>485</name>
       <description>
-        <![CDATA[Sector: 485<br/>Beam: <br/>CellIdentity: 17992672<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 485<br/>Beam: <br/>CellIdentity: 17992672<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -424,7 +424,7 @@
     <Placemark>
       <name>308</name>
       <description>
-        <![CDATA[Sector: 308<br/>Beam: <br/>CellIdentity: 18071518<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 308<br/>Beam: <br/>CellIdentity: 18071518<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#green_balloon_style
       <Point>
@@ -434,7 +434,7 @@
     <Placemark>
       <name>6</name>
       <description>
-        <![CDATA[Sector: 6<br/>Beam: <br/>CellIdentity: 18498531<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 6<br/>Beam: <br/>CellIdentity: 18498531<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -444,7 +444,7 @@
     <Placemark>
       <name>484</name>
       <description>
-        <![CDATA[Sector: 484<br/>Beam: <br/>CellIdentity: 18498532<br/>MNC: /410;100<br/>MCC: /310;313]]>
+        <![CDATA[Sector: 484<br/>Beam: <br/>CellIdentity: 18498532<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -454,7 +454,7 @@
     <Placemark>
       <name>395</name>
       <description>
-        <![CDATA[Sector: 395<br/>Beam: <br/>CellIdentity: 18498533<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 395<br/>Beam: <br/>CellIdentity: 18498533<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -474,7 +474,7 @@
     <Placemark>
       <name>260</name>
       <description>
-        <![CDATA[Sector: 260<br/>Beam: <br/>CellIdentity: 18514143<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 260<br/>Beam: <br/>CellIdentity: 18514143<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#purple_balloon_style
       <Point>
@@ -484,7 +484,7 @@
     <Placemark>
       <name>461</name>
       <description>
-        <![CDATA[Sector: 461<br/>Beam: <br/>CellIdentity: 18625503<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 461<br/>Beam: <br/>CellIdentity: 18625503<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -494,7 +494,7 @@
     <Placemark>
       <name>426</name>
       <description>
-        <![CDATA[Sector: 426<br/>Beam: <br/>CellIdentity: 18625504<br/>MNC: 410;100/<br/>MCC: 310;313/]]>
+        <![CDATA[Sector: 426<br/>Beam: <br/>CellIdentity: 18625504<br/>MNC: 410;100<br/>MCC: 310;313]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -516,7 +516,7 @@
       <description>
         <![CDATA[Sector: 319<br/>Beam: <br/>CellIdentity: 27172636<br/>MNC: 480<br/>MCC: 311]]>
       </description>
-      <styleUrl>#blue_balloon_style
+      <styleUrl>#red_balloon_style
       <Point>
         <coordinates>-77.253494,39.201595,0</coordinates>
       </Point>
@@ -534,7 +534,7 @@
     <Placemark>
       <name>275</name>
       <description>
-        <![CDATA[Sector: 275<br/>Beam: 4<br/>CellIdentity: 25907866678<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 275<br/>Beam: 4<br/>CellIdentity: 25907866678<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -544,7 +544,7 @@
     <Placemark>
       <name>376</name>
       <description>
-        <![CDATA[Sector: 376<br/>Beam: 0<br/>CellIdentity: 25796176946<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 376<br/>Beam: 0<br/>CellIdentity: 25796176946<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#red_balloon_style
       <Point>
@@ -554,7 +554,7 @@
     <Placemark>
       <name>205</name>
       <description>
-        <![CDATA[Sector: 205<br/>Beam: 3<br/>CellIdentity: 17516137978<br/>MNC: 311/<br/>MCC: 480/]]>
+        <![CDATA[Sector: 205<br/>Beam: 3<br/>CellIdentity: 17516137978<br/>MNC: 311<br/>MCC: 480]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -564,7 +564,7 @@
     <Placemark>
       <name>206</name>
       <description>
-        <![CDATA[Sector: 206<br/>Beam: 3<br/>CellIdentity: 17516137994<br/>MNC: /311<br/>MCC: /480]]>
+        <![CDATA[Sector: 206<br/>Beam: 3<br/>CellIdentity: 17516137994<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -574,7 +574,7 @@
     <Placemark>
       <name>167</name>
       <description>
-        <![CDATA[Sector: 167<br/>Beam: 3<br/>CellIdentity: 17516168250<br/>MNC: /311<br/>MCC: /480]]>
+        <![CDATA[Sector: 167<br/>Beam: 3<br/>CellIdentity: 17516168250<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -584,7 +584,7 @@
     <Placemark>
       <name>393</name>
       <description>
-        <![CDATA[Sector: 393<br/>Beam: 3<br/>CellIdentity: 17516169050<br/>MNC: /311<br/>MCC: /480]]>
+        <![CDATA[Sector: 393<br/>Beam: 3<br/>CellIdentity: 17516169050<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#green_balloon_style
       <Point>
@@ -594,7 +594,7 @@
     <Placemark>
       <name>363</name>
       <description>
-        <![CDATA[Sector: 363<br/>Beam: 3<br/>CellIdentity: 17516184394<br/>MNC: 311/<br/>MCC: 480/]]>
+        <![CDATA[Sector: 363<br/>Beam: 3<br/>CellIdentity: 17516184394<br/>MNC: 311<br/>MCC: 480]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -604,7 +604,7 @@
     <Placemark>
       <name>364</name>
       <description>
-        <![CDATA[Sector: 364<br/>Beam: 3<br/>CellIdentity: 17516184410<br/>MNC: 311/<br/>MCC: 480/]]>
+        <![CDATA[Sector: 364<br/>Beam: 3<br/>CellIdentity: 17516184410<br/>MNC: 311<br/>MCC: 480]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -614,7 +614,7 @@
     <Placemark>
       <name>365</name>
       <description>
-        <![CDATA[Sector: 365<br/>Beam: 3<br/>CellIdentity: 17516184426<br/>MNC: /311<br/>MCC: /480]]>
+        <![CDATA[Sector: 365<br/>Beam: 3<br/>CellIdentity: 17516184426<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -624,7 +624,7 @@
     <Placemark>
       <name>48</name>
       <description>
-        <![CDATA[Sector: 48<br/>Beam: 3<br/>CellIdentity: 17516185018<br/>MNC: 311/<br/>MCC: 480/]]>
+        <![CDATA[Sector: 48<br/>Beam: 3<br/>CellIdentity: 17516185018<br/>MNC: 311<br/>MCC: 480]]>
       </description>
       <styleUrl>#purple_balloon_style
       <Point>
@@ -634,7 +634,7 @@
     <Placemark>
       <name>49</name>
       <description>
-        <![CDATA[Sector: 49<br/>Beam: 3<br/>CellIdentity: 17516185034<br/>MNC: /311<br/>MCC: /480]]>
+        <![CDATA[Sector: 49<br/>Beam: 3<br/>CellIdentity: 17516185034<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#purple_balloon_style
       <Point>
@@ -644,7 +644,7 @@
     <Placemark>
       <name>50</name>
       <description>
-        <![CDATA[Sector: 50<br/>Beam: 3<br/>CellIdentity: 17516185050<br/>MNC: 311/<br/>MCC: 480/]]>
+        <![CDATA[Sector: 50<br/>Beam: 3<br/>CellIdentity: 17516185050<br/>MNC: 311<br/>MCC: 480]]>
       </description>
       <styleUrl>#purple_balloon_style
       <Point>
@@ -654,7 +654,7 @@
     <Placemark>
       <name>205</name>
       <description>
-        <![CDATA[Sector: 205<br/>Beam: 3<br/>CellIdentity: 17516137979<br/>MNC: /311<br/>MCC: /480]]>
+        <![CDATA[Sector: 205<br/>Beam: 3<br/>CellIdentity: 17516137979<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -664,7 +664,7 @@
     <Placemark>
       <name>206</name>
       <description>
-        <![CDATA[Sector: 206<br/>Beam: 3<br/>CellIdentity: 17516137995<br/>MNC: /311<br/>MCC: /480]]>
+        <![CDATA[Sector: 206<br/>Beam: 3<br/>CellIdentity: 17516137995<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -674,7 +674,7 @@
     <Placemark>
       <name>167</name>
       <description>
-        <![CDATA[Sector: 167<br/>Beam: 3<br/>CellIdentity: 17516168251<br/>MNC: /311<br/>MCC: /480]]>
+        <![CDATA[Sector: 167<br/>Beam: 3<br/>CellIdentity: 17516168251<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -684,7 +684,7 @@
     <Placemark>
       <name>393</name>
       <description>
-        <![CDATA[Sector: 393<br/>Beam: 3<br/>CellIdentity: 17516169051<br/>MNC: /311<br/>MCC: /480]]>
+        <![CDATA[Sector: 393<br/>Beam: 3<br/>CellIdentity: 17516169051<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#green_balloon_style
       <Point>
@@ -694,7 +694,7 @@
     <Placemark>
       <name>363</name>
       <description>
-        <![CDATA[Sector: 363<br/>Beam: 3<br/>CellIdentity: 17516184395<br/>MNC: /311<br/>MCC: /480]]>
+        <![CDATA[Sector: 363<br/>Beam: 3<br/>CellIdentity: 17516184395<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -704,7 +704,7 @@
     <Placemark>
       <name>364</name>
       <description>
-        <![CDATA[Sector: 364<br/>Beam: 3<br/>CellIdentity: 17516184411<br/>MNC: /311<br/>MCC: /480]]>
+        <![CDATA[Sector: 364<br/>Beam: 3<br/>CellIdentity: 17516184411<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -714,7 +714,7 @@
     <Placemark>
       <name>365</name>
       <description>
-        <![CDATA[Sector: 365<br/>Beam: 3<br/>CellIdentity: 17516184427<br/>MNC: 311/<br/>MCC: 480/]]>
+        <![CDATA[Sector: 365<br/>Beam: 3<br/>CellIdentity: 17516184427<br/>MNC: 311<br/>MCC: 480]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -724,7 +724,7 @@
     <Placemark>
       <name>48</name>
       <description>
-        <![CDATA[Sector: 48<br/>Beam: 3<br/>CellIdentity: 17516185019<br/>MNC: 311/<br/>MCC: 480/]]>
+        <![CDATA[Sector: 48<br/>Beam: 3<br/>CellIdentity: 17516185019<br/>MNC: 311<br/>MCC: 480]]>
       </description>
       <styleUrl>#purple_balloon_style
       <Point>
@@ -734,7 +734,7 @@
     <Placemark>
       <name>49</name>
       <description>
-        <![CDATA[Sector: 49<br/>Beam: 3<br/>CellIdentity: 17516185035<br/>MNC: /311<br/>MCC: /480]]>
+        <![CDATA[Sector: 49<br/>Beam: 3<br/>CellIdentity: 17516185035<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#purple_balloon_style
       <Point>
@@ -756,7 +756,7 @@
       <description>
         <![CDATA[Sector: 210<br/>Beam: 1<br/>CellIdentity: <br/>MNC: <br/>MCC: ]]>
       </description>
-      <styleUrl>#purple_balloon_style
+      <styleUrl>#red_balloon_style
       <Point>
         <coordinates>-77.288610,39.226370,0</coordinates>
       </Point>
@@ -764,7 +764,7 @@
     <Placemark>
       <name>171</name>
       <description>
-        <![CDATA[Sector: 171<br/>Beam: 4<br/>CellIdentity: 25602821146<br/>MNC: 310;313/<br/>MCC: 410;100/]]>
+        <![CDATA[Sector: 171<br/>Beam: 4<br/>CellIdentity: 25602821146<br/>MNC: 310;313<br/>MCC: 410;100]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -774,7 +774,7 @@
     <Placemark>
       <name>171</name>
       <description>
-        <![CDATA[Sector: 171<br/>Beam: 3<br/>CellIdentity: 25602821146<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 171<br/>Beam: 3<br/>CellIdentity: 25602821146<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -784,7 +784,7 @@
     <Placemark>
       <name>171</name>
       <description>
-        <![CDATA[Sector: 171<br/>Beam: 1<br/>CellIdentity: 25602821146<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 171<br/>Beam: 1<br/>CellIdentity: 25602821146<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -794,7 +794,7 @@
     <Placemark>
       <name>171</name>
       <description>
-        <![CDATA[Sector: 171<br/>Beam: 0<br/>CellIdentity: 25602821146<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 171<br/>Beam: 0<br/>CellIdentity: 25602821146<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -804,7 +804,7 @@
     <Placemark>
       <name>171</name>
       <description>
-        <![CDATA[Sector: 171<br/>Beam: 2<br/>CellIdentity: 25602821146<br/>MNC: 310;313/<br/>MCC: 410;100/]]>
+        <![CDATA[Sector: 171<br/>Beam: 2<br/>CellIdentity: 25602821146<br/>MNC: 310;313<br/>MCC: 410;100]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -814,7 +814,7 @@
     <Placemark>
       <name>849</name>
       <description>
-        <![CDATA[Sector: 849<br/>Beam: 1<br/>CellIdentity: 25602821170<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 849<br/>Beam: 1<br/>CellIdentity: 25602821170<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -824,7 +824,7 @@
     <Placemark>
       <name>849</name>
       <description>
-        <![CDATA[Sector: 849<br/>Beam: 4<br/>CellIdentity: 25602821170<br/>MNC: 310;313/<br/>MCC: 410;100/]]>
+        <![CDATA[Sector: 849<br/>Beam: 4<br/>CellIdentity: 25602821170<br/>MNC: 310;313<br/>MCC: 410;100]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -834,7 +834,7 @@
     <Placemark>
       <name>849</name>
       <description>
-        <![CDATA[Sector: 849<br/>Beam: 0<br/>CellIdentity: 25602821170<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 849<br/>Beam: 0<br/>CellIdentity: 25602821170<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -844,7 +844,7 @@
     <Placemark>
       <name>849</name>
       <description>
-        <![CDATA[Sector: 849<br/>Beam: 2<br/>CellIdentity: 25602821170<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 849<br/>Beam: 2<br/>CellIdentity: 25602821170<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -854,7 +854,7 @@
     <Placemark>
       <name>849</name>
       <description>
-        <![CDATA[Sector: 849<br/>Beam: 3<br/>CellIdentity: 25602821170<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 849<br/>Beam: 3<br/>CellIdentity: 25602821170<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -864,7 +864,7 @@
     <Placemark>
       <name>849</name>
       <description>
-        <![CDATA[Sector: 849<br/>Beam: 5<br/>CellIdentity: 25602821170<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 849<br/>Beam: 5<br/>CellIdentity: 25602821170<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -874,7 +874,7 @@
     <Placemark>
       <name>322</name>
       <description>
-        <![CDATA[Sector: 322<br/>Beam: 3<br/>CellIdentity: 25602821198<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 322<br/>Beam: 3<br/>CellIdentity: 25602821198<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -884,7 +884,7 @@
     <Placemark>
       <name>322</name>
       <description>
-        <![CDATA[Sector: 322<br/>Beam: 1<br/>CellIdentity: 25602821198<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 322<br/>Beam: 1<br/>CellIdentity: 25602821198<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -894,7 +894,7 @@
     <Placemark>
       <name>322</name>
       <description>
-        <![CDATA[Sector: 322<br/>Beam: 4<br/>CellIdentity: 25602821198<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 322<br/>Beam: 4<br/>CellIdentity: 25602821198<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -904,7 +904,7 @@
     <Placemark>
       <name>322</name>
       <description>
-        <![CDATA[Sector: 322<br/>Beam: 0<br/>CellIdentity: 25602821198<br/>MNC: 310;313/<br/>MCC: 410;100/]]>
+        <![CDATA[Sector: 322<br/>Beam: 0<br/>CellIdentity: 25602821198<br/>MNC: 310;313<br/>MCC: 410;100]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -914,7 +914,7 @@
     <Placemark>
       <name>322</name>
       <description>
-        <![CDATA[Sector: 322<br/>Beam: 2<br/>CellIdentity: 25602821198<br/>MNC: 310;313/<br/>MCC: 410;100/]]>
+        <![CDATA[Sector: 322<br/>Beam: 2<br/>CellIdentity: 25602821198<br/>MNC: 310;313<br/>MCC: 410;100]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -924,7 +924,7 @@
     <Placemark>
       <name>322</name>
       <description>
-        <![CDATA[Sector: 322<br/>Beam: 5<br/>CellIdentity: 25602821198<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 322<br/>Beam: 5<br/>CellIdentity: 25602821198<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -934,7 +934,7 @@
     <Placemark>
       <name>558</name>
       <description>
-        <![CDATA[Sector: 558<br/>Beam: 0<br/>CellIdentity: 25602821222<br/>MNC: 310;313/<br/>MCC: 410;100/]]>
+        <![CDATA[Sector: 558<br/>Beam: 0<br/>CellIdentity: 25602821222<br/>MNC: 310;313<br/>MCC: 410;100]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -944,7 +944,7 @@
     <Placemark>
       <name>558</name>
       <description>
-        <![CDATA[Sector: 558<br/>Beam: 3<br/>CellIdentity: 25602821222<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 558<br/>Beam: 3<br/>CellIdentity: 25602821222<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -954,7 +954,7 @@
     <Placemark>
       <name>558</name>
       <description>
-        <![CDATA[Sector: 558<br/>Beam: 1<br/>CellIdentity: 25602821222<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 558<br/>Beam: 1<br/>CellIdentity: 25602821222<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -964,7 +964,7 @@
     <Placemark>
       <name>558</name>
       <description>
-        <![CDATA[Sector: 558<br/>Beam: 4<br/>CellIdentity: 25602821222<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 558<br/>Beam: 4<br/>CellIdentity: 25602821222<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -974,7 +974,7 @@
     <Placemark>
       <name>558</name>
       <description>
-        <![CDATA[Sector: 558<br/>Beam: 5<br/>CellIdentity: 25602821222<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 558<br/>Beam: 5<br/>CellIdentity: 25602821222<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -984,7 +984,7 @@
     <Placemark>
       <name>558</name>
       <description>
-        <![CDATA[Sector: 558<br/>Beam: 2<br/>CellIdentity: 25602821222<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 558<br/>Beam: 2<br/>CellIdentity: 25602821222<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#blue_balloon_style
       <Point>
@@ -994,7 +994,7 @@
     <Placemark>
       <name>77</name>
       <description>
-        <![CDATA[Sector: 77<br/>Beam: 0<br/>CellIdentity: 25693970463<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 77<br/>Beam: 0<br/>CellIdentity: 25693970463<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -1004,7 +1004,7 @@
     <Placemark>
       <name>495</name>
       <description>
-        <![CDATA[Sector: 495<br/>Beam: 0<br/>CellIdentity: 25694089293<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 495<br/>Beam: 0<br/>CellIdentity: 25694089293<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#red_balloon_style
       <Point>
@@ -1014,7 +1014,7 @@
     <Placemark>
       <name>856</name>
       <description>
-        <![CDATA[Sector: 856<br/>Beam: 0<br/>CellIdentity: 25694473248<br/>MNC: 310;313/<br/>MCC: 410;100/]]>
+        <![CDATA[Sector: 856<br/>Beam: 0<br/>CellIdentity: 25694473248<br/>MNC: 310;313<br/>MCC: 410;100]]>
       </description>
       <styleUrl>#red_balloon_style
       <Point>
@@ -1024,7 +1024,7 @@
     <Placemark>
       <name>178</name>
       <description>
-        <![CDATA[Sector: 178<br/>Beam: 0<br/>CellIdentity: 25694473272<br/>MNC: 310;313/<br/>MCC: 410;100/]]>
+        <![CDATA[Sector: 178<br/>Beam: 0<br/>CellIdentity: 25694473272<br/>MNC: 310;313<br/>MCC: 410;100]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -1034,7 +1034,7 @@
     <Placemark>
       <name>395</name>
       <description>
-        <![CDATA[Sector: 395<br/>Beam: 0<br/>CellIdentity: 25694473297<br/>MNC: /310;313<br/>MCC: /410;100]]>
+        <![CDATA[Sector: 395<br/>Beam: 0<br/>CellIdentity: 25694473297<br/>MNC: <br/>MCC: ]]>
       </description>
       <styleUrl>#ltblu_balloon_style
       <Point>
@@ -1044,7 +1044,7 @@
     <Placemark>
       <name>485/485/167/485/167/849/167</name>
       <description>
-        <![CDATA[Cluster: 485/485/167/485/167/849/167<br/>Beam: ////3/2/3<br/>CellIdentity: 17992599/17992472/27143456/17992672/17516168251/25602821170/17516168250<br/>MNC: 410;100//410;100//480//410;100///311//310;313//311<br/>MCC: 310;313//310;313//311//310;313///480//410;100//480]]>
+        <![CDATA[Cluster: 485/485/167/485/167/849/167<br/>Beam: ////3/2/3<br/>CellIdentity: 17992599/17992472/27143456/17992672/17516168251/25602821170/17516168250<br/>MNC: 410;100/410;100/480/410;100///<br/>MCC: 310;313/310;313/311/310;313///]]>
       </description>
       <styleUrl>#blue_pin_style
       <Point>
@@ -1054,7 +1054,7 @@
     <Placemark>
       <name>308/308/393/308/393/393/322/350/349</name>
       <description>
-        <![CDATA[Cluster: 308/308/393/308/393/393/322/350/349<br/>Beam: ////3/3/3//<br/>CellIdentity: 18071445/18071318/27196940/18071518/17516169050/17516169051/25602821198/12410883/12410882<br/>MNC: 410;100//410;100///480/410;100///311//311//310;313/260///260<br/>MCC: 310;313//310;313///311/310;313///480//480//410;100/310///310]]>
+        <![CDATA[Cluster: 308/308/393/308/393/393/322/350/349<br/>Beam: ////3/3/3//<br/>CellIdentity: 18071445/18071318/27196940/18071518/17516169050/17516169051/25602821198/12410883/12410882<br/>MNC: 410;100/410;100//410;100////260/<br/>MCC: 310;313/310;313//310;313////310/]]>
       </description>
       <styleUrl>#green_pin_style
       <Point>
@@ -1064,7 +1064,7 @@
     <Placemark>
       <name>6/395/6/395/363/364/365/329/435/6/484/395/363/363/77/178/395/364/484</name>
       <description>
-        <![CDATA[Cluster: 6/395/6/395/363/364/365/329/435/6/484/395/363/363/77/178/395/364/484<br/>Beam: ////////////3/3/0/0/0/3/<br/>CellIdentity: 18498453/18498455/18498326/18498328/27193612/27193622/27193632/223996929/223996930/18498531/18498532/18498533/17516184394/17516184395/25693970463/25694473272/25694473297/17516184410/18498454<br/>MNC: /410;100/410;100///410;100//410;100/480//480//480//260//260//410;100///410;100/410;100//311///311//310;313/310;313///310;313/311//410;100/<br/>MCC: /310;313/310;313///310;313//310;313/311//311//311//310//310//310;313///310;313/310;313//480///480//410;100/410;100///410;100/480//310;313/]]>
+        <![CDATA[Cluster: 6/395/6/395/363/364/365/329/435/6/484/395/363/363/77/178/395/364/484<br/>Beam: ////////////3/3/0/0/0/3/<br/>CellIdentity: 18498453/18498455/18498326/18498328/27193612/27193622/27193632/223996929/223996930/18498531/18498532/18498533/17516184394/17516184395/25693970463/25694473272/25694473297/17516184410/18498454<br/>MNC: /410;100///480/480/480/260/260/410;100//410;100/311///310;313//311/410;100<br/>MCC: /310;313///311/311/311/310/310/310;313//310;313/480///410;100//480/310;313]]>
       </description>
       <styleUrl>#ltblu_pin_style
       <Point>
@@ -1072,23 +1072,23 @@
       </Point>
     </Placemark>
     <Placemark>
-      <name>147/260/292/147/260/292/48/49/311/39/307/147/260/292/48/49/50/48/49/210</name>
+      <name>147/260/292/147/260/292/48/49/311/39/307/147/260/292/48/49/50/48/49</name>
       <description>
-        <![CDATA[Cluster: 147/260/292/147/260/292/48/49/311/39/307/147/260/292/48/49/50/48/49/210<br/>Beam: //////////////3/3/3/3/3/1<br/>CellIdentity: 18514069/18514070/19252630/18513942/18513943/19252503/27215116/27215126/224497409/224497410/224497411/18514142/18514143/19252703/17516185018/17516185034/17516185050/17516185019/17516185035/<br/>MNC: 410;100/410;100//410;100/410;100/410;100//410;100/480//480//260//260//260//410;100/410;100//410;100/311///311/311//311///311/<br/>MCC: 310;313/310;313//310;313/310;313/310;313//310;313/311//311//310//310//310//310;313/310;313//310;313/480///480/480//480///480/]]>
+        <![CDATA[Cluster: 147/260/292/147/260/292/48/49/311/39/307/147/260/292/48/49/50/48/49<br/>Beam: //////////////3/3/3/3/3<br/>CellIdentity: 18514069/18514070/19252630/18513942/18513943/19252503/27215116/27215126/224497409/224497410/224497411/18514142/18514143/19252703/17516185018/17516185034/17516185050/17516185019/17516185035<br/>MNC: 410;100/410;100/410;100/410;100/410;100/410;100/480/480/260/260/260/410;100/410;100/410;100/311//311/311/<br/>MCC: 310;313/310;313/310;313/310;313/310;313/310;313/311/311/310/310/310/310;313/310;313/310;313/480//480/480/]]>
       </description>
       <styleUrl>#purple_pin_style
       <Point>
-        <coordinates>-77.286459,39.229139,0</coordinates>
+        <coordinates>-77.286346,39.229285,0</coordinates>
       </Point>
     </Placemark>
     <Placemark>
-      <name>461/426/461/426/204/205/206/468/469/470/461/426/319/205/205/206/171/171/171/171/171/849/849/849/849/322/322/322/322/558/558/558/558/558/364/322/849/206/275</name>
+      <name>461/426/461/426/204/205/206/468/469/470/461/426/205/205/206/171/171/171/171/171/849/849/849/849/322/322/322/322/558/558/558/558/558/849/322/206/364/275</name>
       <description>
-        <![CDATA[Cluster: 461/426/461/426/204/205/206/468/469/470/461/426/319/205/205/206/171/171/171/171/171/849/849/849/849/322/322/322/322/558/558/558/558/558/364/322/849/206/275<br/>Beam: /////////////3/3/3/4/3/1/0/2/1/0/3/5/1/4/2/5/3/1/4/2/5/3/0/4/3/4<br/>CellIdentity: 18625430/18625431/18625303/18625304/27189772/27189782/27189792/11544321/11544322/11544323/18625503/18625504/27172636/17516137978/17516137979/17516137995/25602821146/25602821146/25602821146/25602821146/25602821146/25602821170/25602821170/25602821170/25602821170/25602821198/25602821198/25602821198/25602821198/25602821222/25602821222/25602821222/25602821222/25602821222/17516184411/25602821198/25602821170/17516137994/25907866678<br/>MNC: 410;100//410;100//410;100///410;100/480//480//480//260//260//260//410;100//410;100//480/311///311//311/310;313///310;313//310;313//310;313/310;313///310;313//310;313//310;313//310;313//310;313//310;313/310;313///310;313//310;313//310;313//310;313//310;313//310;313//311/310;313//310;313///311//310;313<br/>MCC: 310;313//310;313//310;313///310;313/311//311//311//310//310//310//310;313//310;313//311/480///480//480/410;100///410;100//410;100//410;100/410;100///410;100//410;100//410;100//410;100//410;100//410;100/410;100///410;100//410;100//410;100//410;100//410;100//410;100//480/410;100//410;100///480//410;100]]>
+        <![CDATA[Cluster: 461/426/461/426/204/205/206/468/469/470/461/426/205/205/206/171/171/171/171/171/849/849/849/849/322/322/322/322/558/558/558/558/558/849/322/206/364/275<br/>Beam: ////////////3/3/3/4/3/1/0/2/1/0/3/5/1/4/2/5/3/1/4/2/5/4/0/3/3/4<br/>CellIdentity: 18625430/18625431/18625303/18625304/27189772/27189782/27189792/11544321/11544322/11544323/18625503/18625504/17516137978/17516137979/17516137995/25602821146/25602821146/25602821146/25602821146/25602821146/25602821170/25602821170/25602821170/25602821170/25602821198/25602821198/25602821198/25602821198/25602821222/25602821222/25602821222/25602821222/25602821222/25602821170/25602821198/17516137994/17516184411/25907866678<br/>MNC: 410;100/410;100/410;100//480/480/480/260/260/260/410;100/410;100/311///310;313////310;313///////310;313///////310;313/310;313///<br/>MCC: 310;313/310;313/310;313//311/311/311/310/310/310/310;313/310;313/480///410;100////410;100///////410;100///////410;100/410;100///]]>
       </description>
       <styleUrl>#blue_pin_style
       <Point>
-        <coordinates>-77.259197,39.199757,0</coordinates>
+        <coordinates>-77.259347,39.199708,0</coordinates>
       </Point>
     </Placemark>
   </Document>

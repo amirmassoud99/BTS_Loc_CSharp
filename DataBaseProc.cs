@@ -17,6 +17,27 @@ namespace BTS_Location_Estimation
 
         /***************************************************************************************************
         *
+        *   Function:       Confidence_and_Filtering
+        *
+        *   Description:    Filters out entries where Confidence == "Low" from the input list.
+        *
+        *   Input:          data (List<Dictionary<string, string>>) - List of entries to filter.
+        *
+        *   Output:         List<Dictionary<string, string>> with entries of Confidence != "Low".
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 10, 2025
+        *
+        ***************************************************************************************************/
+        public static List<Dictionary<string, string>> Confidence_and_Filtering(List<Dictionary<string, string>> data)
+        {
+            if (data == null) return new List<Dictionary<string, string>>();
+            return data.Where(row => !row.GetValueOrDefault("Confidence", "Low").Equals("Low", StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        /***************************************************************************************************
+        *
         *   Function:       filter_cinr_minimum_PCI
         *
         *   Description:    Filters the extracted data based on three criteria:

@@ -513,10 +513,10 @@ namespace BTS_Location_Estimation
                 { "cellIdentity", combinedCellIdentity },
             };
             // Add mnc and mcc after cellIdentity
-            var mnc = group.Select(p => p.ContainsKey("mnc") ? p["mnc"] : "").Distinct().ToList();
-            var mcc = group.Select(p => p.ContainsKey("mcc") ? p["mcc"] : "").Distinct().ToList();
-            resultDict["mnc"] = string.Join("/", mnc);
-            resultDict["mcc"] = string.Join("/", mcc);
+            var mnc = group.Select(p => p.ContainsKey("mnc") ? p["mnc"] : "").FirstOrDefault();
+            var mcc = group.Select(p => p.ContainsKey("mcc") ? p["mcc"] : "").FirstOrDefault();
+            resultDict["mnc"] = mnc ?? "";
+            resultDict["mcc"] = mcc ?? "";
             // Add remaining fields
             resultDict["xhat1"] = xhat1.ToString("F4", CultureInfo.InvariantCulture);
             resultDict["yhat1"] = yhat1.ToString("F4", CultureInfo.InvariantCulture);
