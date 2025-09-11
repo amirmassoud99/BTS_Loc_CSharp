@@ -557,51 +557,63 @@ namespace BTS_Location_Estimation
             string outputFile = "ALL_Estimate.csv";
             string header = "Technology,Channel,CellId,BeamIndex,Type,cellIdentity,mnc,mcc,xhat1,yhat1,xhat2,yhat2,est_Lat1,est_Lon1,est_Lat2,est_Lon2,Max_cinr,Num_points,Confidence";
             var allRows = new List<Dictionary<string, string>>();
+            var headerColumns = header.Split(',');
+
+            // --- Step 1: Read all Estimate*.csv files into the allRows list ---
+            foreach (string file in estimateFiles)
+            {
+                string tech = "LTE";
+                if (file.Contains("_NR_")) tech = "NR";
+                else if (file.Contains("WCDMA")) tech = "WCDMA";
+                else if (file.Contains("ColorCode")) tech = "GSM";
+
+                var lines = File.ReadAllLines(file);
+                if (lines.Length <= 1) continue; // Skip empty or header-only files
+
+                var fileHeader = lines[0].Split(',');
+
+                for (int i = 1; i < lines.Length; i++) // skip header
+                {
+                    var columns = lines[i].Split(',');
+                    var rowDict = new Dictionary<string, string> { { "Technology", tech } };
+
+                    // Map columns from file to the master header
+                    for (int j = 0; j < fileHeader.Length; j++)
+                    {
+                        if (j < columns.Length)
+                        {
+                            rowDict[fileHeader[j]] = columns[j];
+                        }
+                    }
+                    allRows.Add(rowDict);
+                }
+            }
+
+            // --- Step 2: Filter out entries with Confidence == "Low" ---
+            allRows = DataBaseProc.Confidence_and_Filtering(allRows);
+
+            // --- Step 3: Cluster the filtered data ---
+            var clusterEntries = DataBaseProc.DBSCAN_Cluster(allRows, 0.5, 4);
+
+            // --- Step 4: Write the filtered data and cluster entries to ALL_Estimate.csv ---
             using (var writer = new StreamWriter(outputFile))
             {
                 writer.WriteLine(header);
-                foreach (string file in estimateFiles)
+                // Write filtered rows
+                foreach (var rowDict in allRows)
                 {
-                    string tech = "LTE";
-                    if (file.Contains("_NR_")) tech = "NR";
-                    else if (file.Contains("WCDMA")) tech = "WCDMA";
-                    else if (file.Contains("ColorCode")) tech = "GSM";
-                    var lines = File.ReadAllLines(file);
-                    var fileHeader = lines[0].Split(',');
-                    for (int i = 1; i < lines.Length; i++) // skip header
-                    {
-                        var columns = lines[i].Split(',');
-                        string[] rowArr;
-                        if (tech == "NR")
-                        {
-                            rowArr = new string[] { tech }.Concat(columns).ToArray();
-                        }
-                        else
-                        {
-                            rowArr = new string[] { tech }
-                                .Concat(columns.Take(2))
-                                .Concat(new string[] { "" })
-                                .Concat(columns.Skip(2)).ToArray();
-                        }
-                        writer.WriteLine(string.Join(",", rowArr));
-                        // Build dictionary for clustering
-                        var rowDict = new Dictionary<string, string>();
-                        for (int c = 0; c < header.Split(',').Length && c < rowArr.Length; c++)
-                        {
-                            rowDict[header.Split(',')[c]] = rowArr[c];
-                        }
-                        allRows.Add(rowDict);
-                    }
+                    var values = headerColumns.Select(h => rowDict.GetValueOrDefault(h, ""));
+                    writer.WriteLine(string.Join(",", values));
                 }
-                // Filter out entries with Confidence == "Low"
-                allRows = DataBaseProc.Confidence_and_Filtering(allRows);
-                // Cluster and append cluster entries
-                var clusterEntries = DataBaseProc.DBSCAN_Cluster(allRows, 0.5, 4);
+
+                // Write cluster entries
                 foreach (var entry in clusterEntries)
                 {
-                    writer.WriteLine(string.Join(",", header.Split(',').Select(h => entry.GetValueOrDefault(h, ""))));
+                    var values = headerColumns.Select(h => entry.GetValueOrDefault(h, ""));
+                    writer.WriteLine(string.Join(",", values));
                 }
             }
+
             Console.WriteLine("ALL_Estimate.csv created with Technology column and cluster entries.");
         }
 
