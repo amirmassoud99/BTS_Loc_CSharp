@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.41.0";
+        public const string SW_VERSION = "1.0.42.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -82,7 +82,7 @@ namespace BTS_Location_Estimation
 
                 // 1. Call ExtractChannelCellMap to get all standardized data rows
                 var allData = InputOutputFileProc.ExtractChannelCellMap(filename, fileType);
-                allData = InputOutputFileProc.Expand_mcc_mnc(allData);
+                allData = DataBaseProc.Expand_mcc_mnc(allData);
 
                 // The 'allData' variable now holds a list of all the relevant rows
                 // from the CSV, with standardized headers. You can now perform

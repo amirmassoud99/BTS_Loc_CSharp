@@ -567,34 +567,7 @@ namespace BTS_Location_Estimation
         /// </summary>
         /// <param name="allData">List of data rows</param>
         /// <returns>Updated allData</returns>
-        public static List<Dictionary<string, string>> Expand_mcc_mnc(List<Dictionary<string, string>> allData)
-        {
-            if (allData == null || allData.Count == 0) return allData!;
-            // Group by channel and cellId
-            var groups = allData.GroupBy(row => new {
-                Channel = row.GetValueOrDefault("channel", ""),
-                CellId = row.GetValueOrDefault("cellId", "")
-            });
-            foreach (var group in groups)
-            {
-                // Find first non-blank/non-zero mcc/mnc
-                var refRow = group.FirstOrDefault(r =>
-                    r.TryGetValue("mcc", out var mcc) && !string.IsNullOrWhiteSpace(mcc) && mcc != "0" &&
-                    r.TryGetValue("mnc", out var mnc) && !string.IsNullOrWhiteSpace(mnc) && mnc != "0"
-                );
-                if (refRow != null)
-                {
-                    var mcc = refRow["mcc"];
-                    var mnc = refRow["mnc"];
-                    foreach (var row in group)
-                    {
-                        row["mcc"] = mcc;
-                        row["mnc"] = mnc;
-                    }
-                }
-            }
-            return allData!;
-        }
+
     }
 }
 
