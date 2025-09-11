@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.43.0";
+        public const string SW_VERSION = "1.0.44.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -85,8 +85,7 @@ namespace BTS_Location_Estimation
                 allData = DataBaseProc.Expand_mcc_mnc_cellIdentity(allData);
 
                 // The 'allData' variable now holds a list of all the relevant rows
-                // from the CSV, with standardized headers. You can now perform
-                // grouping and processing directly on this list in memory.
+
                 Console.WriteLine($"Extracted {allData.Count} rows from {inputFilename}");
 
                 InputOutputFileProc.Save_Drive_Route(allData, inputFilename);

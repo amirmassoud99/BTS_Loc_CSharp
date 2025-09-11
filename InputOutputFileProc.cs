@@ -64,18 +64,18 @@ namespace BTS_Location_Estimation
 
             //Batch processing One time SIB1 for debugging.
 
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\7.0.2.4\20250813_Drive2-SIB1-onetime\";
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\7.0.2.4\20250813_Drive2-SIB1-onetime\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
 
                 "Gflex Device 019999090_LTE_EB 14  Upper 700-D Block DL_Blind Scan.dtr"
-                /*"Gflex Device 019999090_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",
+                "Gflex Device 019999090_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",
                 "Gflex Device 019999090_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.dtr",
                 "Gflex Device 019999090_NR_FR1 TDD n77_Blind Scan SCS Autodetect.dtr",
-                "Gflex Device 019999090_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr"*/
+                "Gflex Device 019999090_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr"
                 
-            };
+            };*/
 
 
             //dRIVE bts_5 att n77
@@ -87,27 +87,27 @@ namespace BTS_Location_Estimation
 
                 "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.DTR",
                 "Gflex Device 032201005_NR_FR1 TDD n77_Blind Scan SCS Autodetect.DTR",
-                "Gflex Device 032201005_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.DTR"
+                "Gflex Device 032201005_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.DTR",
                 "Gflex Device 032201005_NR_FR1 TDD n77_nr Top N Signal ARFCN  658080 - 3871.20 MHz SCS 30 kHz.dtr"
             };*/
             
 
             //Batch processing Drive 3_Washington DC
-            /*
-            string fileDirectory = @"C:\Users\amirsoltanian.PCTELUS\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\";
+            
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250827_DC-Detailed-Drive\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
-                "Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
-                "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
-                "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
-                "Gflex Device 032201005_LTE_EB 71 DL_Blind Scan.csv",
-                "Gflex Device 032201005_NR_FR1 FDD n25 DL_Blind Scan SCS Autodetect.csv",
-                "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
-                "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.csv",
-                "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz_Blind Scan.csv"
+                "Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.dtr",
+                "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.dtr",
+                "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",
+                "Gflex Device 032201005_LTE_EB 71 DL_Blind Scan.dtr",
+                "Gflex Device 032201005_NR_FR1 FDD n25 DL_Blind Scan SCS Autodetect.dtr",
+                "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.dtr",
+                "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr",
+                "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz_Blind Scan.dtr"
             };
-            */
+            
 
 
 

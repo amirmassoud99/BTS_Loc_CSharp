@@ -29,6 +29,8 @@
 
 # Output files
 *.csv
+*.dtr
+*.kml
 step1_*.csv
 step2_*.csv
 
