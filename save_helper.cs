@@ -590,13 +590,22 @@ namespace BTS_Location_Estimation
             }
         }
 
-        public static void ClusterProcessing(string? filterType = null, string? filterValue = null)
+    public static string ClusterProcessing(string? filterType = null, string? filterValue = null)
         {
             string[] estimateFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "Estimate*.csv");
-            string outputFile = "ALL_Estimate.csv";
             string header = "Technology,Channel,CellId,BeamIndex,Type,cellIdentity,mnc,mcc,xhat1,yhat1,xhat2,yhat2,est_Lat1,est_Lon1,est_Lat2,est_Lon2,Max_cinr,Num_points,Confidence";
             var allRows = new List<Dictionary<string, string>>();
             var headerColumns = header.Split(',');
+
+            // Determine output filename based on filter
+            string outputFile = "ALL_Estimate.csv";
+            string mapFile = "ALL_map.csv";
+            if (!string.IsNullOrWhiteSpace(filterType) && !string.IsNullOrWhiteSpace(filterValue))
+            {
+                string safeFilterValue = filterValue.Replace("/", "_").Replace(";", "_").Replace(",", ":");
+                outputFile = $"ALL_Estimate_{filterType}_{safeFilterValue}.csv";
+                mapFile = $"ALL_map_{filterType}_{safeFilterValue}.csv";
+            }
 
             // --- Step 1: Read all Estimate*.csv files into the allRows list ---
             foreach (string file in estimateFiles)
@@ -629,12 +638,12 @@ namespace BTS_Location_Estimation
             }
 
             // --- Step 2: Filter out entries with Confidence == "Low" ---
-           var filteredData = DataBaseProc.Confidence_and_Filtering(allRows, filterType, filterValue);
+            var filteredData = DataBaseProc.Confidence_and_Filtering(allRows, filterType, filterValue);
 
             // --- Step 3: Cluster the filtered data ---
             var clusterEntries = DataBaseProc.DBSCAN_Cluster(filteredData, 0.5, 4);
 
-            // --- Step 4: Write the filtered data and cluster entries to ALL_Estimate.csv ---
+            // --- Step 4: Write the filtered data and cluster entries to outputFile ---
             using (var writer = new StreamWriter(outputFile))
             {
                 writer.WriteLine(header);
@@ -653,15 +662,23 @@ namespace BTS_Location_Estimation
                 }
             }
 
-            Console.WriteLine("ALL_Estimate.csv created with Technology column and cluster entries.");
+            Console.WriteLine($"{outputFile} created with Technology column and cluster entries.");
+            // Return outputFile name for use in map_cluster
+            return outputFile;
         }
 
-        public static void save_cluster(string inputFile = "ALL_Estimate.csv", string outputFile = "ALL_map.csv")
+        public static void map_cluster(string inputFile = "ALL_Estimate.csv", string outputFile = "ALL_map.csv")
         {
+            // Build map file names by replacing 'Estimate' with 'map' in inputFile name
+            string inputFileName = Path.GetFileName(inputFile);
+            string mapCsvName = inputFileName.Replace("Estimate", "map");
+            mapCsvName = Path.ChangeExtension(mapCsvName, ".csv");
+            string mapKmlName = Path.ChangeExtension(mapCsvName, ".kml");
+
             var headers = new List<string> { "Latitude", "Longitude", "CellID", "CellIdentity", "mnc", "mcc", "BeamIndex", "Type" };
             var rows = new List<Dictionary<string, string>>();
             using (var reader = new StreamReader(inputFile))
-            using (var writer = new StreamWriter(outputFile))
+            using (var writer = new StreamWriter(mapCsvName))
             {
                 writer.WriteLine(string.Join(",", headers));
                 var allHeaders = reader.ReadLine()?.Split(',') ?? new string[0]; // Read header from ALL_Estimate.csv
@@ -703,9 +720,9 @@ namespace BTS_Location_Estimation
                     rows.Add(dict);
                 }
             }
-            Console.WriteLine("ALL_map.csv created from ALL_Estimate.csv.");
+            Console.WriteLine($"{mapCsvName} created from {inputFile}.");
             // Also generate KML
-            generate_all_map_kml(rows, Path.ChangeExtension(outputFile, ".kml"));
+            generate_all_map_kml(rows, mapKmlName);
         }
 
         // Helper to generate ALL_map.kml from the parsed rows

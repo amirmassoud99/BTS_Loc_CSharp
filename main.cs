@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.47.0";
+        public const string SW_VERSION = "1.0.48.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -157,10 +157,11 @@ namespace BTS_Location_Estimation
                 
             }
             Console.WriteLine("Batch processing complete.");
-            //SaveHelper.ClusterProcessing("channel", "658080");
-            //SaveHelper.ClusterProcessing("mcc", "310;313");
-            SaveHelper.ClusterProcessing();
-            SaveHelper.save_cluster();
+            // Example: Filter by mcc and save cluster results with filter in filename
+            string filterType = "mcc";
+            string filterValue = "310;313";
+            var outputFile = SaveHelper.ClusterProcessing(filterType, filterValue);
+            SaveHelper.map_cluster(outputFile);
         }
     }
 }
