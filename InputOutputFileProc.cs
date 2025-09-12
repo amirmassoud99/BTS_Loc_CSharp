@@ -98,14 +98,14 @@ namespace BTS_Location_Estimation
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
-                "Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.dtr"
-               /* "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.dtr",
+                "Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.dtr",
+                "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.dtr",
                 "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",
                 "Gflex Device 032201005_LTE_EB 71 DL_Blind Scan.dtr",
                 "Gflex Device 032201005_NR_FR1 FDD n25 DL_Blind Scan SCS Autodetect.dtr",
                 "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.dtr",
                 "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr",
-                "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz_Blind Scan.dtr"*/
+                "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz_Blind Scan.dtr"
             };
             
 

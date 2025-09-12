@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.47.0";
+        public const string SW_VERSION = "1.0.48.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -86,18 +86,18 @@ namespace BTS_Location_Estimation
                 // 1. Call ExtractChannelCellMap to get all standardized data rows
                 var allData = InputOutputFileProc.ExtractChannelCellMap(filename, fileType);
                 string step0Filename = $"step0_{filenameOnly}.csv";
-                SaveHelper.save_extrac_step1(allData, step0Filename);
+                //SaveHelper.save_extrac_step1(allData, step0Filename);
 
                 //2. Expand mcc, mnc, cellIdentity and generate unique cellID
                 allData = DataBaseProc.Expand_mcc_mnc_cellIdentity(allData);
-                SaveHelper.debug_csv(allData);
+                //SaveHelper.debug_csv(allData);
                 allData = DataBaseProc.generate_unique_cellID(allData, fileType);
-                SaveHelper.debug_csv(allData);
+                //SaveHelper.debug_csv(allData);
                 Console.WriteLine($"Extracted {allData.Count} rows from {inputFilename}");
                 InputOutputFileProc.Save_Drive_Route(allData, inputFilename);
                 
                 string step1Filename = $"step1_{filenameOnly}.csv";
-                SaveHelper.save_extrac_step1(allData, step1Filename);
+                //SaveHelper.save_extrac_step1(allData, step1Filename);
 
                 bool isWcdma = fileType == DataBaseProc.WCDMA_FILE_TYPE_CSV || fileType == DataBaseProc.WCDMA_FILE_TYPE_DTR;
                 double cinrThreshold = isWcdma ? EC_IO_THRESHOLD : CINR_THRESH;

@@ -8,10 +8,23 @@ namespace BTS_Location_Estimation
     
     public static class SaveHelper
     {
-        /// <summary>
-        /// Prints the content of allData for the following headers: lat, long, channel, cellid, beamindex, cellidentity, cinr.
-        /// </summary>
-        public static void debug_csv(List<Dictionary<string, string>> allData)
+    /***************************************************************************************************
+    *
+    *   Function:       debug_csv
+    *
+    *   Description:    Saves the content of allData to debug.csv using generic headers extracted from the first row.
+    *                   Prints a message if no data is available.
+    *
+    *   Input:          allData (List<Dictionary<string, string>>) - The full list of extracted data.
+    *
+    *   Output:         Writes debug.csv to disk with all rows and headers.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 12, 2025
+    *
+    ***************************************************************************************************/
+    public static void debug_csv(List<Dictionary<string, string>> allData)
         {
             if (allData == null || !allData.Any())
             {
@@ -33,6 +46,22 @@ namespace BTS_Location_Estimation
         }
 
         public static void DeleteOutputFiles(string directoryPath)
+    /***************************************************************************************************
+    *
+    *   Function:       DeleteOutputFiles
+    *
+    *   Description:    Deletes all .csv and .kml files in the specified directory.
+    *                   Prints the name of each deleted file and handles errors gracefully.
+    *
+    *   Input:          directoryPath (string) - The directory to clean up.
+    *
+    *   Output:         Deletes files and prints status messages.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 12, 2025
+    *
+    ***************************************************************************************************/
         {
             try
             {
@@ -56,6 +85,23 @@ namespace BTS_Location_Estimation
 
 
         public static void save_estimation_results(List<Dictionary<string, string>> estimationResults, string outputFilename)
+    /***************************************************************************************************
+    *
+    *   Function:       save_estimation_results
+    *
+    *   Description:    Saves estimation results to a CSV file, generates per-channel map files (CSV/KML),
+    *                   and dynamically adds optional columns if present.
+    *
+    *   Input:          estimationResults (List<Dictionary<string, string>>) - The estimation results to save.
+    *                   outputFilename (string) - The output CSV filename.
+    *
+    *   Output:         Writes results to outputFilename and generates map files per channel.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 12, 2025
+    *
+    ***************************************************************************************************/
         {
             if (!estimationResults.Any())
             {
@@ -317,6 +363,24 @@ namespace BTS_Location_Estimation
         }
 
         public static void save_extract_step3(List<Dictionary<string, string>> finalPoints, string outputFilename, double maxCinr)
+    /***************************************************************************************************
+    *
+    *   Function:       save_extract_step3
+    *
+    *   Description:    Saves the final, distance-filtered points for a single cell to a CSV file.
+    *                   Ensures all columns are correctly aligned, even if some rows are missing certain keys.
+    *
+    *   Input:          finalPoints (List<Dictionary<string, string>>) - The filtered points to save.
+    *                   outputFilename (string) - The output CSV filename.
+    *                   maxCinr (double) - The maximum CINR value for the cell.
+    *
+    *   Output:         Writes results to outputFilename and prints status.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 12, 2025
+    *
+    ***************************************************************************************************/
         {
             // This function saves the final, distance-filtered points for a single cell
             // to a CSV file. It ensures all columns are correctly aligned, even if some
@@ -349,6 +413,22 @@ namespace BTS_Location_Estimation
         }
 
         public static void save_extract_step2(List<Dictionary<string, string>> filteredData, string outputFilename)
+    /***************************************************************************************************
+    *
+    *   Function:       save_extract_step2
+    *
+    *   Description:    Groups filtered data by channel and cell ID, counts occurrences, sorts, and saves to CSV.
+    *
+    *   Input:          filteredData (List<Dictionary<string, string>>) - The filtered data to process.
+    *                   outputFilename (string) - The output CSV filename.
+    *
+    *   Output:         Writes grouped and counted results to outputFilename.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 12, 2025
+    *
+    ***************************************************************************************************/
         {
             // Group data by channel and cell ID, count occurrences, and sort
             var step2Data = filteredData
@@ -379,6 +459,23 @@ namespace BTS_Location_Estimation
         }
 
         public static void save_extrac_step1(List<Dictionary<string, string>> allData, string outputFilename)
+    /***************************************************************************************************
+    *
+    *   Function:       save_extrac_step1
+    *
+    *   Description:    Groups data by channel, cell ID, and beam index, counts occurrences, and saves to CSV.
+    *                   Also calculates max/min cellIdentity for each group.
+    *
+    *   Input:          allData (List<Dictionary<string, string>>) - The full list of extracted data.
+    *                   outputFilename (string) - The output CSV filename.
+    *
+    *   Output:         Writes grouped results to outputFilename.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 12, 2025
+    *
+    ***************************************************************************************************/
         {
             // Group data by channel, cell ID, and beam index and count occurrences
             var processedData = allData
@@ -431,6 +528,22 @@ namespace BTS_Location_Estimation
         }
 
         public static void save_debug_map(List<Dictionary<string, string>> results, string outputFilename)
+    /***************************************************************************************************
+    *
+    *   Function:       save_debug_map
+    *
+    *   Description:    Saves debug information for a specific channel and cell ID, including row numbers, to a CSV file.
+    *
+    *   Input:          results (List<Dictionary<string, string>>) - The data to process.
+    *                   outputFilename (string) - The output CSV filename.
+    *
+    *   Output:         Writes debug map to outputFilename.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 12, 2025
+    *
+    ***************************************************************************************************/
         {
             if (results == null || !results.Any())
             {
@@ -464,6 +577,25 @@ namespace BTS_Location_Estimation
         }
 
         public static void map_cellid(List<Dictionary<string, string>> allData, string channel, string cellId, string color)
+    /***************************************************************************************************
+    *
+    *   Function:       map_cellid
+    *
+    *   Description:    Generates CSV and KML map files for a specific channel and cell ID, using the specified color.
+    *                   Handles both LTE and NR sector/beam data.
+    *
+    *   Input:          allData (List<Dictionary<string, string>>) - The full list of extracted data.
+    *                   channel (string) - The channel to filter.
+    *                   cellId (string) - The cell ID to filter.
+    *                   color (string) - The color for KML styling.
+    *
+    *   Output:         Writes map CSV and KML files to disk.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 12, 2025
+    *
+    ***************************************************************************************************/
         {
             string baseOutputFilename = $"map_ch{channel}_cell{cellId}";
             string csvOutputFilename = baseOutputFilename + ".csv";
@@ -591,6 +723,23 @@ namespace BTS_Location_Estimation
         }
 
         public static void ClusterProcessing(string? filterType = null, string? filterValue = null)
+    /***************************************************************************************************
+    *
+    *   Function:       ClusterProcessing
+    *
+    *   Description:    Reads all Estimate*.csv files, adds Technology column, filters by confidence,
+    *                   clusters the filtered data, and writes results to ALL_Estimate.csv.
+    *
+    *   Input:          filterType (string?) - Optional filter type (e.g., channel, mcc).
+    *                   filterValue (string?) - Optional filter value.
+    *
+    *   Output:         Writes ALL_Estimate.csv and prints status.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 12, 2025
+    *
+    ***************************************************************************************************/
         {
             string[] estimateFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "Estimate*.csv");
             string outputFile = "ALL_Estimate.csv";
@@ -657,6 +806,22 @@ namespace BTS_Location_Estimation
         }
 
         public static void save_cluster(string inputFile = "ALL_Estimate.csv", string outputFile = "ALL_map.csv")
+    /***************************************************************************************************
+    *
+    *   Function:       save_cluster
+    *
+    *   Description:    Reads ALL_Estimate.csv, extracts relevant columns, writes ALL_map.csv, and generates ALL_map.kml.
+    *
+    *   Input:          inputFile (string) - The input CSV filename.
+    *                   outputFile (string) - The output CSV filename.
+    *
+    *   Output:         Writes ALL_map.csv and ALL_map.kml to disk.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 12, 2025
+    *
+    ***************************************************************************************************/
         {
             var headers = new List<string> { "Latitude", "Longitude", "CellID", "CellIdentity", "mnc", "mcc", "BeamIndex", "Type" };
             var rows = new List<Dictionary<string, string>>();
