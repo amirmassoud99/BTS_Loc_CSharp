@@ -932,7 +932,28 @@ namespace BTS_Location_Estimation
             }
             return clusterEntries;
         }
-        public static List<Dictionary<string, string>> Expand_mcc_mnc_cellIdentity(List<Dictionary<string, string>> allData)
+    /***************************************************************************************************
+    *
+    *   Function:       Expand_mcc_mnc_cellIdentity
+    *
+    *   Description:    For each channel/cellId pair, expands mcc/mnc and cellIdentity fields.
+    *                   - mcc/mnc expansion: Finds the first non-blank/non-zero mcc/mnc in the group and propagates
+    *                     those values to all rows in the group, both forward and backward.
+    *                   - cellIdentity expansion: Finds the first non-blank cellIdentity and propagates it backward,
+    *                     then sequentially propagates the latest non-blank cellIdentity forward through the group.
+    *                   This ensures that mcc/mnc are unified for each group, while cellIdentity tracks changes
+    *                   and propagates them as they appear in the data.
+    *
+    *   Input:          allData (List<Dictionary<string, string>>) - The full list of extracted data.
+    *
+    *   Output:         The updated list with expanded mcc, mnc, and cellIdentity fields.
+    *
+    *   Author:         Amir Soltanian
+    *
+    *   Date:           September 12, 2025
+    *
+    ***************************************************************************************************/
+    public static List<Dictionary<string, string>> Expand_mcc_mnc_cellIdentity(List<Dictionary<string, string>> allData)
         {
             if (allData == null || allData.Count == 0) return allData!;
             // Group by channel and cellId
@@ -942,34 +963,70 @@ namespace BTS_Location_Estimation
             });
             foreach (var group in groups)
             {
-                // Expand mcc/mnc as before
-                var refRow = group.FirstOrDefault(r =>
-                    r.TryGetValue("mcc", out var mcc) && !string.IsNullOrWhiteSpace(mcc) && mcc != "0" &&
-                    r.TryGetValue("mnc", out var mnc) && !string.IsNullOrWhiteSpace(mnc) && mnc != "0"
-                );
-                if (refRow != null)
+                // --- Expand mcc/mnc both forward and backward ---
+                int firstMccMncIdx = -1;
+                string mccValue = "";
+                string mncValue = "";
+                var groupList = group.ToList();
+                for (int i = 0; i < groupList.Count; i++)
                 {
-                    var mcc = refRow["mcc"];
-                    var mnc = refRow["mnc"];
-                    foreach (var row in group)
+                    var row = groupList[i];
+                    var mcc = row.GetValueOrDefault("mcc", "");
+                    var mnc = row.GetValueOrDefault("mnc", "");
+                    if (!string.IsNullOrWhiteSpace(mcc) && mcc != "0" && !string.IsNullOrWhiteSpace(mnc) && mnc != "0")
                     {
-                        row["mcc"] = mcc;
-                        row["mnc"] = mnc;
+                        firstMccMncIdx = i;
+                        mccValue = mcc;
+                        mncValue = mnc;
+                        break;
+                    }
+                }
+                if (firstMccMncIdx != -1)
+                {
+                    // Fill backward
+                    for (int i = 0; i <= firstMccMncIdx; i++)
+                    {
+                        groupList[i]["mcc"] = mccValue;
+                        groupList[i]["mnc"] = mncValue;
+                    }
+                    // Fill forward
+                    for (int i = firstMccMncIdx + 1; i < groupList.Count; i++)
+                    {
+                        groupList[i]["mcc"] = mccValue;
+                        groupList[i]["mnc"] = mncValue;
                     }
                 }
 
-                // Sequentially expand cellIdentity
-                string lastCellIdentity = "";
-                foreach (var row in group)
+                // --- Expand cellIdentity both forward and backward ---
+                int firstCellIdentityIdx = -1;
+                string cellIdentityValue = "";
+                for (int i = 0; i < groupList.Count; i++)
                 {
-                    var cellIdentity = row.GetValueOrDefault("cellIdentity", "");
+                    var cellIdentity = groupList[i].GetValueOrDefault("cellIdentity", "");
                     if (!string.IsNullOrWhiteSpace(cellIdentity))
                     {
-                        lastCellIdentity = cellIdentity;
+                        firstCellIdentityIdx = i;
+                        cellIdentityValue = cellIdentity;
+                        break;
                     }
-                    if (!string.IsNullOrWhiteSpace(lastCellIdentity))
+                }
+                if (firstCellIdentityIdx != -1)
+                {
+                    // Fill backward
+                    for (int i = 0; i <= firstCellIdentityIdx; i++)
                     {
-                        row["cellIdentity"] = lastCellIdentity;
+                        groupList[i]["cellIdentity"] = cellIdentityValue;
+                    }
+                    // Fill forward
+                    string lastCellIdentity = cellIdentityValue;
+                    for (int i = firstCellIdentityIdx + 1; i < groupList.Count; i++)
+                    {
+                        var cellIdentity = groupList[i].GetValueOrDefault("cellIdentity", "");
+                        if (!string.IsNullOrWhiteSpace(cellIdentity))
+                        {
+                            lastCellIdentity = cellIdentity;
+                        }
+                        groupList[i]["cellIdentity"] = lastCellIdentity;
                     }
                 }
             }

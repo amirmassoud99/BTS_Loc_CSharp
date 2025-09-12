@@ -22,7 +22,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.46.0";
+        public const string SW_VERSION = "1.0.47.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -77,26 +77,31 @@ namespace BTS_Location_Estimation
             foreach (var inputFilename in inputFilenames)
             {
                 Console.WriteLine($"\n=== Processing file: {inputFilename} ===");
+                
                 string filename = Path.Combine(fileDirectory, inputFilename);
+                string filenameOnly = Path.GetFileNameWithoutExtension(inputFilename);
+
                 int fileType = InputOutputFileProc.GetFileType(filename);
 
                 // 1. Call ExtractChannelCellMap to get all standardized data rows
                 var allData = InputOutputFileProc.ExtractChannelCellMap(filename, fileType);
+                string step0Filename = $"step0_{filenameOnly}.csv";
+                SaveHelper.save_extrac_step1(allData, step0Filename);
+
+                //2. Expand mcc, mnc, cellIdentity and generate unique cellID
                 allData = DataBaseProc.Expand_mcc_mnc_cellIdentity(allData);
+                SaveHelper.debug_csv(allData);
                 allData = DataBaseProc.generate_unique_cellID(allData, fileType);
-
-                // The 'allData' variable now holds a list of all the relevant rows
-
+                SaveHelper.debug_csv(allData);
                 Console.WriteLine($"Extracted {allData.Count} rows from {inputFilename}");
-
                 InputOutputFileProc.Save_Drive_Route(allData, inputFilename);
-
-                string filenameOnly = Path.GetFileNameWithoutExtension(inputFilename);
+                
                 string step1Filename = $"step1_{filenameOnly}.csv";
-                //SaveHelper.save_extrac_step1(allData, step1Filename);
+                SaveHelper.save_extrac_step1(allData, step1Filename);
 
                 bool isWcdma = fileType == DataBaseProc.WCDMA_FILE_TYPE_CSV || fileType == DataBaseProc.WCDMA_FILE_TYPE_DTR;
                 double cinrThreshold = isWcdma ? EC_IO_THRESHOLD : CINR_THRESH;
+                // 3. Filter data based on CINR/ECIO and minimum cell ID count
                 var filteredData = DataBaseProc.filter_cinr_minimum_PCI(allData, cinrThreshold, MINIMUM_CELL_ID_COUNT);
                 string step2Filename = $"step2_{filenameOnly}.csv";
                 //SaveHelper.save_extract_step2(filteredData, step2Filename);
@@ -112,6 +117,7 @@ namespace BTS_Location_Estimation
 
                 foreach (var group in groupedData)
                 {
+                    //extract points with minimum distance
                     var pointsForCell = group.ToList();
                     var (finalPoints, maxCinr) = DataBaseProc.ExtractPointsWithDistance(pointsForCell, DISTANCE_THRESH, MAX_POINTS, METERS_PER_DEGREE);
                     //SaveHelper.map_cellid(finalPoints, "658080", "17104", "blue");

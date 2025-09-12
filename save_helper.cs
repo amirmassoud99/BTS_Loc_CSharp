@@ -8,6 +8,29 @@ namespace BTS_Location_Estimation
     
     public static class SaveHelper
     {
+        /// <summary>
+        /// Prints the content of allData for the following headers: lat, long, channel, cellid, beamindex, cellidentity, cinr.
+        /// </summary>
+        public static void debug_csv(List<Dictionary<string, string>> allData)
+        {
+            if (allData == null || !allData.Any())
+            {
+                Console.WriteLine("No data to save in debug.csv");
+                return;
+            }
+            // Extract headers from the first row (generic keys as in ExtractChannelCellMap)
+            var headers = allData.First().Keys.ToList();
+            using (var writer = new StreamWriter("debug.csv"))
+            {
+                writer.WriteLine(string.Join(",", headers));
+                foreach (var row in allData)
+                {
+                    var values = headers.Select(h => row.GetValueOrDefault(h, ""));
+                    writer.WriteLine(string.Join(",", values));
+                }
+            }
+            Console.WriteLine("Debug CSV saved to debug.csv");
+        }
 
         public static void DeleteOutputFiles(string directoryPath)
         {
@@ -365,12 +388,21 @@ namespace BTS_Location_Estimation
                     CellId = row.ContainsKey("cellId") ? row["cellId"] : "N/A",
                     BeamIndex = row.ContainsKey("beamIndex") ? row["beamIndex"] : "N/A"
                 })
-                .Select(group => new
-                {
-                    group.Key.Channel,
-                    group.Key.CellId,
-                    group.Key.BeamIndex,
-                    Count = group.Count()
+                .Select(group => {
+                    var cellIdentityValues = group
+                        .Select(row => row.GetValueOrDefault("cellIdentity", ""))
+                        .Where(val => long.TryParse(val, out long parsed) && parsed > 0)
+                        .Select(val => long.Parse(val))
+                        .ToList();
+                    return new
+                    {
+                        group.Key.Channel,
+                        group.Key.CellId,
+                        group.Key.BeamIndex,
+                        Count = group.Count(),
+                        MaxCellIdentity = cellIdentityValues.Any() ? cellIdentityValues.Max() : 0,
+                        MinCellIdentity = cellIdentityValues.Any() ? cellIdentityValues.Min() : 0
+                    };
                 })
                 .OrderBy(item => item.Channel)
                 .ThenBy(item => item.CellId)
@@ -380,12 +412,19 @@ namespace BTS_Location_Estimation
             using (var writer = new StreamWriter(outputFilename))
             {
                 // Write header
-                writer.WriteLine("Channel,CellID,BeamIndex,Count");
+                writer.WriteLine("Channel,CellID,BeamIndex,Count,max_cellidentity,min_cellidentity");
 
                 // Write data
                 foreach (var item in processedData)
                 {
-                    writer.WriteLine($"{item.Channel},{item.CellId},{item.BeamIndex},{item.Count}");
+                    if (item.MaxCellIdentity == item.MinCellIdentity)
+                    {
+                        writer.WriteLine($"{item.Channel},{item.CellId},{item.BeamIndex},{item.Count},,{item.MinCellIdentity}");
+                    }
+                    else
+                    {
+                        writer.WriteLine($"{item.Channel},{item.CellId},{item.BeamIndex},{item.Count},{item.MaxCellIdentity},{item.MinCellIdentity}");
+                    }
                 }
             }
             Console.WriteLine($"Step 1 data saved to {outputFilename}");
