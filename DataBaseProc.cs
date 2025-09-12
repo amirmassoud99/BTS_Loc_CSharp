@@ -136,7 +136,15 @@ namespace BTS_Location_Estimation
             // Step 3: Apply filtering
             if (!string.IsNullOrEmpty(filterValue))
             {
-                // Filter by the specific value provided
+                // For mnc, match only the first three digits before any semicolon
+                if (filterKey == "mnc")
+                {
+                    string filterValuePrefix = filterValue.Split(';')[0];
+                    return confidenceFilteredData
+                        .Where(row => row.TryGetValue("mnc", out var mncVal) && mncVal.Split(';')[0] == filterValuePrefix)
+                        .ToList();
+                }
+                // For other keys, match directly
                 return confidenceFilteredData
                     .Where(row => row.GetValueOrDefault(filterKey) == filterValue)
                     .ToList();
