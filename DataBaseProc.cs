@@ -124,9 +124,9 @@ namespace BTS_Location_Estimation
             {
                 filterKey = "Channel";
             }
-            else if (filterType.Equals("mcc", StringComparison.OrdinalIgnoreCase))
+            else if (filterType.Equals("mnc", StringComparison.OrdinalIgnoreCase))
             {
-                filterKey = "mcc";
+                filterKey = "mnc";
             }
             else
             {
