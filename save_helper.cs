@@ -730,7 +730,7 @@ namespace BTS_Location_Estimation
         }
 
         // Helper to generate ALL_map.kml from the parsed rows
-        private static void generate_all_map_kml(List<Dictionary<string, string>> rows, string kmlFilename)
+    private static void generate_all_map_kml(List<Dictionary<string, string>> rows, string kmlFilename, string mapType = "cluster entry")
         {
             // Color styles: blue, green, light blue, purple (no red)
             var colorStyles = new List<(string pin, string balloon)>
@@ -767,63 +767,56 @@ namespace BTS_Location_Estimation
                 writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                 writer.WriteLine("<kml xmlns=\"http://www.opengis.net/kml/2.2\">");
                 writer.WriteLine("  <Document>");
-                writer.WriteLine("    <name>ALL_map</name>");
-                // Styles
-                writer.WriteLine("    <Style id=\"blue_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/blue-pushpin.png</href></Icon></IconStyle></Style>");
-                writer.WriteLine("    <Style id=\"blue_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href></Icon></IconStyle></Style>");
-                writer.WriteLine("    <Style id=\"green_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/grn-pushpin.png</href></Icon></IconStyle></Style>");
-                writer.WriteLine("    <Style id=\"green_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-circle.png</href></Icon></IconStyle></Style>");
-                writer.WriteLine("    <Style id=\"ltblu_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/ltblu-pushpin.png</href></Icon></IconStyle></Style>");
-                writer.WriteLine("    <Style id=\"ltblu_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/ltblu-circle.png</href></Icon></IconStyle></Style>");
-                writer.WriteLine("    <Style id=\"purple_pin_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/pushpin/purple-pushpin.png</href></Icon></IconStyle></Style>");
-                writer.WriteLine("    <Style id=\"purple_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/purple-circle.png</href></Icon></IconStyle></Style>");
-                writer.WriteLine("    <Style id=\"red_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon></IconStyle></Style>");
-                // Placemarks
-                foreach (var row in rows)
+                writer.WriteLine($"    <name>{Path.GetFileNameWithoutExtension(kmlFilename)}</name>");
+
+                // Define styles (copied from generate_map_kml)
+                writer.WriteLine("    <Style id=\"blue_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/blu-circle.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
+                writer.WriteLine("    <Style id=\"green_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/grn-circle.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
+                writer.WriteLine("    <Style id=\"ltblu_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/ltblu-circle.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
+                writer.WriteLine("    <Style id=\"purple_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/purple-circle.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
+                writer.WriteLine("    <Style id=\"red_balloon_style\"><IconStyle><Icon><href>http://maps.google.com/mapfiles/kml/paddle/red-circle.png</href></Icon><hotSpot x=\"32\" y=\"1\" xunits=\"pixels\" yunits=\"pixels\"/></IconStyle></Style>");
+
+                // MapType logic: filter rows
+                IEnumerable<Dictionary<string, string>> filteredRows;
+                if (mapType == "Sector")
                 {
-                    string lat = row.GetValueOrDefault("Latitude", "");
-                    string lon = row.GetValueOrDefault("Longitude", "");
-                    string cellId = row.GetValueOrDefault("CellID", "");
-                    string cellIdentity = row.GetValueOrDefault("CellIdentity", "");
-                    string mnc = row.GetValueOrDefault("mnc", "");
-                    string mcc = row.GetValueOrDefault("mcc", "");
-                    string beamIndex = row.GetValueOrDefault("BeamIndex", "");
-                    string type = row.GetValueOrDefault("Type", "");
-                    string styleUrl = "";
-                    string name = cellId;
-                    string desc = "";
-                    if (type == "cluster entry")
+                    filteredRows = rows.Where(r => r.GetValueOrDefault("Type", "") == "Sector");
+                }
+                else if (mapType == "cluster entry")
+                {
+                    filteredRows = rows.Where(r => r.GetValueOrDefault("Type", "") == "Sector" || r.GetValueOrDefault("Type", "") == "cluster entry");
+                }
+                else
+                {
+                    filteredRows = Enumerable.Empty<Dictionary<string, string>>();
+                }
+
+                foreach (var result in filteredRows)
+                {
+                    string lat = result.GetValueOrDefault("Latitude", "");
+                    string lon = result.GetValueOrDefault("Longitude", "");
+                    string cellId = result.GetValueOrDefault("CellID", "");
+                    string cellIdentity = result.GetValueOrDefault("CellIdentity", "");
+                    string beamIndex = result.GetValueOrDefault("BeamIndex", "");
+                    string type = result.GetValueOrDefault("Type", "");
+
+                    // Assign style
+                    string styleId = "red_balloon_style";
+                    if (type == "Sector")
                     {
-                        // Pushpin, color by cluster
-                        var clusterId = cellId + "_" + beamIndex;
-                        styleUrl = clusterColors.ContainsKey(clusterId) ? clusterColors[clusterId].pin : "#blue_pin_style";
-                        desc = $"<![CDATA[Cluster: {cellId}<br/>Beam: {beamIndex}<br/>CellIdentity: {cellIdentity}<br/>MNC: {mnc}<br/>MCC: {mcc}]]>";
+                        styleId = "blue_balloon_style";
                     }
-                    else if (type == "Sector")
+                    else if (type == "cluster entry")
                     {
-                        // Balloon, color by cluster if associated, else red
-                        string sectorKey = cellId;
-                        if (sectorToCluster.ContainsKey(sectorKey) && clusterColors.ContainsKey(sectorToCluster[sectorKey]))
-                        {
-                            styleUrl = clusterColors[sectorToCluster[sectorKey]].balloon;
-                        }
-                        else
-                        {
-                            styleUrl = "#red_balloon_style";
-                        }
-                        desc = $"<![CDATA[Sector: {cellId}<br/>Beam: {beamIndex}<br/>CellIdentity: {cellIdentity}<br/>MNC: {mnc}<br/>MCC: {mcc}]]>";
+                        styleId = "green_balloon_style";
                     }
-                    else
-                    {
-                        styleUrl = "#red_balloon_style";
-                        desc = $"<![CDATA[{type}: {cellId}<br/>Beam: {beamIndex}<br/>CellIdentity: {cellIdentity}<br/>MNC: {mnc}<br/>MCC: {mcc}]]>";
-                    }
+
                     writer.WriteLine("    <Placemark>");
-                    writer.WriteLine($"      <name>{name}</name>");
+                    writer.WriteLine($"      <name>{cellId}</name>");
                     writer.WriteLine("      <description>");
-                    writer.WriteLine($"        {desc}");
+                    writer.WriteLine($"        <![CDATA[Cell ID: {cellId}, Beam: {beamIndex}<br/>Cell Identity: {cellIdentity}<br/>Type: {type}]]>");
                     writer.WriteLine("      </description>");
-                    writer.WriteLine($"      <styleUrl>{styleUrl}");
+                    writer.WriteLine($"      <styleUrl>#{styleId}</styleUrl>");
                     writer.WriteLine("      <Point>");
                     writer.WriteLine($"        <coordinates>{lon},{lat},0</coordinates>");
                     writer.WriteLine("      </Point>");

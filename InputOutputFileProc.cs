@@ -94,7 +94,7 @@ namespace BTS_Location_Estimation
 
             //Batch processing Drive 3_Washington DC
             
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250827_DC-Detailed-Drive\";
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250827_DC-Detailed-Drive\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
@@ -107,22 +107,21 @@ namespace BTS_Location_Estimation
                 "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr",
                 "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz_Blind Scan.dtr",
                 "Gflex Device 032201005_NR_FR1 FDD n25 DL_Blind Scan SCS Autodetect.dtr"
-            };
-            
+            };*/            
 
 
 
             //Batch processing Drive 5_Gaithersuburg
-            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250828_Gaitherburg-Drive\";
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250828_Gaitherburg-Drive\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
-                //"Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
-                //"Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.csv",
+                "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.csv",
                 "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.csv",
-                //"Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
+                "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.csv",
                 "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr"
-            };*/
+            };
 
             return (fileDirectory, inputFilenames);
         }
