@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
+using Python.Runtime;
 
 namespace BTS_Location_Estimation
 {
@@ -22,7 +23,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.0.52.0";
+        public const string SW_VERSION = "1.1.0.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -167,6 +168,24 @@ namespace BTS_Location_Estimation
             //string filterValue = null;
             var outputFile = SaveHelper.ClusterProcessing(filterType, filterValue, EPS_MILES);
             SaveHelper.map_cluster(outputFile);
+
+            // Call Python HDBSCAN clustering after map_cluster
+            string pythonScriptDir = Directory.GetCurrentDirectory();
+            string pythonScriptName = "cluster_hdbscan"; // without .py
+            string mapCsvFile = Path.ChangeExtension(Path.GetFileName(outputFile).Replace("Estimate", "map"), ".csv");
+            string inputCsv = Path.Combine(pythonScriptDir, mapCsvFile);
+            string outputCsv = Path.Combine(pythonScriptDir, $"cluster_{mapCsvFile}");
+            string kmlFile = Path.Combine(pythonScriptDir, "Python_kml_map.kml");
+
+            PythonEngine.Initialize();
+            using (Py.GIL())
+            {
+                dynamic sys = Py.Import("sys");
+                sys.path.append(pythonScriptDir);
+                dynamic cluster_hdbscan = Py.Import(pythonScriptName);
+                cluster_hdbscan.run_hdbscan_clustering(inputCsv, outputCsv, kmlFile);
+            }
+            PythonEngine.Shutdown();
         }
     }
 }
