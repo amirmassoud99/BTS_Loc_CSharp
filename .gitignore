@@ -34,5 +34,9 @@
 step1_*.csv
 step2_*.csv
 
+# Python cache files
+__pycache__/
+*.pyc
+
 # Source code from other languages
 *.cpp

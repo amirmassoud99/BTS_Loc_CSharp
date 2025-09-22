@@ -23,7 +23,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.2.0.0";
+        public const string SW_VERSION = "1.2.1.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -152,6 +152,9 @@ namespace BTS_Location_Estimation
 
                 var resultsWithBeamIndex = DataBaseProc.splitCellid(fileType, estimationResults);
 
+                //The Tower Estimation uses the Cellidentity information to find sectors
+                //Associated with the same tower. It then averages the location of the sectors
+                //to get the tower location.
                 var sortedResults = DataBaseProc.AddTowerEstimate(resultsWithBeamIndex, fileType, "Tower");
                 SaveHelper.save_estimation_results(sortedResults, estimateFilename);
 
@@ -160,10 +163,17 @@ namespace BTS_Location_Estimation
                 //SaveHelper.map_cellid(filteredData, "658080", "17104");
                 
             }
+
+            /** Python Integration for Advanced Clustering **/
+            /*
+            The below code extract all the sectors belong to the same carrier. It then uses
+            an advanced clustering algorithm to group them by their geographical location. This
+            could be a choice by the user to enable this feature. This feature requires Python installation*/
+
             Console.WriteLine("Batch processing complete.");
             // Example: Filter by mnc and save cluster results with filter in filename
             string filterType = "mnc";
-            string filterValue = "260";
+            string filterValue = "410";
             //string filterType = null;
             //string filterValue = null;
             var outputFile = SaveHelper.ClusterProcessing(filterType, filterValue, EPS_MILES);
