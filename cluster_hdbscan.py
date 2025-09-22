@@ -5,8 +5,12 @@ import sys
 import os
 import simplekml
 
-# --- Constants ---
+# --- Constants --- 
+
 MIN_CLUSTER_SIZE = 3 # Defined as a constant at the top
+
+#This code requires the following packages:
+# pandas, numpy, hdbscan, simplekml
 
 def create_points_array_from_csv(file_path: str):
     """
