@@ -120,10 +120,10 @@ def run_hdbscan_clustering(input_csv, output_csv, kml_filename = "Python_kml_map
     map_cluster_kml(final_df)
 
     if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage: python cluster_hdbscan.py <input_csv> <output_csv> [kml_filename]")
-        sys.exit(1)
-    input_csv = sys.argv[1]
-    output_csv = sys.argv[2]
-    kml_filename = sys.argv[3] if len(sys.argv) > 3 else "Python_kml_map.kml"
-    run_hdbscan_clustering(input_csv, output_csv, kml_filename)
+        if len(sys.argv) < 3:
+            print("Usage: python cluster_hdbscan.py <input_csv> <output_csv> [kml_filename]")
+            sys.exit(1)
+        input_csv = sys.argv[1]
+        output_csv = sys.argv[2]
+        kml_filename = sys.argv[3] if len(sys.argv) > 3 else "Python_kml_map.kml"
+        run_hdbscan_clustering(input_csv, output_csv, kml_filename)
