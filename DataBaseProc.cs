@@ -583,7 +583,9 @@ namespace BTS_Location_Estimation
 
                                     if (p1.TryGetValue("cellIdentity", out var idStr1) && long.TryParse(idStr1, out long id1) &&
                                         p2.TryGetValue("cellIdentity", out var idStr2) && long.TryParse(idStr2, out long id2) &&
-                                        p3.TryGetValue("cellIdentity", out var idStr3) && long.TryParse(idStr3, out long id3))
+                                        p3.TryGetValue("cellIdentity", out var idStr3) && long.TryParse(idStr3, out long id3) &&
+                                        p1.GetValueOrDefault("CellId") == p2.GetValueOrDefault("CellId") &&
+                                        p2.GetValueOrDefault("CellId") == p3.GetValueOrDefault("CellId"))
                                     {
                                         bool isGroupOfThree = (id2 == id1 + 1 && id3 == id2 + 1) || // (1,2,3)
                                                               (id2 == id1 + 1 && id3 == id2 + 2) || // (1,2,4)
@@ -617,7 +619,8 @@ namespace BTS_Location_Estimation
                                 var p2 = items[j].value;
 
                                 if (p1.TryGetValue("cellIdentity", out var idStr1) && long.TryParse(idStr1, out long id1) &&
-                                    p2.TryGetValue("cellIdentity", out var idStr2) && long.TryParse(idStr2, out long id2))
+                                    p2.TryGetValue("cellIdentity", out var idStr2) && long.TryParse(idStr2, out long id2) &&
+                                    p1.GetValueOrDefault("CellId") == p2.GetValueOrDefault("CellId"))
                                 {
                                     bool isGroupOfTwo = (id2 == id1 + 1) || // (1,2)
                                                           (id2 == id1 + 2);   // (1,3)
