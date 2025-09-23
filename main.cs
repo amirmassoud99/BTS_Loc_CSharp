@@ -1,10 +1,13 @@
+#define Python_included
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
+#if Python_included
 using Python.Runtime;
+#endif
 
 namespace BTS_Location_Estimation
 {
@@ -23,7 +26,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.2.5.0";
+        public const string SW_VERSION = "1.2.6.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -81,7 +84,7 @@ namespace BTS_Location_Estimation
             foreach (var inputFilename in inputFilenames)
             {
                 Console.WriteLine($"\n=== Processing file: {inputFilename} ===");
-                
+
                 string filename = Path.Combine(fileDirectory, inputFilename);
                 string filenameOnly = Path.GetFileNameWithoutExtension(inputFilename);
 
@@ -99,7 +102,7 @@ namespace BTS_Location_Estimation
                 //SaveHelper.debug_csv(allData);
                 Console.WriteLine($"Extracted {allData.Count} rows from {inputFilename}");
                 InputOutputFileProc.Save_Drive_Route(allData, inputFilename);
-                
+
                 //string step1Filename = $"step1_{filenameOnly}.csv";
                 //SaveHelper.save_extrac_step1(allData, step1Filename);
 
@@ -161,7 +164,7 @@ namespace BTS_Location_Estimation
                 // Call map_cellid for debugging
                 //SaveHelper.map_cellid(allData, "658080", "17104");
                 //SaveHelper.map_cellid(filteredData, "658080", "17104");
-                
+
             }
 
             /** Python Integration for Advanced Clustering **/
@@ -180,15 +183,18 @@ namespace BTS_Location_Estimation
             SaveHelper.map_cluster(outputFile);
 
             // Call Python HDBSCAN clustering after map_cluster
+#if Python_included
             string pythonScriptDir = Directory.GetCurrentDirectory();
             string pythonScriptName = "cluster_hdbscan"; // without .py
             string mapCsvFile = Path.ChangeExtension(Path.GetFileName(outputFile).Replace("Estimate", "map"), ".csv");
             string inputCsv = Path.Combine(pythonScriptDir, mapCsvFile);
-            string outputCsv = Path.Combine(pythonScriptDir, $"cluster_{mapCsvFile}");
+            string outputCsv = Path.Combine(pythonScriptDir, $"Python_cluster_{mapCsvFile}");
+
             string kmlFile = Path.Combine(pythonScriptDir, "Python_kml_map.kml");
             Python.Runtime.Runtime.PythonDLL = @"C:\Users\amirsoltanian\AppData\Local\Programs\Python\Python310\python310.dll";
 
             PythonEngine.Initialize();
+
             using (Py.GIL())
             {
                 dynamic sys = Py.Import("sys");
@@ -204,6 +210,7 @@ namespace BTS_Location_Estimation
             {
                 Console.WriteLine("Python.NET shutdown exception suppressed: " + ex.Message);
             }
+#endif  
         }
     }
 }
