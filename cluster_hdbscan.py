@@ -130,4 +130,5 @@ def run_hdbscan_clustering(input_csv, output_csv, kml_filename = "Python_kml_map
         input_csv = sys.argv[1]
         output_csv = sys.argv[2]
         kml_filename = sys.argv[3] if len(sys.argv) > 3 else "Python_kml_map.kml"
+        print(f"Running HDBSCAN clustering on '{input_csv}'...")
         run_hdbscan_clustering(input_csv, output_csv, kml_filename)
