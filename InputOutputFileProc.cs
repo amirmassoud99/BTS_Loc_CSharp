@@ -164,7 +164,7 @@ namespace BTS_Location_Estimation
         public static int GetFileType(string filename)
         {
             int baseFileType;
-            if (filename.Contains("ColorCode")) baseFileType = GSM_FILE_TYPE;
+            if (filename.Contains("ColorCode") || filename.Contains("GSM")) baseFileType = GSM_FILE_TYPE;
             else if (filename.Contains("LTE") && filename.Contains("Top N")) baseFileType = LTE_TOPN_FILE_TYPE;
             else if (filename.Contains("LTE") && filename.Contains("Blind")) baseFileType = LTE_BLIND_FILE_TYPE;
             else if (filename.Contains("NR") && (filename.Contains("Topn") || filename.Contains("Top N"))) baseFileType = NR_TOPN_FILE_TYPE;
@@ -326,7 +326,7 @@ namespace BTS_Location_Estimation
                     mccKeyword = "mcc";
                     break;
 
-                case GSM_FILE_TYPE:
+                case GSM_FILE_TYPE: //.csv
                     cellIdKeyword = "Color Code";
                     //cellIdentityKeyword = "CID";
                     channelKeyword = "Channel";
@@ -337,6 +337,16 @@ namespace BTS_Location_Estimation
                     mccKeyword = "mcc";
                     break;
 
+                case GSM_FILE_TYPE*10://.dtr
+                    cellIdKeyword = "BSIC";
+                    cellIdentityKeyword = "cellIdentity";
+                    channelKeyword = "Channel Number";
+                    cinrKeyword = "C/I";
+                    rssiKeyword = "Channel RSSI";
+                    timeOffsetKeyword = "HrToA";
+                    mncKeyword = "mnc";
+                    mccKeyword = "mcc";
+                    break;
                 default: // Fallback for other types if needed
                     Console.WriteLine($"File type {fileType} not fully configured for extraction. Using defaults.");
                     cellIdKeyword = "Cell ID";
