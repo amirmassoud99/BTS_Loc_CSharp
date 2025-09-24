@@ -192,8 +192,11 @@ namespace BTS_Location_Estimation
         *   Date:           September 8, 2025
         *
         ***************************************************************************************************/
-        public static List<Dictionary<string, string>> filter_cinr_minimum_PCI(List<Dictionary<string, string>> allData, double cinrThresh, int minimumCellIdCount)
+        public static List<Dictionary<string, string>> filter_cinr_minimum_PCI(List<Dictionary<string, string>> allData, int fileType, int minimumCellIdCount)
         {
+            // Determine CINR/ECIO threshold based on fileType
+            double cinrThresh = (fileType == WCDMA_FILE_TYPE_CSV || fileType == WCDMA_FILE_TYPE_DTR) ? MainModule.EC_IO_THRESHOLD : MainModule.CINR_THRESH;
+
             // 1. Filter out rows with invalid coordinates (lat/lon = 0)
             var coordinateFiltered = allData.Where(row =>
             {
