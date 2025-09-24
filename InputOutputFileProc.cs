@@ -36,12 +36,12 @@ namespace BTS_Location_Estimation
         public static (string fileDirectory, List<string> inputFilenames) GetFileConfigurations()
         {
             /*****Reference Matlab file*/
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\MatlabRef\";
+           /* string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\MatlabRef\";
             List<string> inputFilenames = new List<string>
             {
                 "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz_Enhanced Top N Signal Auto Bandwidth Channel 39750 - 2506.000000 MHz.csv"
 
-            };
+            };*/
 
             /*****GSM file*/
             /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\GSM\";
@@ -124,9 +124,9 @@ namespace BTS_Location_Estimation
             };*/
             
             //Batch processing Drive 6 Gordon Hong Kong
-            //string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Gordon_20250923_033301\";
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Gordon_20250923_033301\";
             // List of input filenames to process in batch
-            /*List<string> inputFilenames = new List<string>
+            List<string> inputFilenames = new List<string>
             {
                 "Gflex Device 019999102_NR_FR1 TDD n79_Blind Scan SCS Autodetect.dtr",
                 "Gflex Device 019999102_GSM_900 DL_Blind Scan (0 - 125).dtr",
@@ -139,7 +139,7 @@ namespace BTS_Location_Estimation
                 "Gflex Device 019999102_UMTS WCDMA_UB I  2100 (IMT-2000) DL_Blind Scan.dtr",
                 "Gflex Device 019999102_UMTS WCDMA_UB V  850 (Cellular) DL_Blind Scan (4355 - 4460).dtr",
                 "Gflex Device 019999102_UMTS WCDMA_UB VIII  900 DL_Blind Scan.dtr"
-            };*/
+            };
 
             return (fileDirectory, inputFilenames);
         }

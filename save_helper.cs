@@ -590,7 +590,7 @@ namespace BTS_Location_Estimation
             }
         }
 
-    public static string ClusterProcessing(string? filterType = null, string? filterValue = null, double eps_miles = 0.5)
+    public static string? ClusterProcessing(string? filterType = null, string? filterValue = null, double eps_miles = 0.5)
         {
             string[] estimateFiles = Directory.GetFiles(Directory.GetCurrentDirectory(), "Estimate*.csv");
             string header = "Technology,Channel,CellId,BeamIndex,Type,cellIdentity,mnc,mcc,xhat1,yhat1,xhat2,yhat2,est_Lat1,est_Lon1,est_Lat2,est_Lon2,Max_cinr,Num_points,Confidence";
@@ -643,6 +643,13 @@ namespace BTS_Location_Estimation
 
             // --- Step 2: Filter out entries with Confidence == "Low" ---
             var filteredData = DataBaseProc.Confidence_and_Filtering(allRows, filterType, filterValue);
+
+            // If no data remains after filtering, do not generate files and return null
+            if (filteredData == null || filteredData.Count == 0)
+            {
+                Console.WriteLine("No data remains after filtering. No estimate or map files will be generated.");
+                return null;
+            }
 
             // --- Step 3: Cluster the filtered data ---
             var clusterEntries = DataBaseProc.DBSCAN_Cluster(filteredData, eps_miles, 4);

@@ -1,4 +1,4 @@
-//#define Python_included
+#define Python_included
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -26,7 +26,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.2.7.0";
+        public const string SW_VERSION = "1.2.8.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -184,37 +184,38 @@ namespace BTS_Location_Estimation
             //string filterType = null;
             //string filterValue = null;
             var outputFile = SaveHelper.ClusterProcessing(filterType, filterValue, EPS_MILES);
-            SaveHelper.map_cluster(outputFile);
-
-            // Call Python HDBSCAN clustering after map_cluster
+            if (outputFile != null)
+            {
+                SaveHelper.map_cluster(outputFile);
 #if Python_included
-            string pythonScriptDir = Directory.GetCurrentDirectory();
-            string pythonScriptName = "cluster_hdbscan"; // without .py
-            string mapCsvFile = Path.ChangeExtension(Path.GetFileName(outputFile).Replace("Estimate", "map"), ".csv");
-            string inputCsv = Path.Combine(pythonScriptDir, mapCsvFile);
-            string outputCsv = Path.Combine(pythonScriptDir, $"Python_cluster_{mapCsvFile}");
+                string pythonScriptDir = Directory.GetCurrentDirectory();
+                string pythonScriptName = "cluster_hdbscan"; // without .py
+                string mapCsvFile = Path.ChangeExtension(Path.GetFileName(outputFile).Replace("Estimate", "map"), ".csv");
+                string inputCsv = Path.Combine(pythonScriptDir, mapCsvFile);
+                string outputCsv = Path.Combine(pythonScriptDir, $"Python_cluster_{mapCsvFile}");
 
-            string kmlFile = Path.Combine(pythonScriptDir, "Python_kml_map.kml");
-            Python.Runtime.Runtime.PythonDLL = @"C:\Users\amirsoltanian\AppData\Local\Programs\Python\Python310\python310.dll";
+                string kmlFile = Path.Combine(pythonScriptDir, "Python_kml_map.kml");
+                Python.Runtime.Runtime.PythonDLL = @"C:\Users\amirsoltanian\AppData\Local\Programs\Python\Python310\python310.dll";
 
-            PythonEngine.Initialize();
+                PythonEngine.Initialize();
 
-            using (Py.GIL())
-            {
-                dynamic sys = Py.Import("sys");
-                sys.path.append(pythonScriptDir);
-                dynamic cluster_hdbscan = Py.Import(pythonScriptName);
-                cluster_hdbscan.run_hdbscan_clustering(inputCsv, outputCsv, kmlFile);
-            }
-            try
-            {
-                Python.Runtime.PythonEngine.Shutdown();
-            }
-            catch (System.NotSupportedException ex)
-            {
-                Console.WriteLine("Python.NET shutdown exception suppressed: " + ex.Message);
-            }
+                using (Py.GIL())
+                {
+                    dynamic sys = Py.Import("sys");
+                    sys.path.append(pythonScriptDir);
+                    dynamic cluster_hdbscan = Py.Import(pythonScriptName);
+                    cluster_hdbscan.run_hdbscan_clustering(inputCsv, outputCsv, kmlFile);
+                }
+                try
+                {
+                    Python.Runtime.PythonEngine.Shutdown();
+                }
+                catch (System.NotSupportedException ex)
+                {
+                    Console.WriteLine("Python.NET shutdown exception suppressed: " + ex.Message);
+                }
 #endif  
+            }
         }
     }
 }
