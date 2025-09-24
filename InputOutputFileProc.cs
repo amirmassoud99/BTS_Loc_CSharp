@@ -334,18 +334,8 @@ namespace BTS_Location_Estimation
                     mccKeyword = "mcc";
                     break;
 
-                case GSM_FILE_TYPE: //.csv
-                    cellIdKeyword = "Color Code";
-                    //cellIdentityKeyword = "CID";
-                    channelKeyword = "Channel";
-                    cinrKeyword = "CTOI";
-                    rssiKeyword = "Channel RSSI";
-                    timeOffsetKeyword = "HRTOA";
-                    mncKeyword = "mnc";
-                    mccKeyword = "mcc";
-                    break;
 
-                case GSM_FILE_TYPE*10://.dtr
+                case GSM_FILE_TYPE://.dtr
                     cellIdKeyword = "BSIC";
                     cellIdentityKeyword = "cellIdentity";
                     channelKeyword = "Channel Number";
