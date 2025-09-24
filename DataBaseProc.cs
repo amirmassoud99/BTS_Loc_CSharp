@@ -277,7 +277,8 @@ namespace BTS_Location_Estimation
         ***************************************************************************************************/
         public static Tuple<List<Dictionary<string, string>>, double> GSMHrtoaAverage(
             List<Dictionary<string, string>> extractedData,
-            double distanceThreshold)
+            double distanceThreshold,
+            double metersPerDegree)
         {
             if (extractedData == null || !extractedData.Any())
             {
@@ -285,7 +286,7 @@ namespace BTS_Location_Estimation
             }
 
             // Helper to calculate Euclidean distance between two points
-            double CalculateDistance(Dictionary<string, string> p1, Dictionary<string, string> p2)
+            double CalculateSqrDistance(Dictionary<string, string> p1, Dictionary<string, string> p2)
             {
                 if (!p1.TryGetValue("latitude", out var latStr1) || !p1.TryGetValue("longitude", out var lonStr1) ||
                     !p2.TryGetValue("latitude", out var latStr2) || !p2.TryGetValue("longitude", out var lonStr2) ||
@@ -296,11 +297,13 @@ namespace BTS_Location_Estimation
                 {
                     return double.MaxValue;
                 }
-                return Math.Sqrt(Math.Pow(lat2 - lat1, 2) + Math.Pow(lon2 - lon1, 2));
+                // Convert degree distance to meters
+                return (Math.Pow(lat2 - lat1, 2) + Math.Pow(lon2 - lon1, 2)) * metersPerDegree * metersPerDegree;
             }
 
             var updatedPoints = new List<Dictionary<string, string>>();
             double maxAvgHrToA = -999.0;
+            double distanceThresholdSquared = distanceThreshold * distanceThreshold;
 
             for (int i = 0; i < extractedData.Count; i++)
             {
@@ -317,8 +320,8 @@ namespace BTS_Location_Estimation
                 for (int j = i - 1, found = 0; j >= 0 && found < 5; j--)
                 {
                     var candidate = extractedData[j];
-                    double dist = CalculateDistance(currentPoint, candidate);
-                    if (dist <= distanceThreshold)
+                    double dist = CalculateSqrDistance(currentPoint, candidate);
+                    if (dist <= distanceThresholdSquared)
                     {
                         if (candidate.TryGetValue("TimeOffset", out var hrtoaStr2) && double.TryParse(hrtoaStr2, NumberStyles.Any, CultureInfo.InvariantCulture, out double hrtoaVal2))
                         {
@@ -336,8 +339,8 @@ namespace BTS_Location_Estimation
                 for (int j = i + 1, found = 0; j < extractedData.Count && found < 5; j++)
                 {
                     var candidate = extractedData[j];
-                    double dist = CalculateDistance(currentPoint, candidate);
-                    if (dist <= distanceThreshold)
+                    double dist = CalculateSqrDistance(currentPoint, candidate);
+                    if (dist <= distanceThresholdSquared)
                     {
                         if (candidate.TryGetValue("TimeOffset", out var hrtoaStr2) && double.TryParse(hrtoaStr2, NumberStyles.Any, CultureInfo.InvariantCulture, out double hrtoaVal2))
                         {
