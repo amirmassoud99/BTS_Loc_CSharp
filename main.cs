@@ -1,4 +1,4 @@
-#define Python_included
+//#define Python_included
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -26,7 +26,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.2.6.0";
+        public const string SW_VERSION = "1.2.7.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -51,7 +51,11 @@ namespace BTS_Location_Estimation
         public const double CONFIDENCE_MIN_ECIO_WCDMA = -10.0;
 
         // DBSCAN clustering parameter
-        public const double EPS_MILES = 0.11;
+        //This parameter defines the maximum distance between two samples for one to be considered as in 
+        // the neighborhood of the other.
+        //This parameter is used in the function SaveHelper.ClusterProcessing. It is a c# function.
+        //A more advanded clustering algorithm is implemented in Python using HDBSCAN.
+        public const double EPS_MILES = 0.5;
 
         /***************************************************************************************************
         *

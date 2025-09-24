@@ -207,7 +207,9 @@ namespace BTS_Location_Estimation
         {
             if (points.Count < minimum_points_for_TSWLS)
             {
+                #if DEBUG
                 Console.WriteLine($"TSWLS requires at least {minimum_points_for_TSWLS} points. Cannot run with {points.Count} points.");
+                #endif
                 return null;
             }
 
@@ -238,7 +240,9 @@ namespace BTS_Location_Estimation
 
             if (tswls_results == null)
             {
+                #if DEBUG
                 Console.WriteLine("TSWLS algorithm failed to produce a result.");
+                #endif
                 return null;
             }
 
@@ -246,12 +250,20 @@ namespace BTS_Location_Estimation
             double yHat = tswls_results[1];
             double r_0 = tswls_results[2];
 
+            #if DEBUG
             Console.WriteLine("\n--- TSWLS Algorithm Results ---");
+            #endif
+            #if DEBUG
             Console.WriteLine($"Estimated Location (xHat, yHat): ({xHat:F4}, {yHat:F4})");
+            #endif
+            #if DEBUG
             Console.WriteLine($"Estimated Distance (r_0): {r_0:F4} meters");
+            #endif
 
             // Call GridSearch to refine the result
+            #if DEBUG
             Console.WriteLine("\n--- Running Grid Search ---");
+            #endif
             Vector<double> grid_search_results = GridSearch2(N, sx, sy, ts, c, xHat, yHat, range, step);
 
             double xHat2 = 0.0;
@@ -260,7 +272,9 @@ namespace BTS_Location_Estimation
             {
                 xHat2 = grid_search_results[0];
                 yHat2 = grid_search_results[1];
+                #if DEBUG
                 Console.WriteLine($"Grid Search Location (xHat2, yHat2): ({xHat2:F4}, {yHat2:F4})");
+                #endif
             }
 
             return Vector<double>.Build.Dense(new double[] { xHat, yHat, xHat2, yHat2 });
@@ -336,7 +350,9 @@ namespace BTS_Location_Estimation
             int gridSize = 2 * M + 1;
             var rmse = Matrix<double>.Build.Dense(gridSize, gridSize);
 
+            #if DEBUG
             Console.WriteLine("Populating grid for search...");
+            #endif
             for (int xcnt = -M; xcnt <= M; ++xcnt)
             {
                 for (int ycnt = -M; ycnt <= M; ++ycnt)
@@ -347,10 +363,14 @@ namespace BTS_Location_Estimation
                     rmse[ycnt + M, xcnt + M] = rmseTmp;
                 }
             }
+            #if DEBUG
             Console.WriteLine("Grid populated.");
+            #endif
 
             // Walk search to find the minimum
+            #if DEBUG
             Console.WriteLine("Performing walk search...");
+            #endif
             var wk = (Row: M, Col: M); // Start walk from the center [row, col] -> [y, x]
             while (true)
             {
@@ -386,7 +406,9 @@ namespace BTS_Location_Estimation
                 }
                 wk = wkNew;
             }
+            #if DEBUG
             Console.WriteLine("Walk search complete.");
+            #endif
 
             double yAdj = (wk.Row - M) * step;
             double xAdj = (wk.Col - M) * step;
@@ -479,7 +501,9 @@ namespace BTS_Location_Estimation
             var (est_Lat1, est_Lon1) = xy2LatLon(xhat1, yhat1, latRef, lonRef, metersPerDegree);
             var (est_Lat2, est_Lon2) = xy2LatLon(xhat2, yhat2, latRef, lonRef, metersPerDegree);
 
+            #if DEBUG
             Console.WriteLine($"Estimated Final Location for Cell {group.Key.CellId} (Lat, Lon): ({est_Lat2:F6}, {est_Lon2:F6})");
+            #endif
 
             // Extract and combine unique cellIdentity values for the group
             var cellIdentities = group

@@ -227,7 +227,9 @@ namespace BTS_Location_Estimation
                 .SelectMany(group => group) // Flatten the groups back into a list of rows
                 .ToList();
 
+            #if DEBUG
             Console.WriteLine($"Filtered data down to {finalFilteredData.Count} rows after coordinate, CINR, and minimum count checks.");
+            #endif
             return finalFilteredData;
         }
 
@@ -330,7 +332,9 @@ namespace BTS_Location_Estimation
                 {
                     string channel = selectedPoints.First().GetValueOrDefault("channel", "N/A");
                     string cellId = selectedPoints.First().GetValueOrDefault("cellId", "N/A");
+                    #if DEBUG
                     Console.WriteLine($"Removing cell {cellId} on channel {channel} because all points have an identical TimeOffset.");
+                    #endif
                     return Tuple.Create(new List<Dictionary<string, string>>(), -999.0); // Return empty list
                 }
             }
@@ -677,11 +681,15 @@ namespace BTS_Location_Estimation
                         .ToList();
 
                 case "Cluster":
+                    #if DEBUG
                     Console.WriteLine("Warning: 'Cluster' mode is not yet implemented. Returning original data.");
+                    #endif
                     return resultsWithBeamIndex;
 
                 default:
+                    #if DEBUG
                     Console.WriteLine($"Warning: Unknown mode '{mode}'. Returning original data.");
+                    #endif
                     return resultsWithBeamIndex;
             }
         }
