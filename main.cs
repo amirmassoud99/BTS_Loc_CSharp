@@ -26,7 +26,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.2.11.0";
+        public const string SW_VERSION = "1.2.12.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -129,6 +129,10 @@ namespace BTS_Location_Estimation
                 {
                     //extract points with minimum distance
                     var pointsForCell = group.ToList();
+
+
+                    var GSMPoints = DataBaseProc.GSMHrtoaAverage(pointsForCell, DISTANCE_THRESH);
+
                     var (finalPoints, maxCinr) = DataBaseProc.ExtractPointsWithDistance(pointsForCell, DISTANCE_THRESH, MAX_POINTS, METERS_PER_DEGREE);
                     //SaveHelper.map_cellid(finalPoints, "658080", "17104", "blue");
 

@@ -275,6 +275,114 @@ namespace BTS_Location_Estimation
         *   Date:           September 4, 2025
         *
         ***************************************************************************************************/
+        public static Tuple<List<Dictionary<string, string>>, double> GSMHrtoaAverage(
+            List<Dictionary<string, string>> extractedData,
+            double distanceThreshold)
+        {
+            if (extractedData == null || !extractedData.Any())
+            {
+                return Tuple.Create(new List<Dictionary<string, string>>(), -999.0);
+            }
+
+            // Helper to calculate Euclidean distance between two points
+            double CalculateDistance(Dictionary<string, string> p1, Dictionary<string, string> p2)
+            {
+                if (!p1.TryGetValue("latitude", out var latStr1) || !p1.TryGetValue("longitude", out var lonStr1) ||
+                    !p2.TryGetValue("latitude", out var latStr2) || !p2.TryGetValue("longitude", out var lonStr2) ||
+                    !double.TryParse(latStr1, NumberStyles.Any, CultureInfo.InvariantCulture, out double lat1) ||
+                    !double.TryParse(lonStr1, NumberStyles.Any, CultureInfo.InvariantCulture, out double lon1) ||
+                    !double.TryParse(latStr2, NumberStyles.Any, CultureInfo.InvariantCulture, out double lat2) ||
+                    !double.TryParse(lonStr2, NumberStyles.Any, CultureInfo.InvariantCulture, out double lon2))
+                {
+                    return double.MaxValue;
+                }
+                return Math.Sqrt(Math.Pow(lat2 - lat1, 2) + Math.Pow(lon2 - lon1, 2));
+            }
+
+            var updatedPoints = new List<Dictionary<string, string>>();
+            double maxAvgHrToA = -999.0;
+
+            for (int i = 0; i < extractedData.Count; i++)
+            {
+                var currentPoint = extractedData[i];
+                var adjacentHrToA = new List<double>();
+
+                // Always include the current point itself
+                if (currentPoint.TryGetValue("TimeOffset", out var hrtoaStr) && double.TryParse(hrtoaStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double hrtoaVal))
+                {
+                    adjacentHrToA.Add(hrtoaVal);
+                }
+
+                // Search up to 5 points before
+                for (int j = i - 1, found = 0; j >= 0 && found < 5; j--)
+                {
+                    var candidate = extractedData[j];
+                    double dist = CalculateDistance(currentPoint, candidate);
+                    if (dist <= distanceThreshold)
+                    {
+                        if (candidate.TryGetValue("TimeOffset", out var hrtoaStr2) && double.TryParse(hrtoaStr2, NumberStyles.Any, CultureInfo.InvariantCulture, out double hrtoaVal2))
+                        {
+                            adjacentHrToA.Add(hrtoaVal2);
+                        }
+                        found++;
+                    }
+                    else
+                    {
+                        break; // Stop searching if next point is too far
+                    }
+                }
+
+                // Search up to 5 points after
+                for (int j = i + 1, found = 0; j < extractedData.Count && found < 5; j++)
+                {
+                    var candidate = extractedData[j];
+                    double dist = CalculateDistance(currentPoint, candidate);
+                    if (dist <= distanceThreshold)
+                    {
+                        if (candidate.TryGetValue("TimeOffset", out var hrtoaStr2) && double.TryParse(hrtoaStr2, NumberStyles.Any, CultureInfo.InvariantCulture, out double hrtoaVal2))
+                        {
+                            adjacentHrToA.Add(hrtoaVal2);
+                        }
+                        found++;
+                    }
+                    else
+                    {
+                        break; // Stop searching if next point is too far
+                    }
+                }
+
+                // Compute average HrToA for this point
+                double avgHrToA = adjacentHrToA.Any() ? adjacentHrToA.Average() : -999.0;
+                currentPoint["AvgHrToA"] = avgHrToA.ToString("G17", CultureInfo.InvariantCulture);
+                updatedPoints.Add(new Dictionary<string, string>(currentPoint));
+                if (avgHrToA > maxAvgHrToA) maxAvgHrToA = avgHrToA;
+            }
+
+            return Tuple.Create(updatedPoints, maxAvgHrToA);
+        }
+
+        /***************************************************************************************************
+        *
+        *   Function:       ExtractPointsWithDistance
+        *
+        *   Description:    Processes a list of data points for a single cell, filtering them based on
+        *                   geographic distance and signal quality (CINR). It ensures that the selected
+        *                   points are not too close to each other, picking the one with the best CINR
+        *                   if they are. This helps to select geographically distinct points with strong
+        *                   signals, which is crucial for accurate location estimation algorithms.
+        *
+        *   Input:          extractedData (List<...>) - Data points for a single cell.
+        *                   distanceThreshold (double) - The minimum distance between selected points.
+        *                   maxPoints (int) - The maximum number of points to return.
+        *                   metersPerDegree (double) - Conversion factor for distance calculation.
+        *
+        *   Output:         A tuple containing the filtered list of points and the maximum CINR found.
+        *
+        *   Author:         Amir Soltanian
+        *
+        *   Date:           September 4, 2025
+        *
+        ***************************************************************************************************/
         public static Tuple<List<Dictionary<string, string>>, double> ExtractPointsWithDistance(
             List<Dictionary<string, string>> extractedData,
             double distanceThreshold,
@@ -352,9 +460,9 @@ namespace BTS_Location_Estimation
                 {
                     string channel = selectedPoints.First().GetValueOrDefault("channel", "N/A");
                     string cellId = selectedPoints.First().GetValueOrDefault("cellId", "N/A");
-                    #if DEBUG
+#if DEBUG
                     Console.WriteLine($"Removing cell {cellId} on channel {channel} because all points have an identical TimeOffset.");
-                    #endif
+#endif
                     return Tuple.Create(new List<Dictionary<string, string>>(), -999.0); // Return empty list
                 }
             }
