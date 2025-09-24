@@ -171,6 +171,10 @@ namespace BTS_Location_Estimation
             }
         }
 
+
+
+
+
         /***************************************************************************************************
         *
         *   Function:       filter_cinr_minimum_PCI
@@ -209,15 +213,28 @@ namespace BTS_Location_Estimation
                 return latValid && lonValid;
             }).ToList();
 
-            // 2. Filter out rows where CINR is below the threshold
-            var cinrFiltered = coordinateFiltered.Where(row =>
+
+            Console.WriteLine($"Filtered data down to {coordinateFiltered.Count} rows after coordinate check.");
+
+            // 2. Filter out rows where CINR is below the threshold, or
+            // for  GSM, filter by BSIC that is non-blank. since blank BSCIs are filtered before
+            //no action is neccessary.
+            List<Dictionary<string, string>> cinrFiltered;
+            if (fileType != GSM_FILE_TYPE*10)
             {
-                if (row.TryGetValue("cinr", out var cinrString) && double.TryParse(cinrString, NumberStyles.Any, CultureInfo.InvariantCulture, out var cinrValue))
+                cinrFiltered = coordinateFiltered.Where(row =>
                 {
-                    return cinrValue >= cinrThresh;
-                }
-                return false; // Discard rows without a valid CINR
-            }).ToList();
+                    if (row.TryGetValue("cinr", out var cinrString) && double.TryParse(cinrString, NumberStyles.Any, CultureInfo.InvariantCulture, out var cinrValue))
+                    {
+                        return cinrValue >= cinrThresh;
+                    }
+                    return false; // Discard rows without a valid CINR
+                }).ToList();
+            }
+            else
+            {
+                cinrFiltered = coordinateFiltered;
+            }
 
             // 3. Group by channel and cell ID, then filter by count
             var finalFilteredData = cinrFiltered
@@ -230,9 +247,9 @@ namespace BTS_Location_Estimation
                 .SelectMany(group => group) // Flatten the groups back into a list of rows
                 .ToList();
 
-            #if DEBUG
+
             Console.WriteLine($"Filtered data down to {finalFilteredData.Count} rows after coordinate, CINR, and minimum count checks.");
-            #endif
+
             return finalFilteredData;
         }
 

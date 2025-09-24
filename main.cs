@@ -26,7 +26,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.2.10.0";
+        public const string SW_VERSION = "1.2.11.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -104,6 +104,7 @@ namespace BTS_Location_Estimation
                 //SaveHelper.debug_csv(allData);
                 allData = DataBaseProc.generate_unique_cellID(allData, fileType);
                 //SaveHelper.debug_csv(allData);
+
                 Console.WriteLine($"Extracted {allData.Count} rows from {inputFilename}");
                 InputOutputFileProc.Save_Drive_Route(allData, inputFilename);
 
@@ -114,7 +115,7 @@ namespace BTS_Location_Estimation
                 var filteredData = DataBaseProc.filter_cinr_minimum_PCI(allData, fileType, MINIMUM_CELL_ID_COUNT);
                 string step2Filename = $"step2_{filenameOnly}.csv";
                 //SaveHelper.save_extract_step2(filteredData, step2Filename);
-
+                //SaveHelper.debug_csv(filteredData);
                 // Group data by channel and cell to process each one individually
                 var groupedData = filteredData.GroupBy(row => new
                 {
