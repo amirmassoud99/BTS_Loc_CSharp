@@ -613,7 +613,7 @@ namespace BTS_Location_Estimation
                 string tech = "LTE";
                 if (file.Contains("_NR_")) tech = "NR";
                 else if (file.Contains("WCDMA")) tech = "WCDMA";
-                else if (file.Contains("ColorCode")) tech = "GSM";
+                else if (file.Contains("GSM")) tech = "GSM";
 
                 var lines = File.ReadAllLines(file);
                 if (lines.Length <= 1) continue; // Skip empty or header-only files

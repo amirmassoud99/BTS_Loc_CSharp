@@ -27,7 +27,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.3.0.0";
+        public const string SW_VERSION = "1.3.1.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -190,7 +190,7 @@ namespace BTS_Location_Estimation
 
             }
 
-            /** Python Integration for Advanced Clustering **/
+            /** Advanced Clustering First method uses C# library. The second method uses Python HDBSCAN library **/
             /*
             The below code extract all the sectors belong to the same carrier. It then uses
             an advanced clustering algorithm to group them by their geographical location. This

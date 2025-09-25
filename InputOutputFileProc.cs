@@ -125,7 +125,7 @@ namespace BTS_Location_Estimation
             };*/
             
             //Batch processing Drive 6 Gordon Hong Kong
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Gordon_20250923_033301\";
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Gordon_20250923_033301\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
@@ -140,15 +140,15 @@ namespace BTS_Location_Estimation
                 "Gflex Device 019999102_UMTS WCDMA_UB I  2100 (IMT-2000) DL_Blind Scan.dtr",
                 "Gflex Device 019999102_UMTS WCDMA_UB V  850 (Cellular) DL_Blind Scan (4355 - 4460).dtr",
                 "Gflex Device 019999102_UMTS WCDMA_UB VIII  900 DL_Blind Scan.dtr"
-            };
+            };*/
             //Batch processing Drive 7 Josue drive test in Washington DC, GSM only
-            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250922_GSM_HRTOA\";
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250922_GSM_HRTOA\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
                 "Gflex Device 019999090_GSM_1900 (PCS) DL_Blind Scan.dtr"
                 
-            };*/
+            };
             return (fileDirectory, inputFilenames);
         }
 
