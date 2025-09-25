@@ -27,7 +27,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.2.15.0";
+        public const string SW_VERSION = "1.3.0.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -132,9 +132,12 @@ namespace BTS_Location_Estimation
                     //extract points with minimum distance
                     var pointsForCell = group.ToList();
 
-                    // Calculate average GSM HrToA and initialize cinr  to icremental values
-                    var GSMPoints = DataBaseProc.GSMHrtoaAverage(pointsForCell, DISTANCE_THRESH, METERS_PER_DEGREE);
-
+                    // Calculate average GSM HrToA and initialize cinr to incremental values
+                    bool isGsm = fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10;
+                    if (isGsm)
+                    {
+                        DataBaseProc.GSMHrtoaAverage(pointsForCell, DISTANCE_THRESH, METERS_PER_DEGREE);
+                    }
                     var (finalPoints, maxCinr) = DataBaseProc.ExtractPointsWithDistance(pointsForCell, DISTANCE_THRESH, MAX_POINTS, METERS_PER_DEGREE);
                     //SaveHelper.map_cellid(finalPoints, "658080", "17104", "blue");
 
@@ -154,7 +157,7 @@ namespace BTS_Location_Estimation
 
                     double searchDirection = SEARCH_DIRECTION;
                     double distanceThresh = DISTANCE_THRESH;
-                    bool isGsm = fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10;
+                    
                     if (isGsm)
                     {
                         searchDirection = searchDirection * 10;
