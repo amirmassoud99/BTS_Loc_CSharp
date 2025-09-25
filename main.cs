@@ -26,11 +26,12 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.2.13.0";
+        public const string SW_VERSION = "1.2.14.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
         public const double LTE_SAMPLING_RATE_HZ = 30.72e6;
+        public const double GSM_SAMPLING_RATE_HZ = (26 * 625) * 1000 / 15;
         public const double TIME_OFFSET_WRAP_VALUE = 307200.0;
         public const double NR_SAMPLING_RATE_MULTIPLIER = 4.0;
         public const double WCDMA_SAMPLING_RATE_DIVISOR = 4.0;
@@ -138,7 +139,7 @@ namespace BTS_Location_Estimation
 
 
                     // Adjust time offset values for the filtered points
-                    var timeAdjustedPoints = DataBaseProc.ProcessTimeOffset(finalPoints, fileType, TIME_OFFSET_WRAP_VALUE, WCDMA_TIME_OFFSET_WRAP_VALUE, LTE_SAMPLING_RATE_HZ, NR_SAMPLING_RATE_MULTIPLIER, WCDMA_SAMPLING_RATE_DIVISOR);
+                    var timeAdjustedPoints = DataBaseProc.ProcessTimeOffset(finalPoints, fileType, TIME_OFFSET_WRAP_VALUE, WCDMA_TIME_OFFSET_WRAP_VALUE, LTE_SAMPLING_RATE_HZ, NR_SAMPLING_RATE_MULTIPLIER, WCDMA_SAMPLING_RATE_DIVISOR, GSM_SAMPLING_RATE_HZ);
 
 
 

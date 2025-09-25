@@ -255,7 +255,7 @@ namespace BTS_Location_Estimation
 
         /***************************************************************************************************
         *
-        *   Function:       ExtractPointsWithDistance
+        *   Function:       GSMHrtoaAverage
         *
         *   Description:    Processes a list of data points for a single cell, filtering them based on
         *                   geographic distance and signal quality (CINR). It ensures that the selected
@@ -307,6 +307,11 @@ namespace BTS_Location_Estimation
 
             for (int i = 0; i < extractedData.Count; i++)
             {
+                // Initialize cinr to the value of i
+                //The cinr is initialized to an incrememntal value to ensure uniqueness.
+                extractedData[i]["cinr"] = i.ToString();
+
+
                 var currentPoint = extractedData[i];
                 var adjacentHrToA = new List<double>();
 
@@ -502,7 +507,9 @@ namespace BTS_Location_Estimation
             double wcdmaTimeOffsetWrapValue,
             double lteSamplingRateHz,
             double nrSamplingRateMultiplier,
-            double wcdmaSamplingRateDivisor)
+            double wcdmaSamplingRateDivisor,
+            double gsmSamplingRateHz
+            )
         {
             if (data == null || !data.Any())
             {
@@ -511,6 +518,7 @@ namespace BTS_Location_Estimation
 
             bool isNr = fileType == NR_TOPN_FILE_TYPE || fileType == NR_FILE_TYPE || fileType == NR_TOPN_FILE_TYPE * 10 || fileType == NR_FILE_TYPE * 10;
             bool isWcdma = fileType == WCDMA_FILE_TYPE_CSV || fileType == WCDMA_FILE_TYPE_DTR;
+            bool isGsm = fileType == GSM_FILE_TYPE || fileType == GSM_FILE_TYPE * 10;
 
             double wrapValue;
             double samplingRateHz;
@@ -525,6 +533,11 @@ namespace BTS_Location_Estimation
             {
                 wrapValue = wcdmaTimeOffsetWrapValue;
                 samplingRateHz = lteSamplingRateHz / wcdmaSamplingRateDivisor;
+            }
+            else if (isGsm)
+            {
+                wrapValue = timeOffsetWrapValue;
+                samplingRateHz = gsmSamplingRateHz;
             }
             else // LTE cases (1, 2, 10, 20) and any other defaults
             {
@@ -543,7 +556,7 @@ namespace BTS_Location_Estimation
             double tsMax = timeOffsets.Max();
 
             // Adjust for wrapping
-            if (tsMin < wrapValue / 4.0 && tsMax > wrapValue * 3.0 / 4.0)
+            if (tsMin < wrapValue / 4.0 && tsMax > wrapValue * 3.0 / 4.0 && !isGsm)
             {
                 for (int i = 0; i < data.Count; i++)
                 {
@@ -555,13 +568,28 @@ namespace BTS_Location_Estimation
             }
 
             // Normalize the time offset by the sampling rate
-            foreach (var row in data)
+            if (isGsm)
             {
-                if (row.TryGetValue("TimeOffset", out var tsStr) &&
-                    double.TryParse(tsStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double ts))
+                foreach (var row in data)
                 {
-                    // Use "G17" format specifier for full double precision
-                    row["TimeOffset"] = (ts / samplingRateHz).ToString("G17", CultureInfo.InvariantCulture);
+                    if (row.TryGetValue("AvgHrToA", out var tsStr) &&
+                        double.TryParse(tsStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double ts))
+                    {
+                        // Use "G17" format specifier for full double precision
+                        row["TimeOffset"] = (ts / samplingRateHz).ToString("G17", CultureInfo.InvariantCulture);
+                    }
+                }
+            }
+            else
+            {
+                foreach (var row in data)
+                {
+                    if (row.TryGetValue("TimeOffset", out var tsStr) &&
+                        double.TryParse(tsStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double ts))
+                    {
+                        // Use "G17" format specifier for full double precision
+                        row["TimeOffset"] = (ts / samplingRateHz).ToString("G17", CultureInfo.InvariantCulture);
+                    }
                 }
             }
 
