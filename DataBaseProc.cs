@@ -257,22 +257,19 @@ namespace BTS_Location_Estimation
         *
         *   Function:       GSMHrtoaAverage
         *
-        *   Description:    Processes a list of data points for a single cell, filtering them based on
-        *                   geographic distance and signal quality (CINR). It ensures that the selected
-        *                   points are not too close to each other, picking the one with the best CINR
-        *                   if they are. This helps to select geographically distinct points with strong
-        *                   signals, which is crucial for accurate location estimation algorithms.
+        *   Description:    Averages the 'TimeOffset' (HrToA) values for each point in the input list
+        *                   based on nearby points within a specified distance threshold.
+        *                   Initializes 'cinr' to ensure uniqueness.
         *
         *   Input:          extractedData (List<...>) - Data points for a single cell.
-        *                   distanceThreshold (double) - The minimum distance between selected points.
-        *                   maxPoints (int) - The maximum number of points to return.
+        *                   distanceThreshold (double) - The maximumdistance between selected points.
         *                   metersPerDegree (double) - Conversion factor for distance calculation.
         *
         *   Output:         A tuple containing the filtered list of points and the maximum CINR found.
         *
         *   Author:         Amir Soltanian
         *
-        *   Date:           September 4, 2025
+        *   Date:           September 25, 2025
         *
         ***************************************************************************************************/
         public static Tuple<List<Dictionary<string, string>>, double> GSMHrtoaAverage(

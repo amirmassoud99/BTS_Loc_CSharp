@@ -11,6 +11,7 @@ using Python.Runtime;
 
 namespace BTS_Location_Estimation
 {
+
     // Data structure to hold row data (similar to C++ Row)
     public class Row
     {
@@ -26,7 +27,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.2.14.0";
+        public const string SW_VERSION = "1.2.15.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -131,15 +132,18 @@ namespace BTS_Location_Estimation
                     //extract points with minimum distance
                     var pointsForCell = group.ToList();
 
-
+                    // Calculate average GSM HrToA and initialize cinr  to icremental values
                     var GSMPoints = DataBaseProc.GSMHrtoaAverage(pointsForCell, DISTANCE_THRESH, METERS_PER_DEGREE);
 
                     var (finalPoints, maxCinr) = DataBaseProc.ExtractPointsWithDistance(pointsForCell, DISTANCE_THRESH, MAX_POINTS, METERS_PER_DEGREE);
                     //SaveHelper.map_cellid(finalPoints, "658080", "17104", "blue");
 
+                    // Trap breakpoint for Channel=512 and CellId=40101044
+
 
                     // Adjust time offset values for the filtered points
                     var timeAdjustedPoints = DataBaseProc.ProcessTimeOffset(finalPoints, fileType, TIME_OFFSET_WRAP_VALUE, WCDMA_TIME_OFFSET_WRAP_VALUE, LTE_SAMPLING_RATE_HZ, NR_SAMPLING_RATE_MULTIPLIER, WCDMA_SAMPLING_RATE_DIVISOR, GSM_SAMPLING_RATE_HZ);
+
 
 
 
@@ -148,13 +152,21 @@ namespace BTS_Location_Estimation
                     //string step3Filename = $"step3_{filenameOnly}_ch{group.Key.Channel}_cell{group.Key.CellId}.csv";
                     //SaveHelper.save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
 
-
+                    double searchDirection = SEARCH_DIRECTION;
+                    double distanceThresh = DISTANCE_THRESH;
+                    bool isGsm = fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10;
+                    if (isGsm)
+                    {
+                        searchDirection = searchDirection * 10;
+                        distanceThresh = distanceThresh * 5;
+                    }
+                    
                     // Run the TSWLS algorithm
-                    var tswlsResult = TSWLS.run_tswls(timeAdjustedPoints, MINIMUM_POINTS_FOR_TSWLS, SPEED_OF_LIGHT, METERS_PER_DEGREE, SEARCH_DIRECTION, DISTANCE_THRESH);
+                        var tswlsResult = TSWLS.run_tswls(timeAdjustedPoints, MINIMUM_POINTS_FOR_TSWLS, searchDirection, distanceThresh);
 
                     if (tswlsResult != null)
                     {
-                        TSWLS.ProcessTswlsResult(tswlsResult, timeAdjustedPoints, group, maxCinr, estimationResults, fileType, METERS_PER_DEGREE, DataBaseProc.WCDMA_FILE_TYPE_CSV, DataBaseProc.WCDMA_FILE_TYPE_DTR, CONFIDENCE_MIN_POINTS_WCDMA, CONFIDENCE_MIN_ECIO_WCDMA, CONFIDENCE_MIN_POINTS_LTE_NR, CONFIDENCE_MIN_CINR_LTE_NR);
+                        TSWLS.ProcessTswlsResult(tswlsResult, timeAdjustedPoints, group, maxCinr, estimationResults, fileType, DataBaseProc.WCDMA_FILE_TYPE_CSV, DataBaseProc.WCDMA_FILE_TYPE_DTR);
                     }
                 }
 

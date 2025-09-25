@@ -203,7 +203,7 @@ namespace BTS_Location_Estimation
         *   Date:           September 4, 2025
         *
         ***************************************************************************************************/
-        public static Vector<double>? run_tswls(List<Dictionary<string, string>> points, int minimum_points_for_TSWLS, double c, double metersPerDegree, double range, double step)
+        public static Vector<double>? run_tswls(List<Dictionary<string, string>> points, int minimum_points_for_TSWLS, double range, double step)
         {
             if (points.Count < minimum_points_for_TSWLS)
             {
@@ -213,6 +213,8 @@ namespace BTS_Location_Estimation
                 return null;
             }
 
+            double c = MainModule.SPEED_OF_LIGHT;
+            double metersPerDegree = MainModule.METERS_PER_DEGREE;
             int N = points.Count;
             var sx = Vector<double>.Build.Dense(N);
             var sy = Vector<double>.Build.Dense(N);
@@ -482,13 +484,8 @@ namespace BTS_Location_Estimation
             double maxCinr,
             List<Dictionary<string, string>> estimationResults,
             int fileType,
-            double metersPerDegree,
             int wcdmaFileTypeCsv,
-            int wcdmaFileTypeDtr,
-            int confidenceMinPointsWcdma,
-            double confidenceMinEcioWcdma,
-            int confidenceMinPointsLteNr,
-            double confidenceMinCinrLteNr)
+            int wcdmaFileTypeDtr)
         {
             double xhat1 = tswlsResult[0];
             double yhat1 = tswlsResult[1];
@@ -498,8 +495,9 @@ namespace BTS_Location_Estimation
             double latRef = double.Parse(timeAdjustedPoints[0]["latitude"], CultureInfo.InvariantCulture);
             double lonRef = double.Parse(timeAdjustedPoints[0]["longitude"], CultureInfo.InvariantCulture);
 
-            var (est_Lat1, est_Lon1) = xy2LatLon(xhat1, yhat1, latRef, lonRef, metersPerDegree);
-            var (est_Lat2, est_Lon2) = xy2LatLon(xhat2, yhat2, latRef, lonRef, metersPerDegree);
+            // Access METERS_PER_DEGREE directly from MainModule
+            var (est_Lat1, est_Lon1) = xy2LatLon(xhat1, yhat1, latRef, lonRef, MainModule.METERS_PER_DEGREE);
+            var (est_Lat2, est_Lon2) = xy2LatLon(xhat2, yhat2, latRef, lonRef, MainModule.METERS_PER_DEGREE);
 
             #if DEBUG
             Console.WriteLine($"Estimated Final Location for Cell {group.Key.CellId} (Lat, Lon): ({est_Lat2:F6}, {est_Lon2:F6})");
@@ -517,14 +515,14 @@ namespace BTS_Location_Estimation
             bool isWcdma = fileType == wcdmaFileTypeCsv || fileType == wcdmaFileTypeDtr;
             if (isWcdma)
             {
-                if (timeAdjustedPoints.Count < confidenceMinPointsWcdma && maxCinr < confidenceMinEcioWcdma)
+                if (timeAdjustedPoints.Count < MainModule.CONFIDENCE_MIN_POINTS_WCDMA && maxCinr < MainModule.CONFIDENCE_MIN_ECIO_WCDMA)
                 {
                     confidence = "Low";
                 }
             }
             else // LTE and NR
             {
-                if (timeAdjustedPoints.Count < confidenceMinPointsLteNr && maxCinr < confidenceMinCinrLteNr)
+                if (timeAdjustedPoints.Count < MainModule.CONFIDENCE_MIN_POINTS_LTE_NR && maxCinr < MainModule.CONFIDENCE_MIN_CINR_LTE_NR)
                 {
                     confidence = "Low";
                 }
