@@ -273,9 +273,7 @@ namespace BTS_Location_Estimation
         *
         ***************************************************************************************************/
         public static Tuple<List<Dictionary<string, string>>, double> GSMHrtoaAverage(
-            List<Dictionary<string, string>> extractedData,
-            double distanceThreshold,
-            double metersPerDegree)
+            List<Dictionary<string, string>> extractedData)
         {
             if (extractedData == null || !extractedData.Any())
             {
@@ -295,12 +293,12 @@ namespace BTS_Location_Estimation
                     return double.MaxValue;
                 }
                 // Convert degree distance to meters
-                return (Math.Pow(lat2 - lat1, 2) + Math.Pow(lon2 - lon1, 2)) * metersPerDegree * metersPerDegree;
+                return (Math.Pow(lat2 - lat1, 2) + Math.Pow(lon2 - lon1, 2)) * MainModule.METERS_PER_DEGREE * MainModule.METERS_PER_DEGREE;
             }
 
             var updatedPoints = new List<Dictionary<string, string>>();
             double maxAvgHrToA = -999.0;
-            double distanceThresholdSquared = distanceThreshold * distanceThreshold;
+            double distanceThresholdSquared = MainModule.DISTANCE_THRESH * MainModule.DISTANCE_THRESH;
 
             for (int i = 0; i < extractedData.Count; i++)
             {
@@ -389,10 +387,7 @@ namespace BTS_Location_Estimation
         *
         ***************************************************************************************************/
         public static Tuple<List<Dictionary<string, string>>, double> ExtractPointsWithDistance(
-            List<Dictionary<string, string>> extractedData,
-            double distanceThreshold,
-            int maxPoints,
-            double metersPerDegree)
+            List<Dictionary<string, string>> extractedData)
         {
             // This function processes a list of data points for a single cell,
             // filtering them based on geographic distance and signal quality (CINR).
@@ -420,12 +415,12 @@ namespace BTS_Location_Estimation
                 {
                     return -1.0; // Invalid data
                 }
-                return Math.Sqrt(Math.Pow(lat2 - lat1, 2) + Math.Pow(lon2 - lon1, 2)) * metersPerDegree;
+                return Math.Sqrt(Math.Pow(lat2 - lat1, 2) + Math.Pow(lon2 - lon1, 2)) * MainModule.METERS_PER_DEGREE;
             }
 
             for (int i = 1; i < extractedData.Count; ++i)
             {
-                if (selectedPoints.Count >= maxPoints)
+                if (selectedPoints.Count >= MainModule.MAX_POINTS)
                 {
                     break;
                 }
@@ -435,7 +430,7 @@ namespace BTS_Location_Estimation
                 double distance = CalculateDistance(currentPoint, lastSelectedPoint);
                 if (distance < 0) continue;
 
-                if (distance < distanceThreshold)
+                if (distance < MainModule.DISTANCE_THRESH)
                 {
                     if (currentPoint.TryGetValue("cinr", out var currentCinrStr) &&
                         lastSelectedPoint.TryGetValue("cinr", out var lastCinrStr) &&
@@ -499,13 +494,7 @@ namespace BTS_Location_Estimation
         ***************************************************************************************************/
         public static List<Dictionary<string, string>> ProcessTimeOffset(
             List<Dictionary<string, string>> data,
-            int fileType,
-            double timeOffsetWrapValue,
-            double wcdmaTimeOffsetWrapValue,
-            double lteSamplingRateHz,
-            double nrSamplingRateMultiplier,
-            double wcdmaSamplingRateDivisor,
-            double gsmSamplingRateHz
+            int fileType
             )
         {
             if (data == null || !data.Any())
@@ -523,23 +512,23 @@ namespace BTS_Location_Estimation
             if (isNr)
             {
                 const double ssbPeriod = 20e-3; // 20 ms
-                wrapValue = lteSamplingRateHz * nrSamplingRateMultiplier * ssbPeriod;
-                samplingRateHz = lteSamplingRateHz * nrSamplingRateMultiplier;
+                wrapValue = MainModule.LTE_SAMPLING_RATE_HZ * MainModule.NR_SAMPLING_RATE_MULTIPLIER * ssbPeriod;
+                samplingRateHz = MainModule.LTE_SAMPLING_RATE_HZ * MainModule.NR_SAMPLING_RATE_MULTIPLIER;
             }
             else if (isWcdma)
             {
-                wrapValue = wcdmaTimeOffsetWrapValue;
-                samplingRateHz = lteSamplingRateHz / wcdmaSamplingRateDivisor;
+                wrapValue = MainModule.WCDMA_TIME_OFFSET_WRAP_VALUE;
+                samplingRateHz = MainModule.LTE_SAMPLING_RATE_HZ / MainModule.WCDMA_SAMPLING_RATE_DIVISOR;
             }
             else if (isGsm)
             {
-                wrapValue = timeOffsetWrapValue;
-                samplingRateHz = gsmSamplingRateHz;
+                wrapValue = MainModule.TIME_OFFSET_WRAP_VALUE;
+                samplingRateHz = MainModule.GSM_SAMPLING_RATE_HZ;
             }
             else // LTE cases (1, 2, 10, 20) and any other defaults
             {
-                wrapValue = timeOffsetWrapValue;
-                samplingRateHz = lteSamplingRateHz;
+                wrapValue = MainModule.TIME_OFFSET_WRAP_VALUE;
+                samplingRateHz = MainModule.LTE_SAMPLING_RATE_HZ;
             }
 
             var timeOffsets = data.Select(row =>

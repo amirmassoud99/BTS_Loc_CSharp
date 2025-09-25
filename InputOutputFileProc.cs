@@ -36,13 +36,13 @@ namespace BTS_Location_Estimation
         public static (string fileDirectory, List<string> inputFilenames) GetFileConfigurations()
         {
             /*****Reference Matlab file*/
-            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\MatlabRef\";
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\MatlabRef\";
             //The file and the estimation results are saved in the Refbackup folder.
             List<string> inputFilenames = new List<string>
             {
                 "Gflex Device 032201005_TD-LTE_EB 41  TDD 2.5 GHz_Enhanced Top N Signal Auto Bandwidth Channel 39750 - 2506.000000 MHz.csv"
 
-            };*/
+            };
 
             /*****GSM file*/
             /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\GSM\";
@@ -142,13 +142,13 @@ namespace BTS_Location_Estimation
                 "Gflex Device 019999102_UMTS WCDMA_UB VIII  900 DL_Blind Scan.dtr"
             };*/
             //Batch processing Drive 7 Josue drive test in Washington DC, GSM only
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250922_GSM_HRTOA\";
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250922_GSM_HRTOA\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
                 "Gflex Device 019999090_GSM_1900 (PCS) DL_Blind Scan.dtr"
                 
-            };
+            };*/
             return (fileDirectory, inputFilenames);
         }
 

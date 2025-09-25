@@ -203,12 +203,12 @@ namespace BTS_Location_Estimation
         *   Date:           September 4, 2025
         *
         ***************************************************************************************************/
-        public static Vector<double>? run_tswls(List<Dictionary<string, string>> points, int minimum_points_for_TSWLS, double range, double step)
+    public static Vector<double>? run_tswls(List<Dictionary<string, string>> points, double range, double step)
         {
-            if (points.Count < minimum_points_for_TSWLS)
+            if (points.Count < MainModule.MINIMUM_POINTS_FOR_TSWLS)
             {
                 #if DEBUG
-                Console.WriteLine($"TSWLS requires at least {minimum_points_for_TSWLS} points. Cannot run with {points.Count} points.");
+                Console.WriteLine($"TSWLS requires at least {MainModule.MINIMUM_POINTS_FOR_TSWLS} points. Cannot run with {points.Count} points.");
                 #endif
                 return null;
             }
@@ -483,9 +483,7 @@ namespace BTS_Location_Estimation
             IGrouping<dynamic, Dictionary<string, string>> group,
             double maxCinr,
             List<Dictionary<string, string>> estimationResults,
-            int fileType,
-            int wcdmaFileTypeCsv,
-            int wcdmaFileTypeDtr)
+            int fileType)
         {
             double xhat1 = tswlsResult[0];
             double yhat1 = tswlsResult[1];
@@ -512,7 +510,7 @@ namespace BTS_Location_Estimation
             string combinedCellIdentity = string.Join("-", cellIdentities);
 
             string confidence = "High";
-            bool isWcdma = fileType == wcdmaFileTypeCsv || fileType == wcdmaFileTypeDtr;
+            bool isWcdma = fileType == DataBaseProc.WCDMA_FILE_TYPE_CSV || fileType == DataBaseProc.WCDMA_FILE_TYPE_DTR;
             if (isWcdma)
             {
                 if (timeAdjustedPoints.Count < MainModule.CONFIDENCE_MIN_POINTS_WCDMA && maxCinr < MainModule.CONFIDENCE_MIN_ECIO_WCDMA)
