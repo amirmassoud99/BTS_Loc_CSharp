@@ -27,7 +27,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.3.3.0";
+        public const string SW_VERSION = "1.3.4.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -199,7 +199,7 @@ namespace BTS_Location_Estimation
             Console.WriteLine("Batch processing complete.");
             // Example: Filter by mnc and save cluster results with filter in filename
             string filterType = "mnc";
-            string filterValue = "260";
+            string filterValue = "410";
             //string filterType = null;
             //string filterValue = null;
             var outputFile = SaveHelper.ClusterProcessing(filterType, filterValue, EPS_MILES);
