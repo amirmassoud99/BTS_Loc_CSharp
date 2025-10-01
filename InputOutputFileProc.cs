@@ -36,6 +36,7 @@ namespace BTS_Location_Estimation
         public static (string fileDirectory, List<string> inputFilenames) GetFileConfigurations()
         {
             /*****Reference Matlab file*/
+            //BTS_1_Wei_Matalb.map
             /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\MatlabRef\";
             //The file and the estimation results are saved in the Refbackup folder.
             List<string> inputFilenames = new List<string>
@@ -44,15 +45,9 @@ namespace BTS_Location_Estimation
 
             };*/
 
-            /*****GSM file*/
-            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\GSM\";
-            List<string> inputFilenames = new List<string>
-            {
-                "BCCH IBflex_0000000019999039_ColorCodeData_Snum90_134014723539980889.csv"
 
-            };*/
             /**********WCDMA Batch */
-
+            //BTS_20_WCDMA_UK
             /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\Drive test WCDMA MBS_20230111_144045\";
             List<string> inputFilenames = new List<string>
             {
@@ -80,8 +75,8 @@ namespace BTS_Location_Estimation
 
 
             //dRIVE bts_5 att n77
-
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\n77 drive\";
+                                                               
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\n77 drive\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
@@ -90,7 +85,7 @@ namespace BTS_Location_Estimation
                 "Gflex Device 032201005_NR_FR1 TDD n77_Blind Scan SCS Autodetect.DTR",
                 "Gflex Device 032201005_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.DTR",
                 "Gflex Device 032201005_NR_FR1 TDD n77_nr Top N Signal ARFCN  658080 - 3871.20 MHz SCS 30 kHz.dtr"
-            };
+            };*/
 
 
             //Batch processing Drive 3_Washington DC
@@ -142,13 +137,13 @@ namespace BTS_Location_Estimation
                 "Gflex Device 019999102_UMTS WCDMA_UB VIII  900 DL_Blind Scan.dtr"
             };*/
             //Batch processing Drive 7 Josue drive test in Washington DC, GSM only
-            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250922_GSM_HRTOA\";
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250922_GSM_HRTOA\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
                 "Gflex Device 019999090_GSM_1900 (PCS) DL_Blind Scan.dtr"
                 
-            };*/
+            };
             return (fileDirectory, inputFilenames);
         }
 

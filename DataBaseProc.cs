@@ -259,7 +259,7 @@ namespace BTS_Location_Estimation
         *
         *   Description:    Averages the 'TimeOffset' (HrToA) values for each point in the input list
         *                   based on nearby points within a specified distance threshold.
-        *                   Initializes 'cinr' to ensure uniqueness.
+        *                   Initializes 'cinr' to the CountAvgHrToA value to ensure a better performance.
         *
         *   Input:          extractedData (List<...>) - Data points for a single cell.
         *                   distanceThreshold (double) - The maximumdistance between selected points.
@@ -302,11 +302,6 @@ namespace BTS_Location_Estimation
 
             for (int i = 0; i < extractedData.Count; i++)
             {
-                // Initialize cinr to the value of i
-                //The cinr is initialized to an incrememntal value to ensure uniqueness.
-                extractedData[i]["cinr"] = i.ToString();
-
-
                 var currentPoint = extractedData[i];
                 var adjacentHrToA = new List<double>();
 
@@ -356,7 +351,11 @@ namespace BTS_Location_Estimation
 
                 // Compute average HrToA for this point
                 double avgHrToA = adjacentHrToA.Any() ? adjacentHrToA.Average() : -999.0;
+                int countAvgHrToA = adjacentHrToA.Count;
                 currentPoint["AvgHrToA"] = avgHrToA.ToString("G17", CultureInfo.InvariantCulture);
+                currentPoint["CountAvgHrToA"] = countAvgHrToA.ToString();
+                // Initialize cinr to the CountAvgHrToA value
+                currentPoint["cinr"] = countAvgHrToA.ToString();
                 updatedPoints.Add(new Dictionary<string, string>(currentPoint));
                 if (avgHrToA > maxAvgHrToA) maxAvgHrToA = avgHrToA;
             }
