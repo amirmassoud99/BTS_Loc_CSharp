@@ -520,7 +520,10 @@ namespace BTS_Location_Estimation
             }
             else // LTE and NR
             {
-                if (timeAdjustedPoints.Count < MainModule.CONFIDENCE_MIN_POINTS_LTE_NR && maxCinr < MainModule.CONFIDENCE_MIN_CINR_LTE_NR)
+                double minCinrThreshold = (fileType == DataBaseProc.NR_TOPN_FILE_TYPE || fileType == DataBaseProc.NR_FILE_TYPE || fileType == DataBaseProc.NR_TOPN_FILE_TYPE * 10 || fileType == DataBaseProc.NR_FILE_TYPE * 10)
+                    ? MainModule.CONFIDENCE_MIN_CINR_NR
+                    : MainModule.CONFIDENCE_MIN_CINR_LTE;
+                if (timeAdjustedPoints.Count < MainModule.CONFIDENCE_MIN_POINTS_LTE_NR && maxCinr < minCinrThreshold)
                 {
                     confidence = "Low";
                 }

@@ -27,7 +27,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.3.7.0";
+        public const string SW_VERSION = "1.3.8.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -48,7 +48,8 @@ namespace BTS_Location_Estimation
 
         // Confidence Thresholds
         public const int CONFIDENCE_MIN_POINTS_LTE_NR = 9;
-        public const double CONFIDENCE_MIN_CINR_LTE_NR = 13.0;
+        public const double CONFIDENCE_MIN_CINR_LTE = 10.0;
+        public const double CONFIDENCE_MIN_CINR_NR = 13.0;
         public const int CONFIDENCE_MIN_POINTS_WCDMA = 8;
         public const double CONFIDENCE_MIN_ECIO_WCDMA = -10.0;
 
