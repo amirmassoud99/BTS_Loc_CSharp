@@ -696,7 +696,7 @@ namespace BTS_Location_Estimation
             return outputFile;
         }
 
-        public static void map_cluster(string inputFile = "ALL_Estimate.csv", string outputFile = "ALL_map.csv", int fileType = 0)
+        public static void map_cluster(string inputFile = "ALL_Estimate.csv", string outputFile = "ALL_map.csv")
         {
             // Build map file names by replacing 'Estimate' with 'map' in inputFile name
             string inputFileName = Path.GetFileName(inputFile);
@@ -711,12 +711,11 @@ namespace BTS_Location_Estimation
             {
                 writer.WriteLine(string.Join(",", headers));
                 var allHeaders = reader.ReadLine()?.Split(',') ?? new string[0]; // Read header from ALL_Estimate.csv
-                int latIdx = (fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10)
-                    ? Array.IndexOf(allHeaders, "est_Lat1")
-                    : Array.IndexOf(allHeaders, "est_Lat2");
-                int lonIdx = (fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10)
-                    ? Array.IndexOf(allHeaders, "est_Lon1")
-                    : Array.IndexOf(allHeaders, "est_Lon2");
+                int techIdx = Array.IndexOf(allHeaders, "Technology");
+                int lat1Idx = Array.IndexOf(allHeaders, "est_Lat1");
+                int lon1Idx = Array.IndexOf(allHeaders, "est_Lon1");
+                int lat2Idx = Array.IndexOf(allHeaders, "est_Lat2");
+                int lon2Idx = Array.IndexOf(allHeaders, "est_Lon2");
                 int cellIdIdx = Array.IndexOf(allHeaders, "CellId");
                 int cellIdentityIdx = Array.IndexOf(allHeaders, "cellIdentity");
                 int mncIdx = Array.IndexOf(allHeaders, "mnc");
@@ -726,10 +725,13 @@ namespace BTS_Location_Estimation
                 while (reader.ReadLine() is string lineNotNull)
                 {
                     var cols = lineNotNull.Split(',');
+                    bool isGsm = techIdx >= 0 && cols[techIdx].Trim().Equals("GSM", StringComparison.OrdinalIgnoreCase);
+                    string lat = isGsm ? (lat1Idx >= 0 ? cols[lat1Idx] : "") : (lat2Idx >= 0 ? cols[lat2Idx] : "");
+                    string lon = isGsm ? (lon1Idx >= 0 ? cols[lon1Idx] : "") : (lon2Idx >= 0 ? cols[lon2Idx] : "");
                     var row = new List<string>
                     {
-                        latIdx >= 0 ? cols[latIdx] : "",
-                        lonIdx >= 0 ? cols[lonIdx] : "",
+                        lat,
+                        lon,
                         cellIdIdx >= 0 ? cols[cellIdIdx] : "",
                         cellIdentityIdx >= 0 ? cols[cellIdentityIdx] : "",
                         mncIdx >= 0 ? cols[mncIdx] : "",
@@ -741,21 +743,22 @@ namespace BTS_Location_Estimation
                     // Build dictionary for KML
                     var dict = new Dictionary<string, string>
                     {
-                        {"Latitude", latIdx >= 0 ? cols[latIdx] : ""},
-                        {"Longitude", lonIdx >= 0 ? cols[lonIdx] : ""},
+                        {"Latitude", lat},
+                        {"Longitude", lon},
                         {"CellID", cellIdIdx >= 0 ? cols[cellIdIdx] : ""},
                         {"CellIdentity", cellIdentityIdx >= 0 ? cols[cellIdentityIdx] : ""},
                         {"mnc", mncIdx >= 0 ? cols[mncIdx] : ""},
                         {"mcc", mccIdx >= 0 ? cols[mccIdx] : ""},
                         {"BeamIndex", beamIdxIdx >= 0 ? cols[beamIdxIdx] : ""},
-                        {"Type", typeIdx >= 0 ? cols[typeIdx] : ""}
+                        {"Type", typeIdx >= 0 ? cols[typeIdx] : ""},
+                        {"Technology", techIdx >= 0 ? cols[techIdx] : ""}
                     };
                     rows.Add(dict);
                 }
             }
             Console.WriteLine($"{mapCsvName} created from {inputFile}.");
             // Also generate KML
-            generate_all_map_kml(rows, mapKmlName, fileType, "cluster entry");
+            generate_all_map_kml(rows, mapKmlName, 0, "cluster entry");
             // ...existing code...
         }
 

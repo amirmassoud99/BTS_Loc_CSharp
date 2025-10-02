@@ -27,7 +27,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.3.13.0";
+        public const string SW_VERSION = "1.3.14.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -148,7 +148,7 @@ namespace BTS_Location_Estimation
                     var (finalPoints, maxCinr) = DataBaseProc.ExtractPointsWithDistance(pointsForCell);
                     //SaveHelper.map_cellid(finalPoints, "658080", "17104", "blue");
 
-                    SaveHelper.debug_csv(finalPoints);
+                    //SaveHelper.debug_csv(finalPoints);
 
                     // Trap breakpoint for Channel=512 and CellId=40101044
 
@@ -211,13 +211,13 @@ namespace BTS_Location_Estimation
             Console.WriteLine("Batch processing complete.");
             // Example: Filter by mnc and save cluster results with filter in filename
             string filterType = "mnc";
-            string filterValue = "410";
+            string filterValue = "12";
             //string filterType = null;
             //string filterValue = null;
             var outputFile = SaveHelper.ClusterProcessing(filterType, filterValue, EPS_MILES);
             if (outputFile != null)
             {
-                SaveHelper.map_cluster(outputFile, "ALL_map.csv", fileType);
+                SaveHelper.map_cluster(outputFile, "ALL_map.csv");
 #if Python_included
                 string pythonScriptDir = Directory.GetCurrentDirectory();
                 string pythonScriptName = "cluster_hdbscan"; // without .py
