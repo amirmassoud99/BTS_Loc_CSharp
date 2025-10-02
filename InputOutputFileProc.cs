@@ -76,7 +76,7 @@ namespace BTS_Location_Estimation
 
             //dRIVE bts_5 att n77
 
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\n77 drive\";
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\n77 drive\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
@@ -85,7 +85,7 @@ namespace BTS_Location_Estimation
                 "Gflex Device 032201005_NR_FR1 TDD n77_Blind Scan SCS Autodetect.DTR",
                 "Gflex Device 032201005_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.DTR",
                 "Gflex Device 032201005_NR_FR1 TDD n77_nr Top N Signal ARFCN  658080 - 3871.20 MHz SCS 30 kHz.dtr"
-            };
+            };*/
 
 
             //Batch processing Drive 3_Washington DC
@@ -137,13 +137,13 @@ namespace BTS_Location_Estimation
                 "Gflex Device 019999102_UMTS WCDMA_UB VIII  900 DL_Blind Scan.dtr"
             };*/
             //Batch processing Drive 7 Josue drive test in Washington DC, GSM only
-            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250922_GSM_HRTOA\";
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250922_GSM_HRTOA\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
                 "Gflex Device 019999090_GSM_1900 (PCS) DL_Blind Scan.csv"
                 
-            };*/
+            };
             //Drive 8 Rockville Pike
             /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Drive_20251001_RockvillePike\";
             // List of input filenames to process in batch

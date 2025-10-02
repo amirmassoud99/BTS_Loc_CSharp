@@ -27,7 +27,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.3.12.0";
+        public const string SW_VERSION = "1.3.13.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -139,13 +139,16 @@ namespace BTS_Location_Estimation
                     bool isGsm = fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10;
                     if (isGsm)
                     {
-                        DataBaseProc.GSMHrtoaAverage(pointsForCell);
+                        var gsmResult = DataBaseProc.GSMHrtoaAverage(pointsForCell);
+                        pointsForCell = gsmResult.Item1;
                     }
 
-                    //SaveHelper.debug_csv(pointsForCell);
+                    
 
                     var (finalPoints, maxCinr) = DataBaseProc.ExtractPointsWithDistance(pointsForCell);
                     //SaveHelper.map_cellid(finalPoints, "658080", "17104", "blue");
+
+                    SaveHelper.debug_csv(finalPoints);
 
                     // Trap breakpoint for Channel=512 and CellId=40101044
 
