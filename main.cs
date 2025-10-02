@@ -27,7 +27,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.3.8.0";
+        public const string SW_VERSION = "1.3.9.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -45,6 +45,7 @@ namespace BTS_Location_Estimation
         public const double SEARCH_DIRECTION = 600.0;
         public const int MAX_POINTS = 60;
         public const int MINIMUM_CELL_ID_COUNT = 20;
+        public const int GSM_AvgHrToA_COUNT = 3;
 
         // Confidence Thresholds
         public const int CONFIDENCE_MIN_POINTS_LTE_NR = 9;
@@ -101,7 +102,7 @@ namespace BTS_Location_Estimation
                 var allData = InputOutputFileProc.ExtractChannelCellMap(filename, fileType);
                 //string step0Filename = $"step0_{filenameOnly}.csv";
                 //SaveHelper.save_extrac_step1(allData, step0Filename);
-                //SaveHelper.debug_csv(allData);
+                SaveHelper.debug_csv(allData);
                 //2. Expand mcc, mnc, cellIdentity and generate unique cellID
                 allData = DataBaseProc.Expand_mcc_mnc_cellIdentity(allData);
                 //SaveHelper.debug_csv(allData);
@@ -139,10 +140,17 @@ namespace BTS_Location_Estimation
                     {
                         DataBaseProc.GSMHrtoaAverage(pointsForCell);
                     }
-                    var (finalPoints, maxCinr) = DataBaseProc.ExtractPointsWithDistance(pointsForCell);
-                    //SaveHelper.map_cellid(finalPoints, "658080", "17104", "blue");
 
                     // Trap breakpoint for Channel=512 and CellId=40101044
+                    /*if (group.Key.Channel == "512" && group.Key.CellId == "40101044")
+                    {
+                        System.Diagnostics.Debugger.Break();
+                    }*/
+
+                    var (finalPoints, maxCinr) = DataBaseProc.ExtractPointsWithDistance(pointsForCell, fileType);
+                    //SaveHelper.map_cellid(finalPoints, "658080", "17104", "blue");
+
+
 
 
                     // Adjust time offset values for the filtered points
@@ -153,8 +161,8 @@ namespace BTS_Location_Estimation
 
                     // You can now save or process the 'finalPoints' and 'maxCinr' for each cell
                     // For example, save to a new CSV file for step 3
-                    //string step3Filename = $"step3_{filenameOnly}_ch{group.Key.Channel}_cell{group.Key.CellId}.csv";
-                    //SaveHelper.save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
+                    string step3Filename = $"step3_{filenameOnly}_ch{group.Key.Channel}_cell{group.Key.CellId}.csv";
+                    SaveHelper.save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
 
                     double searchDirection = SEARCH_DIRECTION;
                     double distanceThresh = DISTANCE_THRESH;

@@ -220,7 +220,7 @@ namespace BTS_Location_Estimation
             // for  GSM, filter by BSIC that is non-blank. since blank BSCIs are filtered before
             //no action is neccessary.
             List<Dictionary<string, string>> cinrFiltered;
-            if (fileType != GSM_FILE_TYPE*10)
+            if ((fileType != GSM_FILE_TYPE*10) && (fileType != GSM_FILE_TYPE) )
             {
                 cinrFiltered = coordinateFiltered.Where(row =>
                 {
@@ -363,6 +363,7 @@ namespace BTS_Location_Estimation
             return Tuple.Create(updatedPoints, maxAvgHrToA);
         }
 
+
         /***************************************************************************************************
         *
         *   Function:       ExtractPointsWithDistance
@@ -386,7 +387,7 @@ namespace BTS_Location_Estimation
         *
         ***************************************************************************************************/
         public static Tuple<List<Dictionary<string, string>>, double> ExtractPointsWithDistance(
-            List<Dictionary<string, string>> extractedData)
+            List<Dictionary<string, string>> extractedData, int fileType)
         {
             // This function processes a list of data points for a single cell,
             // filtering them based on geographic distance and signal quality (CINR).
@@ -417,35 +418,72 @@ namespace BTS_Location_Estimation
                 return Math.Sqrt(Math.Pow(lat2 - lat1, 2) + Math.Pow(lon2 - lon1, 2)) * MainModule.METERS_PER_DEGREE;
             }
 
-            for (int i = 1; i < extractedData.Count; ++i)
+
+
+            bool isGsm = fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10;
+            if (!isGsm)
             {
-                if (selectedPoints.Count >= MainModule.MAX_POINTS)
-                {
-                    break;
-                }
-                var currentPoint = extractedData[i];
-                var lastSelectedPoint = selectedPoints.Last();
 
-                double distance = CalculateDistance(currentPoint, lastSelectedPoint);
-                if (distance < 0) continue;
-
-                if (distance < MainModule.DISTANCE_THRESH)
+                for (int i = 1; i < extractedData.Count; ++i)
                 {
-                    if (currentPoint.TryGetValue("cinr", out var currentCinrStr) &&
-                        lastSelectedPoint.TryGetValue("cinr", out var lastCinrStr) &&
-                        double.TryParse(currentCinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double currentCinr) &&
-                        double.TryParse(lastCinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lastCinr) &&
-                        currentCinr > lastCinr)
+                    if (selectedPoints.Count >= MainModule.MAX_POINTS)
                     {
-                        selectedPoints[selectedPoints.Count - 1] = currentPoint; // Replace last point
+                        break;
+                    }
+                    var currentPoint = extractedData[i];
+                    var lastSelectedPoint = selectedPoints.Last();
+
+                    double distance = CalculateDistance(currentPoint, lastSelectedPoint);
+                    if (distance < 0) continue;
+
+                    if (distance < MainModule.DISTANCE_THRESH)
+                    {
+                        if (currentPoint.TryGetValue("cinr", out var currentCinrStr) &&
+                            lastSelectedPoint.TryGetValue("cinr", out var lastCinrStr) &&
+                            double.TryParse(currentCinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double currentCinr) &&
+                            double.TryParse(lastCinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lastCinr) &&
+                            currentCinr > lastCinr)
+                        {
+                            selectedPoints[selectedPoints.Count - 1] = currentPoint; // Replace last point
+                        }
+                    }
+                    else
+                    {
+                        selectedPoints.Add(currentPoint);
                     }
                 }
-                else
-                {
-                    selectedPoints.Add(currentPoint);
-                }
             }
+            else { //NR
+                for (int i = 1; i < extractedData.Count; ++i)
+                {
+                    if (selectedPoints.Count >= MainModule.MAX_POINTS)
+                    {
+                        break;
+                    }
+                    var currentPoint = extractedData[i];
+                    var lastSelectedPoint = selectedPoints.Last();
 
+                    int   GSMcount = MainModule.GSM_AvgHrToA_COUNT; // The threshold for minimum count of AvgHrToA for GSM.
+                    double distance = CalculateDistance(currentPoint, lastSelectedPoint);
+                    if (distance < 0) continue;
+
+                    if (distance < MainModule.DISTANCE_THRESH)
+                    {
+                        if (currentPoint.TryGetValue("cinr", out var currentCinrStr) &&
+                            lastSelectedPoint.TryGetValue("cinr", out var lastCinrStr) &&
+                            double.TryParse(currentCinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double currentCinr) &&
+                            double.TryParse(lastCinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lastCinr) &&
+                            currentCinr > lastCinr)
+                        {
+                            selectedPoints[selectedPoints.Count - 1] = currentPoint; // Replace last point
+                        }
+                    }
+                    else
+                    {
+                        selectedPoints.Add(currentPoint);
+                    }
+                }
+        }
             double avgCinr = selectedPoints
                 .Select(row => row.TryGetValue("cinr", out var cinrStr) && double.TryParse(cinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double cinr) ? cinr : -999.0)
                 .DefaultIfEmpty(-999.0)
