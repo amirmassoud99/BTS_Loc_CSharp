@@ -378,7 +378,7 @@ namespace BTS_Location_Estimation
         *                   maxPoints (int) - The maximum number of points to return.
         *                   metersPerDegree (double) - Conversion factor for distance calculation.
         *
-        *   Output:         A tuple containing the filtered list of points and the maximum CINR found.
+        *   Output:         A tuple containing the filtered list of points and the average CINR found.
         *
         *   Author:         Amir Soltanian
         *
@@ -446,10 +446,10 @@ namespace BTS_Location_Estimation
                 }
             }
 
-            double maxCinr = selectedPoints
+            double avgCinr = selectedPoints
                 .Select(row => row.TryGetValue("cinr", out var cinrStr) && double.TryParse(cinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double cinr) ? cinr : -999.0)
                 .DefaultIfEmpty(-999.0)
-                .Max();
+                .Average();
 
             // Check if all remaining points have the same TimeOffset
             if (selectedPoints.Count > 1)
@@ -466,7 +466,7 @@ namespace BTS_Location_Estimation
                 }
             }
 
-            return Tuple.Create(selectedPoints, maxCinr);
+            return Tuple.Create(selectedPoints, avgCinr);
         }
 
         /***************************************************************************************************
@@ -873,6 +873,7 @@ namespace BTS_Location_Estimation
             string combinedMnc = string.Join("/", group.Select(d => d.GetValueOrDefault("mnc", "")));
             string combinedMcc = string.Join("/", group.Select(d => d.GetValueOrDefault("mcc", "")));
 
+            var towerConfidence = group.Any(d => d.GetValueOrDefault("Confidence") == "Low") ? "Low" : "High";
             var newEstimate = new Dictionary<string, string>
             {
                 { "Channel", group[0]["Channel"] },
@@ -892,7 +893,7 @@ namespace BTS_Location_Estimation
                 { "est_Lon2", avgLon2.ToString("F6", CultureInfo.InvariantCulture) },
                 { "Max_cinr", group.Max(d => double.Parse(d["Max_cinr"], CultureInfo.InvariantCulture)).ToString("F2", CultureInfo.InvariantCulture) },
                 { "Num_points", group.Sum(d => int.Parse(d["Num_points"])).ToString() },
-                { "Confidence", "High" }
+                { "Confidence", towerConfidence }
             };
             return newEstimate;
         }
@@ -931,6 +932,7 @@ namespace BTS_Location_Estimation
                 beamIndexValue = string.Join("/", group.Select(d => d.GetValueOrDefault("BeamIndex", "")));
             }
 
+            var towerConfidence = group.Any(d => d.GetValueOrDefault("Confidence") == "Low") ? "Low" : "High";
             var newEstimate = new Dictionary<string, string>
             {
                 { "Channel", group[0]["Channel"] },
@@ -951,7 +953,7 @@ namespace BTS_Location_Estimation
                 // Add other fields with default/aggregated values if needed
                 { "Max_cinr", group.Max(d => double.Parse(d["Max_cinr"], CultureInfo.InvariantCulture)).ToString("F2", CultureInfo.InvariantCulture) },
                 { "Num_points", group.Sum(d => int.Parse(d["Num_points"])).ToString() },
-                { "Confidence", "High" } // Or determine based on logic
+                { "Confidence", towerConfidence }
             };
             return newEstimate;
         }

@@ -75,7 +75,7 @@ namespace BTS_Location_Estimation
 
 
             //dRIVE bts_5 att n77
-                                                               
+
             /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\n77 drive\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
@@ -118,7 +118,7 @@ namespace BTS_Location_Estimation
                 "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.dtr",
                 "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr"
             };*/
-            
+
             //Batch processing Drive 6 Gordon Hong Kong
             /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Gordon_20250923_033301\";
             // List of input filenames to process in batch
@@ -137,11 +137,26 @@ namespace BTS_Location_Estimation
                 "Gflex Device 019999102_UMTS WCDMA_UB VIII  900 DL_Blind Scan.dtr"
             };*/
             //Batch processing Drive 7 Josue drive test in Washington DC, GSM only
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250922_GSM_HRTOA\";
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250922_GSM_HRTOA\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
                 "Gflex Device 019999090_GSM_1900 (PCS) DL_Blind Scan.dtr"
+                
+            };*/
+            //Drive 8 Rockville Pike
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Drive_20251001_RockvillePike\";
+            // List of input filenames to process in batch
+            List<string> inputFilenames = new List<string>
+            {
+                "Gflex Device 032203010_LTE_EB 02  1900 (PCS) DL_Blind Scan.dtr",
+                "Gflex Device 032203010_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.dtr",
+                "Gflex Device 032203010_LTE_EB 14  Upper 700-D Block DL_Blind Scan.dtr",
+                "Gflex Device 032203010_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.dtr",
+                "Gflex Device 032203010_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",
+                "Gflex Device 032203010_NR_FR1 FDD n25 DL_Blind Scan SCS Autodetect.dtr",
+                "Gflex Device 032203010_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.dtr",
+                "Gflex Device 032203010_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr"
                 
             };
             return (fileDirectory, inputFilenames);
