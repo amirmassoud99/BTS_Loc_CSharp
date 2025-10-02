@@ -360,7 +360,12 @@ namespace BTS_Location_Estimation
                 if (avgHrToA > maxAvgHrToA) maxAvgHrToA = avgHrToA;
             }
 
-            return Tuple.Create(updatedPoints, maxAvgHrToA);
+            // Remove any rows with cinr below GSM_AvgHrToA_COUNT
+            var gsmCountThreshold = MainModule.GSM_AvgHrToA_COUNT;
+            var filteredPoints = updatedPoints
+                .Where(row => row.TryGetValue("cinr", out var cinrStr) && double.TryParse(cinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double cinrVal) && cinrVal >= gsmCountThreshold)
+                .ToList();
+            return Tuple.Create(filteredPoints, maxAvgHrToA);
         }
 
 
@@ -387,7 +392,7 @@ namespace BTS_Location_Estimation
         *
         ***************************************************************************************************/
         public static Tuple<List<Dictionary<string, string>>, double> ExtractPointsWithDistance(
-            List<Dictionary<string, string>> extractedData, int fileType)
+            List<Dictionary<string, string>> extractedData)
         {
             // This function processes a list of data points for a single cell,
             // filtering them based on geographic distance and signal quality (CINR).
@@ -418,12 +423,6 @@ namespace BTS_Location_Estimation
                 return Math.Sqrt(Math.Pow(lat2 - lat1, 2) + Math.Pow(lon2 - lon1, 2)) * MainModule.METERS_PER_DEGREE;
             }
 
-
-
-            bool isGsm = fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10;
-            if (!isGsm)
-            {
-
                 for (int i = 1; i < extractedData.Count; ++i)
                 {
                     if (selectedPoints.Count >= MainModule.MAX_POINTS)
@@ -452,38 +451,7 @@ namespace BTS_Location_Estimation
                         selectedPoints.Add(currentPoint);
                     }
                 }
-            }
-            else { //NR
-                for (int i = 1; i < extractedData.Count; ++i)
-                {
-                    if (selectedPoints.Count >= MainModule.MAX_POINTS)
-                    {
-                        break;
-                    }
-                    var currentPoint = extractedData[i];
-                    var lastSelectedPoint = selectedPoints.Last();
 
-                    int   GSMcount = MainModule.GSM_AvgHrToA_COUNT; // The threshold for minimum count of AvgHrToA for GSM.
-                    double distance = CalculateDistance(currentPoint, lastSelectedPoint);
-                    if (distance < 0) continue;
-
-                    if (distance < MainModule.DISTANCE_THRESH)
-                    {
-                        if (currentPoint.TryGetValue("cinr", out var currentCinrStr) &&
-                            lastSelectedPoint.TryGetValue("cinr", out var lastCinrStr) &&
-                            double.TryParse(currentCinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double currentCinr) &&
-                            double.TryParse(lastCinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double lastCinr) &&
-                            currentCinr > lastCinr)
-                        {
-                            selectedPoints[selectedPoints.Count - 1] = currentPoint; // Replace last point
-                        }
-                    }
-                    else
-                    {
-                        selectedPoints.Add(currentPoint);
-                    }
-                }
-        }
             double avgCinr = selectedPoints
                 .Select(row => row.TryGetValue("cinr", out var cinrStr) && double.TryParse(cinrStr, NumberStyles.Any, CultureInfo.InvariantCulture, out double cinr) ? cinr : -999.0)
                 .DefaultIfEmpty(-999.0)

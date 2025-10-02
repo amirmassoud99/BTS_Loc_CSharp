@@ -27,7 +27,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.3.9.0";
+        public const string SW_VERSION = "1.3.11.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -102,7 +102,7 @@ namespace BTS_Location_Estimation
                 var allData = InputOutputFileProc.ExtractChannelCellMap(filename, fileType);
                 //string step0Filename = $"step0_{filenameOnly}.csv";
                 //SaveHelper.save_extrac_step1(allData, step0Filename);
-                SaveHelper.debug_csv(allData);
+                //SaveHelper.debug_csv(allData);
                 //2. Expand mcc, mnc, cellIdentity and generate unique cellID
                 allData = DataBaseProc.Expand_mcc_mnc_cellIdentity(allData);
                 //SaveHelper.debug_csv(allData);
@@ -141,16 +141,12 @@ namespace BTS_Location_Estimation
                         DataBaseProc.GSMHrtoaAverage(pointsForCell);
                     }
 
-                    // Trap breakpoint for Channel=512 and CellId=40101044
-                    /*if (group.Key.Channel == "512" && group.Key.CellId == "40101044")
-                    {
-                        System.Diagnostics.Debugger.Break();
-                    }*/
+                    SaveHelper.debug_csv(pointsForCell);
 
-                    var (finalPoints, maxCinr) = DataBaseProc.ExtractPointsWithDistance(pointsForCell, fileType);
+                    var (finalPoints, maxCinr) = DataBaseProc.ExtractPointsWithDistance(pointsForCell);
                     //SaveHelper.map_cellid(finalPoints, "658080", "17104", "blue");
 
-
+                    // Trap breakpoint for Channel=512 and CellId=40101044
 
 
                     // Adjust time offset values for the filtered points
@@ -191,7 +187,10 @@ namespace BTS_Location_Estimation
                 //Associated with the same tower. It then averages the location of the sectors
                 //to get the tower location.
                 var sortedResults = DataBaseProc.AddTowerEstimate(resultsWithBeamIndex, fileType, "Tower");
-                SaveHelper.save_estimation_results(sortedResults, estimateFilename);
+
+                //Note The Estimation Map file is different for GSM vs. NR/LTE/WCDMA
+                //GSM: Lat1/Lon1, NR/LTE/WCDMA: Lat2/lon2
+                SaveHelper.save_estimation_results(sortedResults, estimateFilename,fileType);
 
                 // Call map_cellid for debugging
                 //SaveHelper.map_cellid(allData, "658080", "17104");

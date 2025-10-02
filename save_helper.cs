@@ -55,7 +55,7 @@ namespace BTS_Location_Estimation
         }
 
 
-        public static void save_estimation_results(List<Dictionary<string, string>> estimationResults, string outputFilename)
+        public static void save_estimation_results(List<Dictionary<string, string>> estimationResults, string outputFilename, int fileType)
         {
             if (!estimationResults.Any())
             {
@@ -124,12 +124,13 @@ namespace BTS_Location_Estimation
                 string mapCsvFilename = Path.Combine(directory, mapBaseFilename + ".csv");
                 string mapKmlFilename = Path.Combine(directory, mapBaseFilename + ".kml");
 
-                generate_map_csv(channelResults, mapCsvFilename);
-                generate_map_kml(channelResults, mapKmlFilename);
+
+                generate_map_csv(channelResults, mapCsvFilename, fileType);
+                generate_map_kml(channelResults, mapKmlFilename, fileType);
             }
         }
 
-        private static void generate_map_csv(List<Dictionary<string, string>> estimationResults, string mapCsvFilename)
+        private static void generate_map_csv(List<Dictionary<string, string>> estimationResults, string mapCsvFilename, int fileType)
         {
             try
             {
@@ -138,8 +139,17 @@ namespace BTS_Location_Estimation
                     writer.WriteLine("Latitude,Longitude,CellID,CellIdentity,BeamIndex,Type");
                     foreach (var result in estimationResults)
                     {
-                        string lat = result.GetValueOrDefault("est_Lat2", "");
-                        string lon = result.GetValueOrDefault("est_Lon2", "");
+                        string lat, lon;
+                        if (fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10)
+                        {
+                            lat = result.GetValueOrDefault("est_Lat1", "");
+                            lon = result.GetValueOrDefault("est_Lon1", "");
+                        }
+                        else
+                        {
+                            lat = result.GetValueOrDefault("est_Lat2", "");
+                            lon = result.GetValueOrDefault("est_Lon2", "");
+                        }
                         string cellId = result.GetValueOrDefault("CellId", "");
                         string cellIdentity = result.GetValueOrDefault("cellIdentity", "");
                         string beamIndex = result.GetValueOrDefault("BeamIndex", "");
@@ -155,7 +165,7 @@ namespace BTS_Location_Estimation
             }
         }
 
-        private static void generate_map_kml(List<Dictionary<string, string>> estimationResults, string mapKmlFilename)
+        private static void generate_map_kml(List<Dictionary<string, string>> estimationResults, string mapKmlFilename, int fileType)
         {
             try
             {
@@ -245,13 +255,21 @@ namespace BTS_Location_Estimation
                     // --- Pass 2: Write a placemark for every result ---
                     foreach (var result in estimationResults)
                     {
-                        if (!result.ContainsKey("est_Lat2") || !result.ContainsKey("est_Lon2"))
+                        string lat, lon;
+                        if (fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10)
                         {
-                            continue;
+                            if (!result.ContainsKey("est_Lat1") || !result.ContainsKey("est_Lon1"))
+                                continue;
+                            lat = result["est_Lat1"];
+                            lon = result["est_Lon1"];
                         }
-
-                        string lat = result["est_Lat2"];
-                        string lon = result["est_Lon2"];
+                        else
+                        {
+                            if (!result.ContainsKey("est_Lat2") || !result.ContainsKey("est_Lon2"))
+                                continue;
+                            lat = result["est_Lat2"];
+                            lon = result["est_Lon2"];
+                        }
                         string cellId = result.GetValueOrDefault("CellId", "");
                         string cellIdentity = result.GetValueOrDefault("cellIdentity", "");
                         string confidence = result.GetValueOrDefault("Confidence", "N/A");
