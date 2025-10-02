@@ -696,7 +696,7 @@ namespace BTS_Location_Estimation
             return outputFile;
         }
 
-        public static void map_cluster(string inputFile = "ALL_Estimate.csv", string outputFile = "ALL_map.csv")
+        public static void map_cluster(string inputFile = "ALL_Estimate.csv", string outputFile = "ALL_map.csv", int fileType = 0)
         {
             // Build map file names by replacing 'Estimate' with 'map' in inputFile name
             string inputFileName = Path.GetFileName(inputFile);
@@ -711,8 +711,12 @@ namespace BTS_Location_Estimation
             {
                 writer.WriteLine(string.Join(",", headers));
                 var allHeaders = reader.ReadLine()?.Split(',') ?? new string[0]; // Read header from ALL_Estimate.csv
-                int latIdx = Array.IndexOf(allHeaders, "est_Lat2");
-                int lonIdx = Array.IndexOf(allHeaders, "est_Lon2");
+                int latIdx = (fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10)
+                    ? Array.IndexOf(allHeaders, "est_Lat1")
+                    : Array.IndexOf(allHeaders, "est_Lat2");
+                int lonIdx = (fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10)
+                    ? Array.IndexOf(allHeaders, "est_Lon1")
+                    : Array.IndexOf(allHeaders, "est_Lon2");
                 int cellIdIdx = Array.IndexOf(allHeaders, "CellId");
                 int cellIdentityIdx = Array.IndexOf(allHeaders, "cellIdentity");
                 int mncIdx = Array.IndexOf(allHeaders, "mnc");
@@ -751,12 +755,12 @@ namespace BTS_Location_Estimation
             }
             Console.WriteLine($"{mapCsvName} created from {inputFile}.");
             // Also generate KML
-            generate_all_map_kml(rows, mapKmlName);
+            generate_all_map_kml(rows, mapKmlName, fileType, "cluster entry");
             // ...existing code...
         }
 
         // Helper to generate ALL_map.kml from the parsed rows
-    private static void generate_all_map_kml(List<Dictionary<string, string>> rows, string kmlFilename, string mapType = "cluster entry")
+    private static void generate_all_map_kml(List<Dictionary<string, string>> rows, string kmlFilename, int fileType, string mapType = "cluster entry")
         {
             // Color styles: blue, green, light blue, purple (no red)
             var colorStyles = new List<(string pin, string balloon)>
@@ -819,8 +823,19 @@ namespace BTS_Location_Estimation
 
                 foreach (var result in filteredRows)
                 {
-                    string lat = result.GetValueOrDefault("Latitude", "");
-                    string lon = result.GetValueOrDefault("Longitude", "");
+                    string lat = "";
+                    string lon = "";
+                    // Use est_Lat1/est_Lon1 for GSM, est_Lat2/est_Lon2 otherwise
+                    if (fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10)
+                    {
+                        lat = result.GetValueOrDefault("est_Lat1", result.GetValueOrDefault("Latitude", ""));
+                        lon = result.GetValueOrDefault("est_Lon1", result.GetValueOrDefault("Longitude", ""));
+                    }
+                    else
+                    {
+                        lat = result.GetValueOrDefault("est_Lat2", result.GetValueOrDefault("Latitude", ""));
+                        lon = result.GetValueOrDefault("est_Lon2", result.GetValueOrDefault("Longitude", ""));
+                    }
                     string cellId = result.GetValueOrDefault("CellID", "");
                     string cellIdentity = result.GetValueOrDefault("CellIdentity", "");
                     string beamIndex = result.GetValueOrDefault("BeamIndex", "");

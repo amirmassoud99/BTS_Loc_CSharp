@@ -27,7 +27,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.3.11.0";
+        public const string SW_VERSION = "1.3.12.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -89,43 +89,44 @@ namespace BTS_Location_Estimation
             // --- Get Target and File Configuration ---
             var (fileDirectory, inputFilenames) = InputOutputFileProc.GetFileConfigurations();
 
-            foreach (var inputFilename in inputFilenames)
-            {
-                Console.WriteLine($"\n=== Processing file: {inputFilename} ===");
-
-                string filename = Path.Combine(fileDirectory, inputFilename);
-                string filenameOnly = Path.GetFileNameWithoutExtension(inputFilename);
-
-                int fileType = InputOutputFileProc.GetFileType(filename);
-
-                // 1. Call ExtractChannelCellMap to get all standardized data rows
-                var allData = InputOutputFileProc.ExtractChannelCellMap(filename, fileType);
-                //string step0Filename = $"step0_{filenameOnly}.csv";
-                //SaveHelper.save_extrac_step1(allData, step0Filename);
-                //SaveHelper.debug_csv(allData);
-                //2. Expand mcc, mnc, cellIdentity and generate unique cellID
-                allData = DataBaseProc.Expand_mcc_mnc_cellIdentity(allData);
-                //SaveHelper.debug_csv(allData);
-                allData = DataBaseProc.generate_unique_cellID(allData, fileType);
-                //SaveHelper.debug_csv(allData);
-
-                Console.WriteLine($"Extracted {allData.Count} rows from {inputFilename}");
-                InputOutputFileProc.Save_Drive_Route(allData, inputFilename);
-
-                //string step1Filename = $"step1_{filenameOnly}.csv";
-                //SaveHelper.save_extrac_step1(allData, step1Filename);
-
-                // 3. Filter data based on CINR/ECIO and minimum cell ID count
-                var filteredData = DataBaseProc.filter_cinr_minimum_PCI(allData, fileType, MINIMUM_CELL_ID_COUNT);
-                string step2Filename = $"step2_{filenameOnly}.csv";
-                //SaveHelper.save_extract_step2(filteredData, step2Filename);
-                //SaveHelper.debug_csv(filteredData);
-                // Group data by channel and cell to process each one individually
-                var groupedData = filteredData.GroupBy(row => new
+                int fileType = 0;
+                foreach (var inputFilename in inputFilenames)
                 {
-                    Channel = row.GetValueOrDefault("channel", "N/A"),
-                    CellId = row.GetValueOrDefault("cellId", "N/A")
-                });
+                    Console.WriteLine($"\n=== Processing file: {inputFilename} ===");
+
+                    string filename = Path.Combine(fileDirectory, inputFilename);
+                    string filenameOnly = Path.GetFileNameWithoutExtension(inputFilename);
+
+                    fileType = InputOutputFileProc.GetFileType(filename);
+
+                    // 1. Call ExtractChannelCellMap to get all standardized data rows
+                    var allData = InputOutputFileProc.ExtractChannelCellMap(filename, fileType);
+                    //string step0Filename = $"step0_{filenameOnly}.csv";
+                    //SaveHelper.save_extrac_step1(allData, step0Filename);
+                    //SaveHelper.debug_csv(allData);
+                    //2. Expand mcc, mnc, cellIdentity and generate unique cellID
+                    allData = DataBaseProc.Expand_mcc_mnc_cellIdentity(allData);
+                    //SaveHelper.debug_csv(allData);
+                    allData = DataBaseProc.generate_unique_cellID(allData, fileType);
+                    //SaveHelper.debug_csv(allData);
+
+                    Console.WriteLine($"Extracted {allData.Count} rows from {inputFilename}");
+                    //InputOutputFileProc.Save_Drive_Route(allData, inputFilename);
+
+                    //string step1Filename = $"step1_{filenameOnly}.csv";
+                    //SaveHelper.save_extrac_step1(allData, step1Filename);
+
+                    // 3. Filter data based on CINR/ECIO and minimum cell ID count
+                    var filteredData = DataBaseProc.filter_cinr_minimum_PCI(allData, fileType, MINIMUM_CELL_ID_COUNT);
+                    string step2Filename = $"step2_{filenameOnly}.csv";
+                    //SaveHelper.save_extract_step2(filteredData, step2Filename);
+                    //SaveHelper.debug_csv(filteredData);
+                    // Group data by channel and cell to process each one individually
+                    var groupedData = filteredData.GroupBy(row => new
+                    {
+                        Channel = row.GetValueOrDefault("channel", "N/A"),
+                        CellId = row.GetValueOrDefault("cellId", "N/A")
+                    });
 
                 var estimationResults = new List<Dictionary<string, string>>();
 
@@ -141,7 +142,7 @@ namespace BTS_Location_Estimation
                         DataBaseProc.GSMHrtoaAverage(pointsForCell);
                     }
 
-                    SaveHelper.debug_csv(pointsForCell);
+                    //SaveHelper.debug_csv(pointsForCell);
 
                     var (finalPoints, maxCinr) = DataBaseProc.ExtractPointsWithDistance(pointsForCell);
                     //SaveHelper.map_cellid(finalPoints, "658080", "17104", "blue");
@@ -157,8 +158,8 @@ namespace BTS_Location_Estimation
 
                     // You can now save or process the 'finalPoints' and 'maxCinr' for each cell
                     // For example, save to a new CSV file for step 3
-                    string step3Filename = $"step3_{filenameOnly}_ch{group.Key.Channel}_cell{group.Key.CellId}.csv";
-                    SaveHelper.save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
+                    //string step3Filename = $"step3_{filenameOnly}_ch{group.Key.Channel}_cell{group.Key.CellId}.csv";
+                    //SaveHelper.save_extract_step3(timeAdjustedPoints, step3Filename, maxCinr);
 
                     double searchDirection = SEARCH_DIRECTION;
                     double distanceThresh = DISTANCE_THRESH;
@@ -207,13 +208,13 @@ namespace BTS_Location_Estimation
             Console.WriteLine("Batch processing complete.");
             // Example: Filter by mnc and save cluster results with filter in filename
             string filterType = "mnc";
-            string filterValue = "260";
+            string filterValue = "410";
             //string filterType = null;
             //string filterValue = null;
             var outputFile = SaveHelper.ClusterProcessing(filterType, filterValue, EPS_MILES);
             if (outputFile != null)
             {
-                SaveHelper.map_cluster(outputFile);
+                SaveHelper.map_cluster(outputFile, "ALL_map.csv", fileType);
 #if Python_included
                 string pythonScriptDir = Directory.GetCurrentDirectory();
                 string pythonScriptName = "cluster_hdbscan"; // without .py
