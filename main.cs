@@ -27,7 +27,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.3.14.0";
+        public const string SW_VERSION = "1.3.15.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -212,13 +212,15 @@ namespace BTS_Location_Estimation
             // Example: Filter by mnc and save cluster results with filter in filename
             string filterType = "mnc";
             string filterValue = "12";
-            //string filterType = null;
-            //string filterValue = null;
+
+            //Generate the All_Estimate_mnc_XXX.csv file for all technologies combined
             var outputFile = SaveHelper.ClusterProcessing(filterType, filterValue, EPS_MILES);
             if (outputFile != null)
-            {
+            {   //Generate the All_map_mnc_XXX.csv file for all technologies combined.
+                //The map file is generated from the All_Estimate_mnc_XXX.csv file
                 SaveHelper.map_cluster(outputFile, "ALL_map.csv");
 #if Python_included
+                //The All_map_mnc_XXX.csv file is used as input to the Python HDBSCAN clustering algorithm
                 string pythonScriptDir = Directory.GetCurrentDirectory();
                 string pythonScriptName = "cluster_hdbscan"; // without .py
                 string mapCsvFile = Path.ChangeExtension(Path.GetFileName(outputFile).Replace("Estimate", "map"), ".csv");

@@ -718,80 +718,9 @@ namespace BTS_Location_Estimation
                         var items = channelGroup.ToList();
                         if (items.Count < 2) continue;
 
-                        // --- Pass 1: Find groups of three ---
-                        for (int i = 0; i < items.Count - 2; i++)
-                        {
-                            if (processedIndices.Contains(items[i].index)) continue;
+                        bool NRMultiBeam = false;
 
-                            for (int j = i + 1; j < items.Count - 1; j++)
-                            {
-                                if (processedIndices.Contains(items[j].index)) continue;
-
-                                for (int k = j + 1; k < items.Count; k++)
-                                {
-                                    if (processedIndices.Contains(items[k].index)) continue;
-
-                                    var p1 = items[i].value;
-                                    var p2 = items[j].value;
-                                    var p3 = items[k].value;
-
-                                    if (p1.TryGetValue("cellIdentity", out var idStr1) && long.TryParse(idStr1, out long id1) &&
-                                        p2.TryGetValue("cellIdentity", out var idStr2) && long.TryParse(idStr2, out long id2) &&
-                                        p3.TryGetValue("cellIdentity", out var idStr3) && long.TryParse(idStr3, out long id3) )
-
-                                    {
-                                        bool isGroupOfThree = (id2 == id1 + 1 && id3 == id2 + 1) || // (1,2,3)
-                                                              (id2 == id1 + 1 && id3 == id2 + 2) || // (1,2,4)
-                                                              (id2 == id1 + 2 && id3 == id2 + 1);   // (1,3,4)
-
-                                        if (isGroupOfThree)
-                                        {
-                                            var group = new List<Dictionary<string, string>> { p1, p2, p3 };
-                                            newTowerEstimates.Add(CreateTowerEstimate(group, isNrFile));
-                                            processedIndices.Add(items[i].index);
-                                            processedIndices.Add(items[j].index);
-                                            processedIndices.Add(items[k].index);
-                                            goto next_i_loop_3; // Continue outer loop
-                                        }
-                                    }
-                                }
-                            }
-                        next_i_loop_3:;
-                        }
-
-                        // --- Pass 2: Find groups of two ---
-                        for (int i = 0; i < items.Count - 1; i++)
-                        {
-                            if (processedIndices.Contains(items[i].index)) continue;
-
-                            for (int j = i + 1; j < items.Count; j++)
-                            {
-                                if (processedIndices.Contains(items[j].index)) continue;
-
-                                var p1 = items[i].value;
-                                var p2 = items[j].value;
-
-                                if (p1.TryGetValue("cellIdentity", out var idStr1) && long.TryParse(idStr1, out long id1) &&
-                                    p2.TryGetValue("cellIdentity", out var idStr2) && long.TryParse(idStr2, out long id2))
-                                   
-                                {
-                                    bool isGroupOfTwo = (id2 == id1 + 1) || // (1,2)
-                                                          (id2 == id1 + 2);   // (1,3)
-
-                                    if (isGroupOfTwo)
-                                    {
-                                        var group = new List<Dictionary<string, string>> { p1, p2 };
-                                        newTowerEstimates.Add(CreateTowerEstimate(group, isNrFile));
-                                        processedIndices.Add(items[i].index);
-                                        processedIndices.Add(items[j].index);
-                                        goto next_i_loop_2; // Continue outer loop
-                                    }
-                                }
-                            }
-                        next_i_loop_2:;
-                        }
-
-                        // --- Pass 3: Find NR groups with same CellId and CellIdentity ---
+                        // --- Pass 0: Find NR groups with same CellId and CellIdentity ---
                         if (isNrFile)
                         {
                             var remainingItems = items.Where(item => !processedIndices.Contains(item.index)).ToList();
@@ -806,6 +735,11 @@ namespace BTS_Location_Estimation
                                 .Where(g => g.Count() > 1)
                                 .ToList();
 
+                            if (sameIdGroups.Any())
+                            {
+                                NRMultiBeam = true;
+                            }
+
                             foreach (var idGroup in sameIdGroups)
                             {
                                 var groupItems = idGroup.Select(g => g.value).ToList();
@@ -817,6 +751,83 @@ namespace BTS_Location_Estimation
                                 {
                                     processedIndices.Add(item.index);
                                 }
+                            }
+                        }
+
+                        // Only run the next two passes if NRMultiBeam is false
+                        if (!NRMultiBeam)
+                        {
+                            // --- Pass 1: Find groups of three ---
+                            for (int i = 0; i < items.Count - 2; i++)
+                            {
+                                if (processedIndices.Contains(items[i].index)) continue;
+
+                                for (int j = i + 1; j < items.Count - 1; j++)
+                                {
+                                    if (processedIndices.Contains(items[j].index)) continue;
+
+                                    for (int k = j + 1; k < items.Count; k++)
+                                    {
+                                        if (processedIndices.Contains(items[k].index)) continue;
+
+                                        var p1 = items[i].value;
+                                        var p2 = items[j].value;
+                                        var p3 = items[k].value;
+
+                                        if (p1.TryGetValue("cellIdentity", out var idStr1) && long.TryParse(idStr1, out long id1) &&
+                                            p2.TryGetValue("cellIdentity", out var idStr2) && long.TryParse(idStr2, out long id2) &&
+                                            p3.TryGetValue("cellIdentity", out var idStr3) && long.TryParse(idStr3, out long id3) )
+
+                                        {
+                                            bool isGroupOfThree = (id2 == id1 + 1 && id3 == id2 + 1) || // (1,2,3)
+                                                                  (id2 == id1 + 1 && id3 == id2 + 2) || // (1,2,4)
+                                                                  (id2 == id1 + 2 && id3 == id2 + 1);   // (1,3,4)
+
+                                            if (isGroupOfThree)
+                                            {
+                                                var group = new List<Dictionary<string, string>> { p1, p2, p3 };
+                                                newTowerEstimates.Add(CreateTowerEstimate(group, isNrFile));
+                                                processedIndices.Add(items[i].index);
+                                                processedIndices.Add(items[j].index);
+                                                processedIndices.Add(items[k].index);
+                                                goto next_i_loop_3; // Continue outer loop
+                                            }
+                                        }
+                                    }
+                                }
+                            next_i_loop_3:;
+                            }
+
+                            // --- Pass 2: Find groups of two ---
+                            for (int i = 0; i < items.Count - 1; i++)
+                            {
+                                if (processedIndices.Contains(items[i].index)) continue;
+
+                                for (int j = i + 1; j < items.Count; j++)
+                                {
+                                    if (processedIndices.Contains(items[j].index)) continue;
+
+                                    var p1 = items[i].value;
+                                    var p2 = items[j].value;
+
+                                    if (p1.TryGetValue("cellIdentity", out var idStr1) && long.TryParse(idStr1, out long id1) &&
+                                        p2.TryGetValue("cellIdentity", out var idStr2) && long.TryParse(idStr2, out long id2))
+                                       
+                                    {
+                                        bool isGroupOfTwo = (id2 == id1 + 1) || // (1,2)
+                                                              (id2 == id1 + 2);   // (1,3)
+
+                                        if (isGroupOfTwo)
+                                        {
+                                            var group = new List<Dictionary<string, string>> { p1, p2 };
+                                            newTowerEstimates.Add(CreateTowerEstimate(group, isNrFile));
+                                            processedIndices.Add(items[i].index);
+                                            processedIndices.Add(items[j].index);
+                                            goto next_i_loop_2; // Continue outer loop
+                                        }
+                                    }
+                                }
+                            next_i_loop_2:;
                             }
                         }
                     }
