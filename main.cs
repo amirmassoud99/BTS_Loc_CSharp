@@ -27,7 +27,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.3.15.0";
+        public const string SW_VERSION = "1.3.16.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -135,7 +135,7 @@ namespace BTS_Location_Estimation
                     //extract points with minimum distance
                     var pointsForCell = group.ToList();
 
-                    // Calculate average GSM HrToA and initialize cinr to incremental values
+                    // Calculate average GSM HrToA and initialize cinr to HrToAAvg count values
                     bool isGsm = fileType == DataBaseProc.GSM_FILE_TYPE || fileType == DataBaseProc.GSM_FILE_TYPE * 10;
                     if (isGsm)
                     {

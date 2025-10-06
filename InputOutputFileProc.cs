@@ -108,21 +108,21 @@ namespace BTS_Location_Estimation
 
 
             //Batch processing Drive 5_Gaithersuburg
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250828_Gaitherburg-Drive\";
+            //string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250828_Gaitherburg-Drive\";
             // List of input filenames to process in batch
-            List<string> inputFilenames = new List<string>
+            /*List<string> inputFilenames = new List<string>
             {
                 "Gflex Device 032201005_LTE_EB 02  1900 (PCS) DL_Blind Scan.dtr",
                 "Gflex Device 032201005_LTE_EB 12  US Lower 700-A B C Blocks DL_Blind Scan.dtr",
                 "Gflex Device 032201005_LTE_EB 66  AWS-3 DL_Blind Scan.dtr",
                 "Gflex Device 032201005_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.dtr",
                 "Gflex Device 032201005_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr"
-            };
+            };*/
 
             //Batch processing Drive 6 Gordon Hong Kong
-            //string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Gordon_20250923_033301\";
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Gordon_20250923_033301\";
             // List of input filenames to process in batch
-            /*List<string> inputFilenames = new List<string>
+            List<string> inputFilenames = new List<string>
             {
                 "Gflex Device 019999102_GSM_900 DL_Blind Scan (0 - 125).dtr",
                 "Gflex Device 019999102_GSM_1800 (DCS) DL_Blind Scan.dtr",                
@@ -145,7 +145,7 @@ namespace BTS_Location_Estimation
                 
             };*/
             //Drive 8 Rockville Pike
-            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Drive_20251001_RockvillePike\";
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Drive_20251001_RockvillePike\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
@@ -158,7 +158,7 @@ namespace BTS_Location_Estimation
                 "Gflex Device 032203010_NR_FR1 FDD n71 DL_Blind Scan SCS Autodetect.dtr",
                 "Gflex Device 032203010_NR_FR1 TDD n41   n90_Blind Scan SCS Autodetect.dtr"
                 
-            };*/
+            };
             return (fileDirectory, inputFilenames);
         }
 

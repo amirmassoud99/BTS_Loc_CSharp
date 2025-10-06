@@ -777,11 +777,17 @@ namespace BTS_Location_Estimation
                                         if (p1.TryGetValue("cellIdentity", out var idStr1) && long.TryParse(idStr1, out long id1) &&
                                             p2.TryGetValue("cellIdentity", out var idStr2) && long.TryParse(idStr2, out long id2) &&
                                             p3.TryGetValue("cellIdentity", out var idStr3) && long.TryParse(idStr3, out long id3) )
-
                                         {
-                                            bool isGroupOfThree = (id2 == id1 + 1 && id3 == id2 + 1) || // (1,2,3)
-                                                                  (id2 == id1 + 1 && id3 == id2 + 2) || // (1,2,4)
-                                                                  (id2 == id1 + 2 && id3 == id2 + 1);   // (1,3,4)
+                                            // Accept increments of 1 or 10 for triplets
+                                            bool isGroupOfThree =
+                                                // (a, b, c) consecutive by 1
+                                                (id2 == id1 + 1 && id3 == id2 + 1) || // (1,2,3)
+                                                (id2 == id1 + 1 && id3 == id2 + 2) || // (1,2,4)
+                                                (id2 == id1 + 2 && id3 == id2 + 1) || // (1,3,4)
+                                                // increments of 10
+                                                (id2 == id1 + 10 && id3 == id2 + 10) || // (10,20,30)
+                                                (id2 == id1 + 10 && id3 == id2 + 20) || // (10,20,40)
+                                                (id2 == id1 + 20 && id3 == id2 + 10);   // (10,30,40)
 
                                             if (isGroupOfThree)
                                             {
@@ -812,10 +818,12 @@ namespace BTS_Location_Estimation
 
                                     if (p1.TryGetValue("cellIdentity", out var idStr1) && long.TryParse(idStr1, out long id1) &&
                                         p2.TryGetValue("cellIdentity", out var idStr2) && long.TryParse(idStr2, out long id2))
-                                       
                                     {
+                                        // Accept increments of 1, 2, 10, or 20 for pairs
                                         bool isGroupOfTwo = (id2 == id1 + 1) || // (1,2)
-                                                              (id2 == id1 + 2);   // (1,3)
+                                                           (id2 == id1 + 2) || // (1,3)
+                                                           (id2 == id1 + 10) || // (10,20)
+                                                           (id2 == id1 + 20);  // (10,30)
 
                                         if (isGroupOfTwo)
                                         {
