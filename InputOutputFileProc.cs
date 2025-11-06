@@ -60,7 +60,7 @@ namespace BTS_Location_Estimation
 
             //UK Drive 12.
 
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Drive_12_UK_20241106_143228\";
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Drive_12_UK_20241106_143228\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
@@ -76,12 +76,12 @@ namespace BTS_Location_Estimation
                 "Gflex Device 032306010_NR_FR1 FDD n7 DL_Blind Scan SCS Autodetect.dtr",
                 "Gflex Device 032306010_NR_FR1 TDD n78_Blind Scan SCS Autodetect.dtr",
                 "Gflex Device 032306010_TD-LTE_EB 40  TDD 2.4 GHz_Blind Scan.dtr"
-            };
+            };*/
 
 
             //dRIVE bts_5 att n77
-
-            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\n77 drive\";
+            
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\n77 drive\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
@@ -90,7 +90,7 @@ namespace BTS_Location_Estimation
                 "Gflex Device 032201005_NR_FR1 TDD n77_Blind Scan SCS Autodetect.DTR",
                 "Gflex Device 032201005_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.DTR",
                 "Gflex Device 032201005_NR_FR1 TDD n77_nr Top N Signal ARFCN  658080 - 3871.20 MHz SCS 30 kHz.dtr"
-            };*/
+            };
 
 
             //Batch processing Drive 3_Washington DC

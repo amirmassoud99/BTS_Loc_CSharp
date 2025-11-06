@@ -27,7 +27,7 @@ namespace BTS_Location_Estimation
     public static class MainModule
     {
         // --- Software Version ---
-        public const string SW_VERSION = "1.3.17.0";
+        public const string SW_VERSION = "1.3.18.0";
 
         // --- Constants ---
         public const double METERS_PER_DEGREE = 111139.0;
@@ -111,14 +111,14 @@ namespace BTS_Location_Estimation
                     //SaveHelper.debug_csv(allData);
 
                     Console.WriteLine($"Extracted {allData.Count} rows from {inputFilename}");
-                    //InputOutputFileProc.Save_Drive_Route(allData, inputFilename);
+                    InputOutputFileProc.Save_Drive_Route(allData, inputFilename);
 
                     //string step1Filename = $"step1_{filenameOnly}.csv";
                     //SaveHelper.save_extrac_step1(allData, step1Filename);
 
                     // 3. Filter data based on CINR/ECIO and minimum cell ID count
                     var filteredData = DataBaseProc.filter_cinr_minimum_PCI(allData, fileType, MINIMUM_CELL_ID_COUNT);
-                    string step2Filename = $"step2_{filenameOnly}.csv";
+                    //string step2Filename = $"step2_{filenameOnly}.csv";
                     //SaveHelper.save_extract_step2(filteredData, step2Filename);
                     //SaveHelper.debug_csv(filteredData);
                     // Group data by channel and cell to process each one individually
@@ -211,7 +211,10 @@ namespace BTS_Location_Estimation
             Console.WriteLine("Batch processing complete.");
             // Example: Filter by mnc and save cluster results with filter in filename
             string filterType = "mnc";
-            string filterValue = "30";
+            //china mobile string filterValue = "12";
+            string filterValue = "260";//Tmobile US
+            //string filterValue = "410";//AT&T USA
+            //string filterValue = "30";//EE limited UK
 
             //Generate the All_Estimate_mnc_XXX.csv file for all technologies combined
             var outputFile = SaveHelper.ClusterProcessing(filterType, filterValue, EPS_MILES);

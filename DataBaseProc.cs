@@ -1,4 +1,4 @@
-    /***************************************************************************************************
+/***************************************************************************************************
     *
     *   Function:       Expand_mcc_mnc_cellIdentity
     *
@@ -712,7 +712,7 @@ namespace BTS_Location_Estimation
                         .GroupBy(x => x.value.GetValueOrDefault("Channel"));
 
                     bool isNrFile = fileType == NR_TOPN_FILE_TYPE || fileType == NR_FILE_TYPE || fileType == NR_TOPN_FILE_TYPE * 10 || fileType == NR_FILE_TYPE * 10;
-
+                    bool isLTEfile = fileType == LTE_BLIND_FILE_TYPE || fileType == LTE_TOPN_FILE_TYPE || fileType == LTE_BLIND_FILE_TYPE * 10 || fileType == LTE_TOPN_FILE_TYPE * 10;
                     foreach (var channelGroup in groupedByChannel)
                     {
                         var items = channelGroup.ToList();
@@ -754,8 +754,27 @@ namespace BTS_Location_Estimation
                             }
                         }
 
+                        if (isLTEfile)
+                        {
+                            // Calculate eNodeB and group sectors with the same eNodeB value as a tower
+                            var groupedByENodeB = items
+                                .Where(item => item.value.TryGetValue("cellIdentity", out var cellIdentityStr) &&
+                                               int.TryParse(cellIdentityStr, out _))
+                                .GroupBy(item => int.Parse(item.value["cellIdentity"]) >> 8)
+                                .Where(group => group.Count() > 1) // Ensure at least two sectors in the group
+                                .ToList();
+
+                            foreach (var eNodeBGroup in groupedByENodeB)
+                            {
+                                var groupItems = eNodeBGroup.Select(g => g.value).ToList();
+                                newTowerEstimates.Add(CreateTowerEstimate(groupItems, isNrFile));
+                            }
+
+                            continue; // Skip further processing for LTE files
+                        }
+
                         // Only run the next two passes if NRMultiBeam is false
-                        if (!NRMultiBeam)
+                        if (!NRMultiBeam && !isLTEfile)
                         {
                             // --- Pass 1: Find groups of three ---
                             for (int i = 0; i < items.Count - 2; i++)
@@ -776,7 +795,7 @@ namespace BTS_Location_Estimation
 
                                         if (p1.TryGetValue("cellIdentity", out var idStr1) && long.TryParse(idStr1, out long id1) &&
                                             p2.TryGetValue("cellIdentity", out var idStr2) && long.TryParse(idStr2, out long id2) &&
-                                            p3.TryGetValue("cellIdentity", out var idStr3) && long.TryParse(idStr3, out long id3) )
+                                            p3.TryGetValue("cellIdentity", out var idStr3) && long.TryParse(idStr3, out long id3))
                                         {
                                             // Accept increments of 1 or 10 for triplets
                                             bool isGroupOfThree =
@@ -784,7 +803,7 @@ namespace BTS_Location_Estimation
                                                 (id2 == id1 + 1 && id3 == id2 + 1) || // (1,2,3)
                                                 (id2 == id1 + 1 && id3 == id2 + 2) || // (1,2,4)
                                                 (id2 == id1 + 2 && id3 == id2 + 1) || // (1,3,4)
-                                                // increments of 10
+                                                                                      // increments of 10
                                                 (id2 == id1 + 10 && id3 == id2 + 10) || // (10,20,30)
                                                 (id2 == id1 + 10 && id3 == id2 + 20) || // (10,20,40)
                                                 (id2 == id1 + 20 && id3 == id2 + 10);   // (10,30,40)
@@ -838,6 +857,10 @@ namespace BTS_Location_Estimation
                             next_i_loop_2:;
                             }
                         }
+                        if (isLTEfile)
+                        {
+                            // LTE-specific logic can be added here if needed in the future
+                        }   
                     }
 
                     var combinedResults = initialSorted.Concat(newTowerEstimates).ToList();
