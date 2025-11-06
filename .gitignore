@@ -28,6 +28,7 @@
 *.pdb
 
 # Output files
+*.xlsx
 *.csv
 *.dtr
 *.kml

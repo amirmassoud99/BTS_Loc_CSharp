@@ -81,7 +81,7 @@ namespace BTS_Location_Estimation
 
             //dRIVE bts_5 att n77
             
-            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\n77 drive\";
+            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\n77 drive\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
@@ -90,7 +90,7 @@ namespace BTS_Location_Estimation
                 "Gflex Device 032201005_NR_FR1 TDD n77_Blind Scan SCS Autodetect.DTR",
                 "Gflex Device 032201005_LTE_EB 30  2.3 GHz (WCS A B) DL_Blind Scan.DTR",
                 "Gflex Device 032201005_NR_FR1 TDD n77_nr Top N Signal ARFCN  658080 - 3871.20 MHz SCS 30 kHz.dtr"
-            };
+            };*/
 
 
             //Batch processing Drive 3_Washington DC
@@ -125,7 +125,7 @@ namespace BTS_Location_Estimation
             };*/
 
             //Batch processing Drive 6 Gordon Hong Kong
-            /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Gordon_20250923_033301\";
+            string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\Gordon_20250923_033301\";
             // List of input filenames to process in batch
             List<string> inputFilenames = new List<string>
             {
@@ -140,7 +140,7 @@ namespace BTS_Location_Estimation
                 "Gflex Device 019999102_UMTS WCDMA_UB I  2100 (IMT-2000) DL_Blind Scan.dtr",
                 "Gflex Device 019999102_UMTS WCDMA_UB V  850 (Cellular) DL_Blind Scan (4355 - 4460).dtr",
                 "Gflex Device 019999102_UMTS WCDMA_UB VIII  900 DL_Blind Scan.dtr"
-            };*/
+            };
             //Batch processing Drive 7 Josue drive test in Washington DC, GSM only
             /*string fileDirectory = @"C:\Users\amirsoltanian\OneDrive - PCTEL, Inc\LocalDrive Tests\BTS Location_DriveTests\20250922_GSM_HRTOA\";
             // List of input filenames to process in batch

@@ -773,7 +773,7 @@ namespace BTS_Location_Estimation
                             continue; // Skip further processing for LTE files
                         }
 
-                        // Only run the next two passes if NRMultiBeam is false
+                        // Only for NR single beam, WCDMA and GSM.
                         if (!NRMultiBeam && !isLTEfile)
                         {
                             // --- Pass 1: Find groups of three ---
@@ -802,11 +802,8 @@ namespace BTS_Location_Estimation
                                                 // (a, b, c) consecutive by 1
                                                 (id2 == id1 + 1 && id3 == id2 + 1) || // (1,2,3)
                                                 (id2 == id1 + 1 && id3 == id2 + 2) || // (1,2,4)
-                                                (id2 == id1 + 2 && id3 == id2 + 1) || // (1,3,4)
-                                                                                      // increments of 10
-                                                (id2 == id1 + 10 && id3 == id2 + 10) || // (10,20,30)
-                                                (id2 == id1 + 10 && id3 == id2 + 20) || // (10,20,40)
-                                                (id2 == id1 + 20 && id3 == id2 + 10);   // (10,30,40)
+                                                (id2 == id1 + 2 && id3 == id2 + 1);  // (1,3,4)
+
 
                                             if (isGroupOfThree)
                                             {
@@ -840,9 +837,8 @@ namespace BTS_Location_Estimation
                                     {
                                         // Accept increments of 1, 2, 10, or 20 for pairs
                                         bool isGroupOfTwo = (id2 == id1 + 1) || // (1,2)
-                                                           (id2 == id1 + 2) || // (1,3)
-                                                           (id2 == id1 + 10) || // (10,20)
-                                                           (id2 == id1 + 20);  // (10,30)
+                                                           (id2 == id1 + 2);  // (1,3)
+
 
                                         if (isGroupOfTwo)
                                         {
